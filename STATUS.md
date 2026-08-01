@@ -8,6 +8,7 @@
 
 - TRS-0001: Accepted
 - TRS-0002: None
+- Research Method Matrix: `docs/RESEARCH_EXECUTION_MATRIX.md` active
 
 ## Runtime
 

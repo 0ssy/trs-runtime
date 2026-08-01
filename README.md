@@ -34,6 +34,7 @@ TRS runtime implementation with strict payload-independence:
 - `docs/Design_Record.pdf`
 - `docs/Amendment_Log.md`
 - `docs/SPEC_TRACEABILITY.md`
+- `docs/RESEARCH_EXECUTION_MATRIX.md`
 
 ## Run tests
 

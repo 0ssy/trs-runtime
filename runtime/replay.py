@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 
-from .graph import Graph
 from .record import PrimitiveType
 from .storage import StorageEngine
 
@@ -27,7 +26,6 @@ class ReplaySnapshot:
 class ReplayEngine:
     def __init__(self, store: StorageEngine) -> None:
         self.store = store
-        self.graph = Graph(store)
 
     def replay(self) -> ReplaySnapshot:
         records = self.store.all()
@@ -51,9 +49,32 @@ class ReplayEngine:
         return dict(by_author)
 
     def _replay_workflows(self, records) -> dict[str, list[str]]:
+        children_by_parent: dict[str, set[str]] = defaultdict(set)
+        for record in records:
+            for parent_id in record.causes:
+                children_by_parent[parent_id].add(record.id)
+
+        memo: dict[str, set[str]] = {}
+        visiting: set[str] = set()
+
+        def collect_descendants(record_id: str) -> set[str]:
+            if record_id in memo:
+                return memo[record_id]
+            if record_id in visiting:
+                return set()
+
+            visiting.add(record_id)
+            descendants: set[str] = set()
+            for child_id in children_by_parent.get(record_id, set()):
+                descendants.add(child_id)
+                descendants.update(collect_descendants(child_id))
+            visiting.remove(record_id)
+            memo[record_id] = descendants
+            return descendants
+
         workflow: dict[str, list[str]] = {}
         for record in records:
-            workflow[record.id] = sorted(self.graph.descendants(record.id))
+            workflow[record.id] = sorted(collect_descendants(record.id))
         return workflow
 
     def _replay_contracts(self, records) -> list[str]:

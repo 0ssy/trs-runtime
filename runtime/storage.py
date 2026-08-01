@@ -253,7 +253,7 @@ class LMDBStorage:
 
     def children(self, record_id: str) -> list[Record]:
         prefix = _b(f"{record_id}\x1f")
-        child_ids: list[str] = []
+        records: list[Record] = []
         with self._env.begin() as txn:
             cursor = txn.cursor(db=self._children_db)
             found = cursor.set_range(prefix)
@@ -261,21 +261,26 @@ class LMDBStorage:
                 key = bytes(cursor.key())
                 if not key.startswith(prefix):
                     break
-                child_ids.append(key.decode("utf-8").split("\x1f", 1)[1])
+                child_id = key.decode("utf-8").split("\x1f", 1)[1]
+                payload = txn.get(_b(child_id), db=self._records_db)
+                if payload is not None:
+                    records.append(_json_bytes_to_record(bytes(payload)))
                 found = cursor.next()
-        return [record for record in (self.get(child_id) for child_id in child_ids) if record is not None]
+        return records
 
     def parents(self, record_id: str) -> list[str]:
         record = self.get(record_id)
         return list(record.causes) if record else []
 
     def all(self) -> list[Record]:
-        ordered_ids: list[str] = []
+        records: list[Record] = []
         with self._env.begin() as txn:
             cursor = txn.cursor(db=self._sequence_db)
             for _, raw_record_id in cursor:
-                ordered_ids.append(bytes(raw_record_id).decode("utf-8"))
-        return [record for record in (self.get(record_id) for record_id in ordered_ids) if record is not None]
+                payload = txn.get(bytes(raw_record_id), db=self._records_db)
+                if payload is not None:
+                    records.append(_json_bytes_to_record(bytes(payload)))
+        return records
 
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return filter_records(self.all(), expression)
@@ -310,6 +315,11 @@ class RocksDBStorage:
         self._db[record_key] = json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":"))
         for parent in record.causes:
             self._db[f"child:{parent}\x1f{record.id}"] = "1"
+            index_key = _rocks_children_index_key(parent)
+            raw = self._db.get(index_key)
+            child_ids = json.loads(str(raw)) if raw is not None else []
+            child_ids.append(record.id)
+            self._db[index_key] = json.dumps(child_ids, separators=(",", ":"))
 
     def get(self, record_id: str) -> Record | None:
         payload = self._db.get(f"record:{record_id}")
@@ -322,8 +332,13 @@ class RocksDBStorage:
         return f"record:{record_id}" in self._db
 
     def children(self, record_id: str) -> list[Record]:
-        prefix = f"child:{record_id}\x1f"
-        child_ids = [str(k).split("\x1f", 1)[1] for k in self._db.keys() if str(k).startswith(prefix)]
+        index_key = _rocks_children_index_key(record_id)
+        raw = self._db.get(index_key)
+        if raw is not None:
+            child_ids = [str(value) for value in json.loads(str(raw))]
+        else:
+            prefix = f"child:{record_id}\x1f"
+            child_ids = [str(k).split("\x1f", 1)[1] for k in self._db.keys() if str(k).startswith(prefix)]
         return [record for record in (self.get(child_id) for child_id in child_ids) if record is not None]
 
     def parents(self, record_id: str) -> list[str]:
@@ -409,3 +424,7 @@ def _next_sequence(txn: Any, sequence_db: Any) -> int:
         return 1
     last_key = bytes(cursor.key()).decode("utf-8")
     return int(last_key) + 1
+
+
+def _rocks_children_index_key(parent_id: str) -> str:
+    return f"children:{parent_id}"
