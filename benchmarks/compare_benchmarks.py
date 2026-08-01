@@ -23,6 +23,56 @@ def _pct_change(base: float, current: float) -> float:
     return ((current - base) / base) * 100.0
 
 
+def compare_payloads(
+    baseline: dict,
+    current: dict,
+    throughput_regression_pct: float = 10.0,
+    latency_regression_pct: float = 15.0,
+    threshold_overrides: dict[str, dict[str, float]] | None = None,
+) -> tuple[list[str], list[str]]:
+    baseline_results = baseline["results"]
+    current_results = current["results"]
+    backends = sorted(set(baseline_results.keys()) & set(current_results.keys()))
+
+    lines: list[str] = []
+    failures: list[str] = []
+    for backend in backends:
+        lines.append(f"[{backend}]")
+        base_metrics = baseline_results[backend]
+        cur_metrics = current_results[backend]
+        keys = list(THROUGHPUT_KEYS) + list(LATENCY_KEYS)
+        for key in keys:
+            base_value = float(base_metrics[key])
+            cur_value = float(cur_metrics[key])
+            delta_pct = _pct_change(base_value, cur_value)
+            direction = "better"
+            if key in THROUGHPUT_KEYS:
+                threshold_pct = abs(throughput_regression_pct)
+                if threshold_overrides and backend in threshold_overrides and key in threshold_overrides[backend]:
+                    threshold_pct = abs(threshold_overrides[backend][key])
+                if delta_pct < 0:
+                    direction = "worse"
+                if delta_pct <= -threshold_pct:
+                    failures.append(
+                        f"{backend}:{key} regressed {delta_pct:.2f}% (threshold {-threshold_pct:.2f}%)"
+                    )
+            else:
+                threshold_pct = abs(latency_regression_pct)
+                if threshold_overrides and backend in threshold_overrides and key in threshold_overrides[backend]:
+                    threshold_pct = abs(threshold_overrides[backend][key])
+                if delta_pct > 0:
+                    direction = "worse"
+                if delta_pct >= threshold_pct:
+                    failures.append(
+                        f"{backend}:{key} regressed +{delta_pct:.2f}% (threshold +{threshold_pct:.2f}%)"
+                    )
+            lines.append(
+                f"  {key}: base={base_value:.6g} current={cur_value:.6g} delta={delta_pct:+.2f}% ({direction})"
+            )
+        lines.append("")
+    return lines, failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compare benchmark JSON outputs.")
     parser.add_argument("--baseline", required=True, help="path to baseline benchmark JSON")
@@ -44,43 +94,17 @@ def main() -> int:
     baseline = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
     current = json.loads(Path(args.current).read_text(encoding="utf-8"))
 
-    baseline_results = baseline["results"]
-    current_results = current["results"]
-    backends = sorted(set(baseline_results.keys()) & set(current_results.keys()))
-
-    failures: list[str] = []
     print(f"Baseline: {args.baseline}")
     print(f"Current : {args.current}")
     print()
-
-    for backend in backends:
-        print(f"[{backend}]")
-        base_metrics = baseline_results[backend]
-        cur_metrics = current_results[backend]
-        keys = list(THROUGHPUT_KEYS) + list(LATENCY_KEYS)
-        for key in keys:
-            base_value = float(base_metrics[key])
-            cur_value = float(cur_metrics[key])
-            delta_pct = _pct_change(base_value, cur_value)
-            direction = "better"
-            if key in THROUGHPUT_KEYS:
-                # Higher is better for throughput.
-                if delta_pct < 0:
-                    direction = "worse"
-                if delta_pct <= -abs(args.throughput_regression_pct):
-                    failures.append(
-                        f"{backend}:{key} regressed {delta_pct:.2f}% (threshold {-abs(args.throughput_regression_pct):.2f}%)"
-                    )
-            else:
-                # Lower is better for latency/memory/disk.
-                if delta_pct > 0:
-                    direction = "worse"
-                if delta_pct >= abs(args.latency_regression_pct):
-                    failures.append(
-                        f"{backend}:{key} regressed +{delta_pct:.2f}% (threshold +{abs(args.latency_regression_pct):.2f}%)"
-                    )
-            print(f"  {key}: base={base_value:.6g} current={cur_value:.6g} delta={delta_pct:+.2f}% ({direction})")
-        print()
+    lines, failures = compare_payloads(
+        baseline,
+        current,
+        throughput_regression_pct=args.throughput_regression_pct,
+        latency_regression_pct=args.latency_regression_pct,
+    )
+    for line in lines:
+        print(line)
 
     if failures:
         print("Regressions detected:")

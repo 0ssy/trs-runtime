@@ -22,6 +22,7 @@ TRS runtime implementation with strict payload-independence:
 - `research/attacks/`: persisted attack records
 - `logs/development/`: short daily engineering logs
 - `evidence/`: persisted test-run and benchmark artifacts
+- `experiments/`: disposable engineering validation scripts
 - `STATUS.md`: live project status dashboard
 - `schemas/`: schema artifacts (placeholder)
 - `payloads/`: payload artifacts (placeholder)
@@ -39,6 +40,16 @@ TRS runtime implementation with strict payload-independence:
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
 python -m unittest discover -s conformance -p "test_*.py"
+python -m unittest -v tests.test_property_invariants
+python -m unittest -v tests.test_fuzz_malformed_inputs
+python -m unittest -v tests.test_mutation_checks
+python -m unittest -v tests.test_multi_node_sim
+```
+
+## Run mutation checks
+
+```bash
+python experiments/0003-mutation/run_mutation_checks.py
 ```
 
 ## Run benchmarks
@@ -52,6 +63,50 @@ python benchmarks/run_benchmarks.py --records 2000 --out evidence/benchmarks/ben
 ```bash
 python benchmarks/compare_benchmarks.py --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json --current evidence/benchmarks/2026-08-01_phase15_baseline.json
 ```
+
+## Run benchmark regression gate (writes history artifact)
+
+```bash
+python benchmarks/gate_benchmarks.py --mode quick --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+python benchmarks/gate_benchmarks.py --mode pr --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+python benchmarks/gate_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+```
+
+Policy split:
+
+- `pr`: balanced gate for pull requests
+- `nightly`: strict gate for stable machine/nightly run
+- `nightly` includes small per-metric jitter overrides for volatile microbenchmarks
+
+## Re-capture baseline on quiet machine (archives prior baseline)
+
+```bash
+python benchmarks/rebaseline_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+```
+
+## Run multi-node sync simulation
+
+```bash
+python experiments/0005-multi-node/run_multi_node_sim.py
+```
+
+## Run full validation cycle
+
+```bash
+python experiments/0006-validation/run_validation_cycle.py --gate-mode pr
+```
+
+If you want to continue while still recording benchmark regressions:
+
+```bash
+python experiments/0006-validation/run_validation_cycle.py --gate-mode quick --allow-benchmark-regressions
+```
+
+## CI policy
+
+- Pull requests run validation with `--gate-mode pr`.
+- Pushes to `main` and nightly schedule run strict validation with `--gate-mode nightly`.
+- Workflow file: `.github/workflows/validation.yml`.
 
 ## TerraNode integration boundary
 

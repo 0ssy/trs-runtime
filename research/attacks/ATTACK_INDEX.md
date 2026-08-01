@@ -12,5 +12,7 @@
 | ATTACK-008 | Payload Sniffing | 5.3 Payload Shape | BLOCKED | `ATTACK-008_payload-sniffing.md` | `attacks/attack_008_payload_sniffing.py` |
 | ATTACK-009 | Query Mutation | 4.3 Local Sufficiency | BLOCKED | `ATTACK-009_query-mutation.md` | `attacks/attack_009_query_mutation.py` |
 | ATTACK-010 | Hidden Conflict | 4.5 Non-Silent Conflict | BLOCKED | `ATTACK-010_hidden-conflict.md` | `attacks/attack_010_hidden_conflict.py` |
+| ATTACK-011 | Malformed Envelope Fuzz | 5.3 Payload Shape; 6.1 Authorization Traceability | BLOCKED | `ATTACK-011_malformed-envelope-fuzz.md` | `tests/test_fuzz_malformed_inputs.py` |
+| ATTACK-012 | Partition/Reconnection Sync | 4.2 Causality; 4.3 Local Sufficiency | BLOCKED | `ATTACK-012_partition-reconnection-sync.md` | `tests/test_multi_node_sim.py` |
 
 Last verified run: `evidence/test_runs/2026-08-01_attack_suite.txt`

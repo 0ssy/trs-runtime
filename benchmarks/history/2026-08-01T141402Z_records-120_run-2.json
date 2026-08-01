@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-08-01T14:13:52.384226+00:00",
+  "records": 120,
+  "run_index": 2,
+  "results": {
+    "in_memory": {
+      "records": 120,
+      "append_records_per_sec": 1248699.217576411,
+      "verify_records_per_sec": 63251.10653707741,
+      "graph_descendants_sec": 0.00045039999531582,
+      "authorization_verify_sec": 3.819999983534217e-05,
+      "query_latency_ms": 0.016200006939470768,
+      "replay_sec": 0.049757500004488975,
+      "memory_peak_mb": 0.079833984375,
+      "disk_usage_bytes": 0
+    },
+    "sqlite": {
+      "records": 120,
+      "append_records_per_sec": 127.77869411343868,
+      "verify_records_per_sec": 262.7015659787176,
+      "graph_descendants_sec": 0.0761820999905467,
+      "authorization_verify_sec": 0.011564300017198548,
+      "query_latency_ms": 4.1591000044718385,
+      "replay_sec": 5.473323199985316,
+      "memory_peak_mb": 0.47354984283447266,
+      "disk_usage_bytes": 49152
+    },
+    "lmdb": {
+      "records": 120,
+      "append_records_per_sec": 1077.9617897947173,
+      "verify_records_per_sec": 24782.12384670993,
+      "graph_descendants_sec": 0.0019826999923679978,
+      "authorization_verify_sec": 0.002516500011552125,
+      "query_latency_ms": 1.9221999973524362,
+      "replay_sec": 0.5053882999927737,
+      "memory_peak_mb": 0.4734201431274414,
+      "disk_usage_bytes": 67117056
+    },
+    "rocksdb": {
+      "records": 120,
+      "append_records_per_sec": 16482.83726156825,
+      "verify_records_per_sec": 6639.5551433263045,
+      "graph_descendants_sec": 0.015920200006803498,
+      "authorization_verify_sec": 0.0021359000238589942,
+      "query_latency_ms": 1.455199992051348,
+      "replay_sec": 2.7617802000022493,
+      "memory_peak_mb": 0.47338199615478516,
+      "disk_usage_bytes": 74431
+    }
+  }
+}

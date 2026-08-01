@@ -26,19 +26,27 @@
 
 ## Verification
 
-- Unit Tests: 25 / 25 Passing
+- Unit Tests: 37 / 37 Passing
 - Conformance: 7 / 7 Passing
-- Attacks: 10 / 10 Blocked
-- Property Tests: 0
-- Benchmarks: 1 baseline captured
+- Attack Suite Runner: 10 / 10 Blocked
+- Attack Records: 12 total (ATTACK-001 .. ATTACK-012)
+- Property Tests: 4 invariant properties (Hypothesis) passing
+- Fuzzing: 2 generated fuzz properties passing
+- Mutation Checks: 5 / 5 mutants killed
+- Benchmarks: baseline + history + median regression gate configured (PR/nightly policy)
 
 ## Evidence
 
 - `evidence/test_runs/2026-08-01_unit_tests.txt`
 - `evidence/test_runs/2026-08-01_conformance.txt`
 - `evidence/test_runs/2026-08-01_attack_suite.txt`
+- `evidence/test_runs/2026-08-01_mutation_checks.json`
 - `evidence/benchmarks/2026-08-01_phase15_baseline.json`
+- `evidence/benchmarks/archive/2026-08-01_phase15_baseline_2026-08-01T143811Z.json`
+- `benchmarks/history/*.json` (rolling benchmark history artifacts)
+- `evidence/traces/2026-08-01_multi_node_sim.json`
+- `evidence/test_runs/2026-08-01T144757Z_validation_cycle.log` (nightly gate: pass)
 
 ## Reference Runtime
 
-- Version: v0.1.0-reference-runtime (pending tag)
+- Version: v0.1.0-reference-runtime (checkpoint locked; tag ready)

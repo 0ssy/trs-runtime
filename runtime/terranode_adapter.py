@@ -61,22 +61,36 @@ class TerraNodeRuntimeAdapter:
         if missing:
             raise ValueError(f"envelope missing required fields: {', '.join(missing)}")
 
-        primitive = PrimitiveType(envelope["type"])
+        try:
+            primitive = PrimitiveType(envelope["type"])
+        except Exception as exc:
+            raise ValueError(f"invalid primitive type: {envelope['type']}") from exc
         timestamp = envelope["timestamp"]
         if isinstance(timestamp, str):
-            timestamp = datetime.fromisoformat(timestamp)
+            try:
+                timestamp = datetime.fromisoformat(timestamp)
+            except Exception as exc:
+                raise ValueError("timestamp must be a valid ISO string") from exc
         if not isinstance(timestamp, datetime):
             raise ValueError("timestamp must be ISO string or datetime")
 
+        payload = envelope["payload"]
+        if not isinstance(payload, Mapping):
+            raise ValueError("payload must be an object")
+
         causes = envelope.get("causes", [])
         authorization = envelope.get("authorization", [])
+        if not isinstance(causes, list):
+            raise ValueError("causes must be a list")
+        if not isinstance(authorization, list):
+            raise ValueError("authorization must be a list")
         return Record(
             id=str(envelope["id"]),
             type=primitive,
             author=str(envelope["author"]),
             timestamp=timestamp,
             schema=str(envelope["schema"]),
-            payload=envelope["payload"],
+            payload=payload,
             causes=tuple(str(value) for value in causes),
             authorization=tuple(str(value) for value in authorization),
             signature=str(envelope["signature"]),
