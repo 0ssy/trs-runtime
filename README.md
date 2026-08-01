@@ -13,6 +13,9 @@ TRS runtime implementation with strict payload-independence:
 - `libraries/`: derived read-only libraries (identity, reputation, contracts, workflow, capabilities, trust, policy)
 - `conformance/`: specification-facing conformance tests
 - `tests/`: focused unit tests
+- `attacks/`: executable adversarial attack scripts
+- `research/attacks/`: persisted attack records
+- `logs/development/`: short daily engineering logs
 - `schemas/`: schema artifacts (placeholder)
 - `payloads/`: payload artifacts (placeholder)
 - `docs/`: amendment log and external specification artifacts
