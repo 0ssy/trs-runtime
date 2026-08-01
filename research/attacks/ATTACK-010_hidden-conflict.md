@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `visible=['h1', 'h2']`
 
+Affected Rules:
+- 4.5 Non-Silent Conflict
+
 Result: PASS (attack blocked)
 
 Spec changed?: No  

@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `before=2, after=2`
 
+Affected Rules:
+- 4.3 Local Sufficiency
+
 Result: PASS (attack blocked; query-state separation preserved)
 
 Spec changed?: No  

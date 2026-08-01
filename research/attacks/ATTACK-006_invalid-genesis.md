@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `5.2 Signature Presence: missing signature`
 
+Affected Rules:
+- 5.2 Signature Presence
+
 Result: PASS (attack blocked)
 
 Spec changed?: No  

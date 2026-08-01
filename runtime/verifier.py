@@ -5,8 +5,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Mapping
 
+from .crypto import CryptoSuite
 from .record import PrimitiveType, Record
-from .storage import RecordStore
+from .storage import StorageEngine
 
 
 class RuleStatus(str, Enum):
@@ -56,8 +57,9 @@ def _require_keys(record: Record, keys: tuple[str, ...]) -> tuple[bool, str]:
 
 
 class Verifier:
-    def __init__(self, store: RecordStore) -> None:
+    def __init__(self, store: StorageEngine, crypto: CryptoSuite | None = None) -> None:
         self.store = store
+        self.crypto = crypto
 
     def verify(self, record: Record) -> VerificationResult:
         rule_results: list[RuleResult] = []
@@ -209,6 +211,18 @@ class Verifier:
         for auth_id in record.authorization:
             path = self._find_authorization_path(auth_id, genesis_ids)
             if path:
+                if self.crypto:
+                    delegation_ok, delegation_reason = self._verify_delegation_chain(record, path)
+                    if not delegation_ok:
+                        return (
+                            RuleResult(
+                                "6.1",
+                                "Authorization Traceability",
+                                RuleStatus.FAIL,
+                                delegation_reason,
+                            ),
+                            [],
+                        )
                 return (
                     RuleResult(
                         "6.1",
@@ -244,9 +258,14 @@ class Verifier:
     def verify_signature(self, record: Record) -> RuleResult:
         if not record.signature:
             return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, "missing signature")
-        if not record.signature.startswith("sig:"):
+        if self.crypto is None:
+            if record.signature.startswith("sig:") or record.signature.startswith("ed25519:"):
+                return RuleResult("5.2", "Signature Presence", RuleStatus.PASS, "signature present")
             return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, "signature format invalid")
-        return RuleResult("5.2", "Signature Presence", RuleStatus.PASS, "signature present")
+        ok, reason = self.crypto.verify_record_signature(record)
+        if not ok:
+            return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, reason)
+        return RuleResult("5.2", "Signature Presence", RuleStatus.PASS, "signature verified")
 
     def verify_payload_shape(self, record: Record) -> RuleResult:
         validator = DEFAULT_PAYLOAD_VALIDATORS.get(record.type)
@@ -277,3 +296,17 @@ class Verifier:
                     visited.add(parent)
                     queue.append((parent, [*path, parent]))
         return []
+
+    def _verify_delegation_chain(self, record: Record, auth_path: list[str]) -> tuple[bool, str]:
+        child_author = record.author
+        for auth_id in auth_path:
+            parent = self.store.get(auth_id)
+            if parent is None:
+                return False, f"authorization record missing during delegation check: {auth_id}"
+            if child_author != parent.author and not self.crypto.has_delegation(parent.author, child_author):
+                return (
+                    False,
+                    f"missing delegation from {parent.author} to {child_author} in authorization chain",
+                )
+            child_author = parent.author
+        return True, ""

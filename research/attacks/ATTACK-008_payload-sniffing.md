@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `5.3 Payload Shape: missing payload keys: subject, value`
 
+Affected Rules:
+- 5.3 Payload Shape
+
 Result: PASS (attack blocked; payload-independence preserved)
 
 Spec changed?: No  

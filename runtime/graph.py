@@ -2,18 +2,15 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 
-from .storage import RecordStore
+from .storage import StorageEngine
 
 
 class Graph:
-    def __init__(self, store: RecordStore) -> None:
+    def __init__(self, store: StorageEngine) -> None:
         self.store = store
 
     def parents(self, record_id: str) -> list[str]:
-        record = self.store.get(record_id)
-        if record is None:
-            return []
-        return list(record.causes)
+        return self.store.parents(record_id)
 
     def children(self, record_id: str) -> list[str]:
         return [r.id for r in self.store.children(record_id)]

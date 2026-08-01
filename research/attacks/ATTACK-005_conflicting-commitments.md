@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `children=['c1', 'c2']`
 
+Affected Rules:
+- 4.5 Non-Silent Conflict
+
 Result: PASS (attack blocked; non-silent conflict visibility preserved)
 
 Spec changed?: No  

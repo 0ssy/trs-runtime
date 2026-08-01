@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `5.1 Schema Declaration: schema trs.observation.v1 does not match declared primitive Commitment`
 
+Affected Rules:
+- 5.1 Schema Declaration
+
 Result: PASS (attack blocked)
 
 Spec changed?: No  

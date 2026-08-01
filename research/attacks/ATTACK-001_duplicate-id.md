@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `4.1 Immutability: record id already exists: dup`
 
+Affected Rules:
+- 4.1 Immutability
+
 Result: PASS (attack blocked)
 
 Spec changed?: No  

@@ -9,6 +9,9 @@ Actual:
 - Status: BLOCKED
 - Evidence: `6.1 Authorization Traceability: missing authorization records: ghost-capability`
 
+Affected Rules:
+- 6.1 Authorization Traceability
+
 Result: PASS (attack blocked)
 
 Spec changed?: No  

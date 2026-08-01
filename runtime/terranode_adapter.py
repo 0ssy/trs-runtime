@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Mapping
 
+from .crypto import CryptoSuite
 from .graph import Graph
 from .query import QueryEngine
 from .record import PrimitiveType, Record
-from .storage import RecordStore
+from .storage import RecordStore, StorageEngine
 from .sync import SyncResult, sync_append_only
 from .verifier import VerificationResult, Verifier
 
@@ -26,9 +27,9 @@ class TerraNodeRuntimeAdapter:
     embedding TRS rule logic in TerraNode itself.
     """
 
-    def __init__(self, store: RecordStore | None = None) -> None:
+    def __init__(self, store: StorageEngine | None = None, crypto: CryptoSuite | None = None) -> None:
         self.store = store or RecordStore()
-        self.verifier = Verifier(self.store)
+        self.verifier = Verifier(self.store, crypto=crypto)
         self.graph = Graph(self.store)
         self.query_engine = QueryEngine(self.store)
 

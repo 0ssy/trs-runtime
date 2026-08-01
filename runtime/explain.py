@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from .record import Record
-from .storage import RecordStore
+from .storage import StorageEngine
 from .verifier import RuleStatus, VerificationResult
 
 
-def explain(record: Record, verification: VerificationResult, store: RecordStore) -> str:
+def explain(record: Record, verification: VerificationResult, store: StorageEngine) -> str:
     dependents = [r.id for r in store.children(record.id)]
 
     lines: list[str] = [
