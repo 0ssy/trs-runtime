@@ -1,0 +1,42 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import dataclass
+
+from .record import Record
+from .storage import RecordStore
+from .verifier import VerificationResult, Verifier
+
+
+def _hash_record(record: Record) -> str:
+    payload = json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def hash_inventory(store: RecordStore) -> dict[str, str]:
+    return {record.id: _hash_record(record) for record in store.all()}
+
+
+def missing_records(local_store: RecordStore, remote_records: list[Record]) -> list[Record]:
+    return [record for record in remote_records if not local_store.exists(record.id)]
+
+
+@dataclass(frozen=True)
+class SyncResult:
+    appended_ids: list[str]
+    verification_results: list[VerificationResult]
+
+
+def sync_append_only(
+    local_store: RecordStore, incoming_records: list[Record], verifier: Verifier
+) -> SyncResult:
+    appended_ids: list[str] = []
+    verification_results: list[VerificationResult] = []
+    for record in missing_records(local_store, incoming_records):
+        result = verifier.verify(record)
+        verification_results.append(result)
+        if result.valid:
+            local_store.append(record)
+            appended_ids.append(record.id)
+    return SyncResult(appended_ids=appended_ids, verification_results=verification_results)
