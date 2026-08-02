@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from typing import Iterable, Literal
 
 from .record import PrimitiveType
 from .storage import StorageEngine
@@ -24,13 +25,24 @@ class ReplaySnapshot:
 
 
 class ReplayEngine:
-    def __init__(self, store: StorageEngine) -> None:
+    def __init__(
+        self,
+        store: StorageEngine,
+        *,
+        workflow_view: Literal["closure", "direct", "auto"] = "closure",
+        sort_workflows: bool = True,
+        auto_closure_limit: int = 5000,
+    ) -> None:
         self.store = store
+        self.workflow_view = workflow_view
+        self.sort_workflows = sort_workflows
+        self.auto_closure_limit = auto_closure_limit
 
-    def replay(self) -> ReplaySnapshot:
+    def replay(self, *, workflow_view: Literal["closure", "direct", "auto"] | None = None) -> ReplaySnapshot:
         records = self.store.all()
         identities = self._replay_identities(records)
-        workflows = self._replay_workflows(records)
+        selected_view = workflow_view or self.workflow_view
+        workflows = self._replay_workflows(records, selected_view)
         contracts = self._replay_contracts(records)
         reputation = self._replay_reputation(records)
         coordination = self._replay_coordination(records, contracts)
@@ -48,23 +60,50 @@ class ReplayEngine:
             by_author[record.author].append(record.id)
         return dict(by_author)
 
-    def _replay_workflows(self, records) -> dict[str, list[str]]:
-        children_by_parent: dict[str, set[str]] = defaultdict(set)
+    def _replay_workflows(
+        self,
+        records: Iterable,
+        workflow_view: Literal["closure", "direct", "auto"],
+    ) -> dict[str, list[str]]:
+        materialized = list(records)
+        if workflow_view == "auto":
+            workflow_view = "closure" if len(materialized) <= self.auto_closure_limit else "direct"
+        if workflow_view == "direct":
+            return self._replay_workflows_direct(materialized)
+        if workflow_view == "closure":
+            return self._replay_workflows_closure(materialized)
+        raise ValueError(f"unsupported workflow view: {workflow_view}")
+
+    def _replay_workflows_direct(self, records: list) -> dict[str, list[str]]:
+        children_by_parent: dict[str, list[str]] = defaultdict(list)
+        workflow: dict[str, list[str]] = {record.id: [] for record in records}
+        for record in records:
+            for parent_id in record.causes:
+                children_by_parent[parent_id].append(record.id)
+        for record in records:
+            children = children_by_parent.get(record.id, [])
+            workflow[record.id] = sorted(children) if self.sort_workflows else list(children)
+        return workflow
+
+    def _replay_workflows_closure(self, records: list) -> dict[str, list[str]]:
+        children_by_parent: dict[str, list[str]] = defaultdict(list)
         record_order: list[str] = []
         for record in records:
             record_order.append(record.id)
             for parent_id in record.causes:
-                children_by_parent[parent_id].add(record.id)
+                children_by_parent[parent_id].append(record.id)
 
         descendants_by_id: dict[str, set[str]] = {record_id: set() for record_id in record_order}
         for record_id in reversed(record_order):
-            for child_id in children_by_parent.get(record_id, set()):
-                descendants_by_id[record_id].add(child_id)
-                descendants_by_id[record_id].update(descendants_by_id.get(child_id, set()))
+            descendants = descendants_by_id[record_id]
+            for child_id in children_by_parent.get(record_id, []):
+                descendants.add(child_id)
+                descendants.update(descendants_by_id.get(child_id, set()))
 
         workflow: dict[str, list[str]] = {}
         for record in records:
-            workflow[record.id] = sorted(descendants_by_id.get(record.id, set()))
+            values = descendants_by_id.get(record.id, set())
+            workflow[record.id] = sorted(values) if self.sort_workflows else list(values)
         return workflow
 
     def _replay_contracts(self, records) -> list[str]:

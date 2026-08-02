@@ -1,0 +1,69 @@
+{
+  "program": "Program 11 - InMemory Perf RCA",
+  "timestamp": "2026-08-02T14:58:58.726044+00:00",
+  "runs": [
+    {
+      "records": 2000,
+      "runs": 1,
+      "median_metrics": {
+        "append_records_per_sec": 1714236.6828090188,
+        "authorization_verify_sec": 0.00028090004343539476,
+        "disk_usage_bytes": 0.0,
+        "graph_descendants_sec": 0.10359900002367795,
+        "memory_peak_mb": 0.4524688720703125,
+        "query_latency_ms": 0.18289999570697546,
+        "records": 2000.0,
+        "replay_sec": 0.03913350001676008,
+        "verify_records_per_sec": 14957.296917752821
+      },
+      "samples": [
+        {
+          "records": 2000,
+          "append_records_per_sec": 1714236.6828090188,
+          "verify_records_per_sec": 14957.296917752821,
+          "graph_descendants_sec": 0.10359900002367795,
+          "authorization_verify_sec": 0.00028090004343539476,
+          "query_latency_ms": 0.18289999570697546,
+          "replay_sec": 0.03913350001676008,
+          "memory_peak_mb": 0.4524688720703125,
+          "disk_usage_bytes": 0
+        }
+      ]
+    },
+    {
+      "records": 10000,
+      "runs": 1,
+      "median_metrics": {
+        "append_records_per_sec": 1139471.2850121136,
+        "authorization_verify_sec": 0.0018873000517487526,
+        "disk_usage_bytes": 0.0,
+        "graph_descendants_sec": 2.8692085000220686,
+        "memory_peak_mb": 2.2505264282226562,
+        "query_latency_ms": 1.004900026600808,
+        "records": 10000.0,
+        "replay_sec": 0.6367144000250846,
+        "verify_records_per_sec": 2957.3689353678483
+      },
+      "samples": [
+        {
+          "records": 10000,
+          "append_records_per_sec": 1139471.2850121136,
+          "verify_records_per_sec": 2957.3689353678483,
+          "graph_descendants_sec": 2.8692085000220686,
+          "authorization_verify_sec": 0.0018873000517487526,
+          "query_latency_ms": 1.004900026600808,
+          "replay_sec": 0.6367144000250846,
+          "memory_peak_mb": 2.2505264282226562,
+          "disk_usage_bytes": 0
+        }
+      ]
+    }
+  ],
+  "profile_records": 10000,
+  "profile_artifacts": {
+    "raw_profile": "evidence/experiments/2026-08-02T145851Z_program11_inmemory_profile.prof",
+    "top30_report": "evidence/experiments/2026-08-02T145851Z_program11_inmemory_profile_top30.txt"
+  },
+  "outcome": "NEED_MORE_EVIDENCE",
+  "note": "Use this artifact to isolate in_memory replay/append/memory regressions without changing TRS semantics."
+}
