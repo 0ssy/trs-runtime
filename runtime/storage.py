@@ -152,7 +152,8 @@ class SQLiteStorage:
                     payload TEXT NOT NULL,
                     causes TEXT NOT NULL,
                     authorization TEXT NOT NULL,
-                    signature TEXT NOT NULL
+                    signature TEXT NOT NULL,
+                    subject TEXT NOT NULL
                 );
 
                 CREATE TABLE IF NOT EXISTS cause_edges (
@@ -171,8 +172,8 @@ class SQLiteStorage:
         with self._session() as conn:
             conn.execute(
                 """
-                INSERT INTO records (id, type, author, timestamp, schema, payload, causes, authorization, signature)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO records (id, type, author, timestamp, schema, payload, causes, authorization, signature, subject)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     record.id,
@@ -184,6 +185,7 @@ class SQLiteStorage:
                     json.dumps(list(record.causes)),
                     json.dumps(list(record.authorization)),
                     record.signature,
+                    record.subject,
                 ),
             )
             for parent in record.causes:
@@ -196,7 +198,7 @@ class SQLiteStorage:
         with self._session() as conn:
             row = conn.execute(
                 """
-                SELECT id, type, author, timestamp, schema, payload, causes, authorization, signature
+                SELECT id, type, author, timestamp, schema, payload, causes, authorization, signature, subject
                 FROM records
                 WHERE id = ?
                 """,
@@ -213,7 +215,7 @@ class SQLiteStorage:
         with self._session() as conn:
             rows = conn.execute(
                 """
-                SELECT r.id, r.type, r.author, r.timestamp, r.schema, r.payload, r.causes, r.authorization, r.signature
+                SELECT r.id, r.type, r.author, r.timestamp, r.schema, r.payload, r.causes, r.authorization, r.signature, r.subject
                 FROM cause_edges ce
                 JOIN records r ON r.id = ce.child_id
                 WHERE ce.parent_id = ?
@@ -231,7 +233,7 @@ class SQLiteStorage:
         with self._session() as conn:
             rows = conn.execute(
                 """
-                SELECT id, type, author, timestamp, schema, payload, causes, authorization, signature
+                SELECT id, type, author, timestamp, schema, payload, causes, authorization, signature, subject
                 FROM records
                 ORDER BY seq ASC
                 """
@@ -408,6 +410,7 @@ def _row_to_record(row: tuple[Any, ...]) -> Record:
         causes=tuple(json.loads(str(row[6]))),
         authorization=tuple(json.loads(str(row[7]))),
         signature=str(row[8]),
+        subject=str(row[9]),
     )
 
 
@@ -441,6 +444,7 @@ def _dict_to_record(data: Mapping[str, Any]) -> Record:
         causes=tuple(data.get("causes", [])),
         authorization=tuple(data.get("authorization", [])),
         signature=str(data["signature"]),
+        subject=str(data.get("subject", "")),
     )
 
 

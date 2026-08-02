@@ -117,4 +117,5 @@ def clone_with_signature(record: Record, signature: str) -> Record:
         causes=record.causes,
         authorization=record.authorization,
         signature=signature,
+        subject=record.subject,
     )

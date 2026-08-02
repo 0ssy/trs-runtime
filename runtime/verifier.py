@@ -209,7 +209,7 @@ class Verifier:
         conflicting: list[str] = []
         for cause_id in record.causes:
             for sibling in self._children_of_type(cause_id, record.type):
-                if sibling.payload != record.payload:
+                if sibling.subject == record.subject and sibling.payload != record.payload:
                     conflicting.append(sibling.id)
         if store_revision is not None:
             self._conflict_cache[cache_key] = tuple(conflicting)

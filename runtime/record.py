@@ -45,6 +45,7 @@ class Record:
     causes: tuple[str, ...] = field(default_factory=tuple)
     authorization: tuple[str, ...] = field(default_factory=tuple)
     signature: str = ""
+    subject: str = ""
 
     def __post_init__(self) -> None:
         if not self.id:
@@ -55,6 +56,8 @@ class Record:
             raise ValueError("schema is required")
         if self.timestamp.tzinfo is None:
             object.__setattr__(self, "timestamp", self.timestamp.replace(tzinfo=timezone.utc))
+        if not self.subject:
+            object.__setattr__(self, "subject", self.causes[0] if self.causes else self.id)
 
         object.__setattr__(self, "payload", _freeze(self.payload))
         object.__setattr__(self, "causes", tuple(self.causes))
@@ -99,6 +102,7 @@ class Record:
             "causes": list(self.causes),
             "authorization": list(self.authorization),
             "signature": self.signature,
+            "subject": self.subject,
         }
 
 

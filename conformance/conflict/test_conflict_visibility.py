@@ -5,6 +5,7 @@ from runtime.graph import Graph
 from runtime.query import QueryEngine
 from runtime.record import PrimitiveType, Record
 from runtime.storage import RecordStore
+from runtime.verifier import RuleStatus, Verifier
 
 
 class ConflictTests(unittest.TestCase):
@@ -47,6 +48,90 @@ class ConflictTests(unittest.TestCase):
         query = QueryEngine(store)
         self.assertEqual(set(graph.children("root")), {"c1", "c2"})
         self.assertEqual(set(r.id for r in query.query({"cause": "root"})), {"c1", "c2"})
+
+    def test_same_parent_different_subjects_are_not_conflict(self) -> None:
+        store = RecordStore()
+        verifier = Verifier(store)
+        root = Record(
+            id="root2",
+            type=PrimitiveType.OBSERVATION,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "state", "value": "open"},
+            signature="sig:root2",
+        )
+        store.append(root)
+
+        first = Record(
+            id="i1",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "pick", "horizon": "Q1"},
+            causes=("root2",),
+            subject="warehouse-7/slot-a",
+            signature="sig:i1",
+        )
+        store.append(first)
+
+        second = Record(
+            id="i2",
+            type=PrimitiveType.INTENTION,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "pick", "horizon": "Q2"},
+            causes=("root2",),
+            subject="warehouse-7/slot-b",
+            signature="sig:i2",
+        )
+        result = verifier.verify(second)
+        conflict_rule = next(r for r in result.rules if r.rule_id == "4.5")
+        self.assertEqual(conflict_rule.status, RuleStatus.NOT_APPLICABLE)
+
+    def test_same_parent_same_subject_and_different_payload_is_conflict(self) -> None:
+        store = RecordStore()
+        verifier = Verifier(store)
+        root = Record(
+            id="root3",
+            type=PrimitiveType.OBSERVATION,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "state", "value": "open"},
+            signature="sig:root3",
+        )
+        store.append(root)
+
+        first = Record(
+            id="i3",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "allocate", "horizon": "Q1"},
+            causes=("root3",),
+            subject="warehouse-7",
+            signature="sig:i3",
+        )
+        store.append(first)
+
+        second = Record(
+            id="i4",
+            type=PrimitiveType.INTENTION,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "allocate", "horizon": "Q2"},
+            causes=("root3",),
+            subject="warehouse-7",
+            signature="sig:i4",
+        )
+        result = verifier.verify(second)
+        conflict_rule = next(r for r in result.rules if r.rule_id == "4.5")
+        self.assertEqual(conflict_rule.status, RuleStatus.PASS)
 
 
 if __name__ == "__main__":

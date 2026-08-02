@@ -7,7 +7,7 @@
 ## Amendments
 
 - TRS-0001: Accepted
-- TRS-0002: None
+- TRS-0002: Accepted
 - Research Method Matrix: `docs/RESEARCH_EXECUTION_MATRIX.md` active
 - Current cycle record: `research/cycles/CYCLE-0001.md` (TRS-0002 not triggered)
 - Current cycle record: `research/cycles/CYCLE-0002.md` (closed; external Program 10 submission complete)
@@ -31,7 +31,7 @@
 ## Verification
 
 - Unit Tests: 44 / 44 Passing
-- Conformance: 7 / 7 Passing
+- Conformance: 9 / 9 Passing
 - Attack Suite Runner: 10 / 10 Blocked
 - Attack Records: 12 total (ATTACK-001 .. ATTACK-012)
 - Property Tests: 4 invariant properties (Hypothesis) passing

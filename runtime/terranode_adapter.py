@@ -94,4 +94,5 @@ class TerraNodeRuntimeAdapter:
             causes=tuple(str(value) for value in causes),
             authorization=tuple(str(value) for value in authorization),
             signature=str(envelope["signature"]),
+            subject=str(envelope.get("subject", "")),
         )
