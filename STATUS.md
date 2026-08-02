@@ -30,7 +30,7 @@
 
 ## Verification
 
-- Unit Tests: 37 / 37 Passing
+- Unit Tests: 44 / 44 Passing
 - Conformance: 7 / 7 Passing
 - Attack Suite Runner: 10 / 10 Blocked
 - Attack Records: 12 total (ATTACK-001 .. ATTACK-012)
@@ -41,15 +41,12 @@
 
 ## Evidence
 
-- `evidence/test_runs/2026-08-01_unit_tests.txt`
-- `evidence/test_runs/2026-08-01_conformance.txt`
-- `evidence/test_runs/2026-08-01_attack_suite.txt`
-- `evidence/test_runs/2026-08-01_mutation_checks.json`
-- `evidence/benchmarks/2026-08-01_phase15_baseline.json`
-- `evidence/benchmarks/archive/2026-08-01_phase15_baseline_2026-08-01T143811Z.json`
+- `evidence/benchmarks/2026-08-01_phase15_baseline.json` (re-captured on current code)
+- `evidence/benchmarks/archive/2026-08-01_phase15_baseline_2026-08-02T165225Z.json`
 - `benchmarks/history/*.json` (rolling benchmark history artifacts)
-- `evidence/traces/2026-08-01_multi_node_sim.json`
-- `evidence/test_runs/2026-08-01T144757Z_validation_cycle.log` (nightly gate: pass)
+- `evidence/traces/2026-08-01_multi_node_sim.json` (regenerated on current code)
+- `evidence/test_runs/2026-08-02T162349Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
+- `evidence/test_runs/2026-08-02T165226Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
 
 ## Reference Runtime
 

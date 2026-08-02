@@ -1,0 +1,127 @@
+
+=== Unit tests ===
+$ C:\Users\josep\OneDrive\Desktop\trs-runtime\venv\Scripts\python.exe -m unittest discover -s tests -p test_*.py
+............................................
+----------------------------------------------------------------------
+Ran 44 tests in 4.966s
+
+OK
+
+(exit=0)
+
+=== Conformance tests ===
+$ C:\Users\josep\OneDrive\Desktop\trs-runtime\venv\Scripts\python.exe -m unittest discover -s conformance -p test_*.py
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+
+(exit=0)
+
+=== Attack suite ===
+$ C:\Users\josep\OneDrive\Desktop\trs-runtime\venv\Scripts\python.exe attacks/run_attacks.py
+attack_001_duplicate_ids: BLOCKED | errors=['4.1 Immutability: record id already exists: dup']
+attack_002_forged_authority: BLOCKED | errors=['6.1 Authorization Traceability: missing authorization records: ghost-capability']
+attack_003_cycle_creation: BLOCKED | errors=['4.2 Causality: missing causes: self-cycle', '4.4 Closure: missing causes: self-cycle']
+attack_004_schema_mismatch: BLOCKED | errors=['5.1 Schema Declaration: schema trs.observation.v1 does not match declared primitive Commitment']
+attack_005_conflicting_commitments: BLOCKED | children=['c1', 'c2'], r2_errors=[]
+attack_006_invalid_genesis: BLOCKED | errors=['5.2 Signature Presence: missing signature']
+attack_007_transitive_capability: BLOCKED | d1_errors=['6.1 Authorization Traceability: missing authorization records: ghost-root'], d2_errors=['6.1 Authorization Traceability: missing authorization records: d1']
+attack_008_payload_sniffing: BLOCKED | errors=['5.3 Payload Shape: missing payload keys: subject, value']
+attack_009_query_mutation: BLOCKED | before=2, after=2
+attack_010_hidden_conflict: BLOCKED | visible=['h1', 'h2']
+
+Summary: 10/10 attacks blocked
+
+(exit=0)
+
+=== Mutation checks ===
+$ C:\Users\josep\OneDrive\Desktop\trs-runtime\venv\Scripts\python.exe experiments/0003-mutation/run_mutation_checks.py
+{
+  "total": 5,
+  "killed": 5,
+  "survived": 0,
+  "results": [
+    {
+      "mutant": "immutability_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "signature_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "payload_shape_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "authorization_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "query_mutation",
+      "killed": true,
+      "details": "killed"
+    }
+  ]
+}
+
+(exit=0)
+
+=== Benchmark gate ===
+$ C:\Users\josep\OneDrive\Desktop\trs-runtime\venv\Scripts\python.exe benchmarks/gate_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+Baseline: evidence\benchmarks\2026-08-01_phase15_baseline.json
+Current : benchmarks\history\2026-08-02T165241Z_records-200_median-of-3.json
+Mode    : nightly
+Records : 200
+Runs    : 3 (median)
+
+[in_memory]
+  append_records_per_sec: base=821355 current=903751 delta=+10.03% (better)
+  verify_records_per_sec: base=1.29283e+06 current=1.3541e+06 delta=+4.74% (better)
+  graph_descendants_sec: base=0.0001149 current=0.0001095 delta=-4.70% (better)
+  authorization_verify_sec: base=5.67e-05 current=5.5e-05 delta=-3.00% (better)
+  query_latency_ms: base=0.024 current=0.0224 delta=-6.67% (better)
+  replay_sec: base=0.0006011 current=0.0006344 delta=+5.54% (worse)
+  memory_peak_mb: base=0.0328751 current=0.0328751 delta=+0.00% (better)
+  disk_usage_bytes: base=0 current=0 delta=+0.00% (better)
+
+[lmdb]
+  append_records_per_sec: base=841.351 current=835.087 delta=-0.74% (worse)
+  verify_records_per_sec: base=23989.2 current=24152 delta=+0.68% (better)
+  graph_descendants_sec: base=0.0031315 current=0.0028728 delta=-8.26% (better)
+  authorization_verify_sec: base=0.0022066 current=0.0022266 delta=+0.91% (worse)
+  query_latency_ms: base=1.9215 current=2.0653 delta=+7.48% (worse)
+  replay_sec: base=0.0091494 current=0.0097878 delta=+6.98% (worse)
+  memory_peak_mb: base=0.188585 current=0.188585 delta=+0.00% (better)
+  disk_usage_bytes: base=6.71171e+07 current=6.71171e+07 delta=+0.00% (better)
+
+[rocksdb]
+  append_records_per_sec: base=11068.4 current=12370.3 delta=+11.76% (better)
+  verify_records_per_sec: base=26507.3 current=28089.1 delta=+5.97% (better)
+  graph_descendants_sec: base=0.0031759 current=0.003063 delta=-3.55% (better)
+  authorization_verify_sec: base=0.0027731 current=0.0026912 delta=-2.95% (better)
+  query_latency_ms: base=2.9064 current=2.5128 delta=-13.54% (better)
+  replay_sec: base=0.0102733 current=0.01123 delta=+9.31% (worse)
+  memory_peak_mb: base=0.188578 current=0.188578 delta=+0.00% (better)
+  disk_usage_bytes: base=115360 current=115360 delta=+0.00% (better)
+
+[sqlite]
+  append_records_per_sec: base=124.405 current=125.1 delta=+0.56% (better)
+  verify_records_per_sec: base=422.034 current=430.739 delta=+2.06% (better)
+  graph_descendants_sec: base=0.119458 current=0.124673 delta=+4.37% (worse)
+  authorization_verify_sec: base=0.0043894 current=0.0044772 delta=+2.00% (worse)
+  query_latency_ms: base=2.7762 current=3.3228 delta=+19.69% (worse)
+  replay_sec: base=0.0099942 current=0.0100107 delta=+0.17% (worse)
+  memory_peak_mb: base=0.201164 current=0.201164 delta=+0.00% (better)
+  disk_usage_bytes: base=61440 current=61440 delta=+0.00% (better)
+
+Regressions detected:
+  - sqlite:query_latency_ms regressed +19.69% (threshold +15.00%)
+
+(exit=1)
