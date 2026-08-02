@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from collections import deque
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable, Mapping
+from typing import Callable
 
 from .crypto import CryptoSuite
 from .record import PrimitiveType, Record
@@ -60,8 +61,25 @@ class Verifier:
     def __init__(self, store: StorageEngine, crypto: CryptoSuite | None = None) -> None:
         self.store = store
         self.crypto = crypto
+        revision = getattr(self.store, "revision", None)
+        children_of_type = getattr(self.store, "children_of_type", None)
+        self._revision_provider: Callable[[], int] | None = revision if callable(revision) else None
+        self._children_of_type_provider: Callable[[str, PrimitiveType], list[Record]] | None = (
+            children_of_type if callable(children_of_type) else None
+        )
+        self._cache_revision: int | None = None
+        self._verification_cache: dict[tuple[int, int], VerificationResult] = {}
+        self._conflict_cache: dict[tuple[int, PrimitiveType, tuple[str, ...], int], tuple[str, ...]] = {}
 
     def verify(self, record: Record) -> VerificationResult:
+        store_revision = self._store_revision()
+        if store_revision is not None:
+            self._prepare_revision_caches(store_revision)
+            verification_key = (store_revision, id(record))
+            cached_verification = self._verification_cache.get(verification_key)
+            if cached_verification is not None:
+                return cached_verification
+
         rule_results: list[RuleResult] = []
         causal_path: list[str] = []
         auth_path: list[str] = []
@@ -103,7 +121,7 @@ class Verifier:
             for r in rule_results
             if r.status == RuleStatus.NOT_APPLICABLE
         ]
-        return VerificationResult(
+        result = VerificationResult(
             valid=not errors,
             errors=errors,
             warnings=warnings,
@@ -111,6 +129,11 @@ class Verifier:
             causal_path=causal_path,
             rules=rule_results,
         )
+        if store_revision is not None:
+            if len(self._verification_cache) > 4096:
+                self._verification_cache.clear()
+            self._verification_cache[(store_revision, id(record))] = result
+        return result
 
     def verify_immutability(self, record: Record) -> RuleResult:
         if self.store.exists(record.id):
@@ -169,11 +192,27 @@ class Verifier:
         return RuleResult("4.4", "Closure", RuleStatus.PASS, "intention is causally closed")
 
     def verify_non_silent_conflict(self, record: Record) -> RuleResult:
+        store_revision = self._store_revision()
+        if store_revision is not None:
+            cache_key = (store_revision, record.type, tuple(record.causes), id(record.payload))
+            cached = self._conflict_cache.get(cache_key)
+            if cached is not None:
+                if cached:
+                    return RuleResult(
+                        "4.5",
+                        "Non-Silent Conflict",
+                        RuleStatus.PASS,
+                        f"conflict explicitly visible with siblings: {', '.join(cached)}",
+                    )
+                return RuleResult("4.5", "Non-Silent Conflict", RuleStatus.NOT_APPLICABLE, "no conflict detected")
+
         conflicting: list[str] = []
         for cause_id in record.causes:
-            for sibling in self.store.children(cause_id):
-                if sibling.type == record.type and sibling.payload != record.payload:
+            for sibling in self._children_of_type(cause_id, record.type):
+                if sibling.payload != record.payload:
                     conflicting.append(sibling.id)
+        if store_revision is not None:
+            self._conflict_cache[cache_key] = tuple(conflicting)
         if conflicting:
             return RuleResult(
                 "4.5",
@@ -310,3 +349,21 @@ class Verifier:
                 )
             child_author = parent.author
         return True, ""
+
+    def _children_of_type(self, record_id: str, primitive: PrimitiveType) -> list[Record]:
+        if self._children_of_type_provider is not None:
+            return self._children_of_type_provider(record_id, primitive)
+        return [child for child in self.store.children(record_id) if child.type == primitive]
+
+    def _store_revision(self) -> int | None:
+        if self._revision_provider is not None:
+            value = self._revision_provider()
+            return value if isinstance(value, int) else None
+        return None
+
+    def _prepare_revision_caches(self, store_revision: int) -> None:
+        if self._cache_revision == store_revision:
+            return
+        self._cache_revision = store_revision
+        self._verification_cache.clear()
+        self._conflict_cache.clear()

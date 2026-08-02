@@ -11,6 +11,7 @@
 - Research Method Matrix: `docs/RESEARCH_EXECUTION_MATRIX.md` active
 - Current cycle record: `research/cycles/CYCLE-0001.md` (TRS-0002 not triggered)
 - Current cycle record: `research/cycles/CYCLE-0002.md` (closed; external Program 10 submission complete)
+- Current cycle record: `research/cycles/CYCLE-0003.md` (Program 11 closed; TRS refined; TRS-0002 not triggered)
 
 ## Runtime
 

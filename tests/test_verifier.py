@@ -78,6 +78,70 @@ class VerifierTests(unittest.TestCase):
         self.assertEqual(auth_rule.status, RuleStatus.PASS)
         self.assertEqual(result.authorization_path, ["delegation", "genesis"])
 
+    def test_non_silent_conflict_cache_invalidates_on_append(self) -> None:
+        candidate = Record(
+            id="candidate",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "ship", "horizon": "Q1"},
+            causes=("genesis",),
+            signature="sig:candidate",
+        )
+
+        first = self.verifier.verify(candidate)
+        first_rule = next(r for r in first.rules if r.rule_id == "4.5")
+        self.assertEqual(first_rule.status, RuleStatus.NOT_APPLICABLE)
+
+        sibling = Record(
+            id="sibling",
+            type=PrimitiveType.INTENTION,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "review", "horizon": "Q2"},
+            causes=("genesis",),
+            signature="sig:sibling",
+        )
+        self.store.append(sibling)
+
+        second = self.verifier.verify(candidate)
+        second_rule = next(r for r in second.rules if r.rule_id == "4.5")
+        self.assertEqual(second_rule.status, RuleStatus.PASS)
+        self.assertIn("sibling", second_rule.reason)
+
+    def test_verification_cache_invalidates_on_append(self) -> None:
+        missing_cause_record = Record(
+            id="pending-intention",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "ship", "horizon": "Q1"},
+            causes=("future-cause",),
+            signature="sig:pending-intention",
+        )
+
+        first = self.verifier.verify(missing_cause_record)
+        self.assertFalse(first.valid)
+        self.assertTrue(any("missing causes" in err for err in first.errors))
+
+        future_cause = Record(
+            id="future-cause",
+            type=PrimitiveType.OBSERVATION,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "ready", "value": 1},
+            causes=("genesis",),
+            signature="sig:future-cause",
+        )
+        self.store.append(future_cause)
+
+        second = self.verifier.verify(missing_cause_record)
+        self.assertTrue(second.valid)
+
 
 if __name__ == "__main__":
     unittest.main()

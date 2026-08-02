@@ -50,6 +50,24 @@ class RecordStoreTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             store.append(record)
 
+    def test_record_payload_is_frozen_and_isolated_from_input_mutation(self) -> None:
+        payload = {"subject": "temp", "value": [1, {"n": 2}]}
+        record = Record(
+            id="r2",
+            type=PrimitiveType.OBSERVATION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload=payload,
+            signature="sig:r2",
+        )
+        payload["value"][1]["n"] = 999
+        payload["value"].append(3)
+        payload["subject"] = "changed"
+
+        self.assertEqual(record.payload["subject"], "temp")
+        self.assertEqual(record.payload["value"], (1, {"n": 2}))
+
 
 if __name__ == "__main__":
     unittest.main()

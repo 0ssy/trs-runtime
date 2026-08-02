@@ -110,7 +110,7 @@ def _benchmark_store(
 
     tracemalloc.start()
     t10 = time.perf_counter()
-    _ = ReplayEngine(store, workflow_view="direct", sort_workflows=False).replay()
+    _ = ReplayEngine(store, workflow_view="direct", sort_workflows=False, sort_coordination=False).replay()
     t11 = time.perf_counter()
     _, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()

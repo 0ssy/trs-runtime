@@ -31,12 +31,22 @@ class ReplayEngine:
         *,
         workflow_view: Literal["closure", "direct", "auto"] = "closure",
         sort_workflows: bool = True,
+        sort_coordination: bool = True,
         auto_closure_limit: int = 5000,
     ) -> None:
         self.store = store
         self.workflow_view = workflow_view
         self.sort_workflows = sort_workflows
+        self.sort_coordination = sort_coordination
         self.auto_closure_limit = auto_closure_limit
+        child_ids_view = getattr(self.store, "child_ids_view", None)
+        self._child_ids_view_provider = child_ids_view if callable(child_ids_view) else None
+        child_ids = getattr(self.store, "child_ids", None)
+        self._child_ids_provider = child_ids if callable(child_ids) else None
+        child_ids_of_type = getattr(self.store, "child_ids_of_type", None)
+        self._child_ids_of_type_provider = child_ids_of_type if callable(child_ids_of_type) else None
+        children_of_type = getattr(self.store, "children_of_type", None)
+        self._children_of_type_provider = children_of_type if callable(children_of_type) else None
 
     def replay(self, *, workflow_view: Literal["closure", "direct", "auto"] | None = None) -> ReplaySnapshot:
         records = self.store.all()
@@ -75,6 +85,20 @@ class ReplayEngine:
         raise ValueError(f"unsupported workflow view: {workflow_view}")
 
     def _replay_workflows_direct(self, records: list) -> dict[str, list[str]]:
+        if self._child_ids_view_provider is not None:
+            workflow: dict[str, list[str]] = {}
+            for record in records:
+                children = self._child_ids_view_provider(record.id)
+                workflow[record.id] = sorted(children) if self.sort_workflows else list(children)
+            return workflow
+
+        if self._child_ids_provider is not None:
+            workflow: dict[str, list[str]] = {}
+            for record in records:
+                children = self._child_ids_provider(record.id)
+                workflow[record.id] = sorted(children) if self.sort_workflows else list(children)
+            return workflow
+
         children_by_parent: dict[str, list[str]] = defaultdict(list)
         workflow: dict[str, list[str]] = {record.id: [] for record in records}
         for record in records:
@@ -113,30 +137,52 @@ class ReplayEngine:
         return dict(Counter(record.author for record in records))
 
     def _replay_coordination(self, records, contracts: list[str]) -> CoordinationView:
-        commitment_to_causes = {
-            record.id: set(record.causes)
-            for record in records
-            if record.type == PrimitiveType.COMMITMENT
-        }
         intention_ids = [record.id for record in records if record.type == PrimitiveType.INTENTION]
         intention_to_commitments: dict[str, list[str]] = {}
         unresolved_intentions: list[str] = []
-        claimed_commitments: set[str] = set()
+        claimed_commitments_buffer: list[str] = []
 
-        for intention_id in intention_ids:
-            linked = sorted(
-                commitment_id
-                for commitment_id, causes in commitment_to_causes.items()
-                if intention_id in causes
-            )
-            intention_to_commitments[intention_id] = linked
-            if not linked:
-                unresolved_intentions.append(intention_id)
-            claimed_commitments.update(linked)
+        if self._child_ids_of_type_provider is not None:
+            for intention_id in intention_ids:
+                linked_base = self._child_ids_of_type_provider(intention_id, PrimitiveType.COMMITMENT)
+                linked = sorted(linked_base) if self.sort_coordination else list(linked_base)
+                intention_to_commitments[intention_id] = linked
+                if not linked:
+                    unresolved_intentions.append(intention_id)
+                else:
+                    claimed_commitments_buffer.extend(linked)
+        elif self._children_of_type_provider is not None:
+            for intention_id in intention_ids:
+                linked_base = [record.id for record in self._children_of_type_provider(intention_id, PrimitiveType.COMMITMENT)]
+                linked = sorted(linked_base) if self.sort_coordination else linked_base
+                intention_to_commitments[intention_id] = linked
+                if not linked:
+                    unresolved_intentions.append(intention_id)
+                else:
+                    claimed_commitments_buffer.extend(linked)
+        else:
+            intention_set = set(intention_ids)
+            commitments_by_intention: dict[str, list[str]] = defaultdict(list)
+            for record in records:
+                if record.type != PrimitiveType.COMMITMENT:
+                    continue
+                for cause_id in record.causes:
+                    if cause_id in intention_set:
+                        commitments_by_intention[cause_id].append(record.id)
+            for intention_id in intention_ids:
+                linked_base = commitments_by_intention.get(intention_id, [])
+                linked = sorted(linked_base) if self.sort_coordination else list(linked_base)
+                intention_to_commitments[intention_id] = linked
+                if not linked:
+                    unresolved_intentions.append(intention_id)
+                else:
+                    claimed_commitments_buffer.extend(linked)
 
-        orphan_commitments = sorted(commitment_id for commitment_id in contracts if commitment_id not in claimed_commitments)
+        claimed_commitments = set(claimed_commitments_buffer)
+        orphan_base = [commitment_id for commitment_id in contracts if commitment_id not in claimed_commitments]
+        orphan_commitments = sorted(orphan_base) if self.sort_coordination else orphan_base
         return CoordinationView(
             intention_to_commitments=intention_to_commitments,
-            unresolved_intentions=sorted(unresolved_intentions),
+            unresolved_intentions=sorted(unresolved_intentions) if self.sort_coordination else unresolved_intentions,
             orphan_commitments=orphan_commitments,
         )

@@ -1,0 +1,40 @@
+Sun Aug  2 18:35:50 2026    evidence\experiments\2026-08-02T153549Z_program11_inmemory_profile.prof
+
+         806830 function calls (766815 primitive calls) in 0.722 seconds
+
+   Ordered by: cumulative time
+   List reduced from 92 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.008    0.008    0.841    0.841 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:36(run_benchmarks)
+        1    0.000    0.000    0.833    0.833 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:48(_benchmark_in_memory)
+        1    0.014    0.014    0.833    0.833 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:75(_benchmark_store)
+    10001    0.075    0.000    0.365    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:65(verify)
+        1    0.000    0.000    0.262    0.262 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:41(replay)
+        1    0.003    0.003    0.164    0.164 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:63(_replay_workflows)
+        1    0.122    0.122    0.161    0.161 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:77(_replay_workflows_direct)
+        1    0.030    0.030    0.128    0.128 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:134(_make_seed_records)
+    10001    0.016    0.000    0.077    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:287(verify_payload_shape)
+        1    0.033    0.033    0.070    0.070 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:115(_replay_coordination)
+    10002    0.019    0.000    0.065    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\record.py:41(__post_init__)
+    10001    0.019    0.000    0.052    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:172(verify_non_silent_conflict)
+   153340    0.051    0.000    0.051    0.000 {method 'append' of 'list' objects}
+130024/110022    0.020    0.000    0.047    0.000 {built-in method builtins.isinstance}
+30006/10002    0.033    0.000    0.046    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\record.py:17(_freeze)
+    10000    0.004    0.000    0.044    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:46(<lambda>)
+    53338    0.042    0.000    0.042    0.000 {method 'get' of 'dict' objects}
+    10001    0.006    0.000    0.040    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:50(_require_keys)
+    10000    0.021    0.000    0.034    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:61(append)
+    10001    0.005    0.000    0.029    0.000 C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\typing.py:1389(__instancecheck__)
+        1    0.009    0.009    0.028    0.028 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\graph.py:29(descendants)
+    10001    0.007    0.000    0.024    0.000 C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\typing.py:1685(__subclasscheck__)
+    10001    0.012    0.000    0.023    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:126(verify_causality)
+    10001    0.011    0.000    0.021    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:152(verify_closure)
+    10001    0.009    0.000    0.019    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:262(verify_schema)
+    10001    0.009    0.000    0.019    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:116(verify_immutability)
+    10001    0.008    0.000    0.019    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:275(verify_signature)
+    10001    0.010    0.000    0.017    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:337(_store_revision)
+    10001    0.007    0.000    0.017    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:203(verify_authorization)
+        1    0.009    0.009    0.016    0.016 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:57(_replay_identities)
+
+

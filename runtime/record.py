@@ -14,15 +14,23 @@ class PrimitiveType(str, Enum):
     INTENTION = "Intention"
 
 
+_SCALAR_TYPES = (str, int, float, bool, bytes, type(None))
+
+
 def _freeze(value: Any) -> Any:
-    if isinstance(value, dict):
+    value_type = type(value)
+    if value_type in _SCALAR_TYPES:
+        return value
+    if value_type is dict:
         return MappingProxyType({k: _freeze(v) for k, v in value.items()})
-    if isinstance(value, list):
+    if value_type is list:
         return tuple(_freeze(v) for v in value)
-    if isinstance(value, set):
+    if value_type is set:
         return frozenset(_freeze(v) for v in value)
-    if isinstance(value, tuple):
+    if value_type is tuple:
         return tuple(_freeze(v) for v in value)
+    if isinstance(value, Mapping):
+        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
     return value
 
 
@@ -48,7 +56,7 @@ class Record:
         if self.timestamp.tzinfo is None:
             object.__setattr__(self, "timestamp", self.timestamp.replace(tzinfo=timezone.utc))
 
-        object.__setattr__(self, "payload", _freeze(dict(self.payload)))
+        object.__setattr__(self, "payload", _freeze(self.payload))
         object.__setattr__(self, "causes", tuple(self.causes))
         object.__setattr__(self, "authorization", tuple(self.authorization))
 

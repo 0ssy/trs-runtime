@@ -6,7 +6,7 @@ from contextlib import contextmanager
 import json
 import os
 import sqlite3
-from typing import Any, Dict, Iterable, Iterator, List, Mapping, Protocol, Set
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, Protocol, Sequence
 
 from .record import PrimitiveType, Record
 
@@ -54,15 +54,33 @@ def filter_records(records: Iterable[Record], expression: Mapping[str, Any]) -> 
 class RecordStore:
     _records: Dict[str, Record] = field(default_factory=dict)
     _append_order: List[str] = field(default_factory=list)
-    _children: Dict[str, Set[str]] = field(default_factory=dict)
+    _children: Dict[str, List[str]] = field(default_factory=dict)
+    _children_by_type: Dict[str, Dict[PrimitiveType, List[str]]] = field(default_factory=dict)
+    _revision: int = 0
 
     def append(self, record: Record) -> None:
         if record.id in self._records:
             raise ValueError(f"record already exists: {record.id}")
         self._records[record.id] = record
         self._append_order.append(record.id)
+        self._revision += 1
+        record_id = record.id
         for parent_id in record.causes:
-            self._children.setdefault(parent_id, set()).add(record.id)
+            child_list = self._children.get(parent_id)
+            if child_list is None:
+                child_list = []
+                self._children[parent_id] = child_list
+            child_list.append(record_id)
+
+            by_type = self._children_by_type.get(parent_id)
+            if by_type is None:
+                by_type = {}
+                self._children_by_type[parent_id] = by_type
+            typed_child_list = by_type.get(record.type)
+            if typed_child_list is None:
+                typed_child_list = []
+                by_type[record.type] = typed_child_list
+            typed_child_list.append(record_id)
 
     def get(self, record_id: str) -> Record | None:
         return self._records.get(record_id)
@@ -71,8 +89,21 @@ class RecordStore:
         return record_id in self._records
 
     def children(self, record_id: str) -> list[Record]:
-        child_ids = self._children.get(record_id, set())
-        return [self._records[rid] for rid in self._append_order if rid in child_ids]
+        child_ids = self._children.get(record_id, [])
+        return [self._records[rid] for rid in child_ids]
+
+    def child_ids(self, record_id: str) -> list[str]:
+        return list(self._children.get(record_id, ()))
+
+    def child_ids_view(self, record_id: str) -> Sequence[str]:
+        return self._children.get(record_id, ())
+
+    def children_of_type(self, record_id: str, primitive: PrimitiveType) -> list[Record]:
+        child_ids = self._children_by_type.get(record_id, {}).get(primitive, [])
+        return [self._records[rid] for rid in child_ids]
+
+    def child_ids_of_type(self, record_id: str, primitive: PrimitiveType) -> Sequence[str]:
+        return self._children_by_type.get(record_id, {}).get(primitive, ())
 
     def parents(self, record_id: str) -> list[str]:
         record = self.get(record_id)
@@ -83,6 +114,9 @@ class RecordStore:
 
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return filter_records(self.all(), expression)
+
+    def revision(self) -> int:
+        return self._revision
 
 
 class SQLiteStorage:
