@@ -31,6 +31,7 @@ class CryptoSuite:
         self._public_keys: dict[str, dict[str, Ed25519PublicKey]] = {}
         self._active_key: dict[str, str] = {}
         self._delegations: dict[str, set[str]] = {}
+        self._revision: int = 0
 
     def generate_key(self, author: str, *, set_active: bool = True) -> SigningKey:
         private_key = Ed25519PrivateKey.generate()
@@ -64,12 +65,17 @@ class CryptoSuite:
         self._public_keys.setdefault(author, {})[key_id] = public_key
         if set_active or author not in self._active_key:
             self._active_key[author] = key_id
+        self._revision += 1
 
     def grant_delegation(self, grantor: str, grantee: str) -> None:
         self._delegations.setdefault(grantor, set()).add(grantee)
+        self._revision += 1
 
     def has_delegation(self, grantor: str, grantee: str) -> bool:
         return grantee in self._delegations.get(grantor, set())
+
+    def revision(self) -> int:
+        return self._revision
 
     def sign_record(self, record: Record, private_key_b64: str, key_id: str) -> str:
         private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode(private_key_b64))

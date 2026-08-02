@@ -72,10 +72,10 @@ class Verifier:
         self._conflict_cache: dict[tuple[int, PrimitiveType, tuple[str, ...], int], tuple[str, ...]] = {}
 
     def verify(self, record: Record) -> VerificationResult:
-        store_revision = self._store_revision()
-        if store_revision is not None:
-            self._prepare_revision_caches(store_revision)
-            verification_key = (store_revision, id(record))
+        cache_revision = self._cache_revision_key()
+        if cache_revision is not None:
+            self._prepare_revision_caches(cache_revision)
+            verification_key = (cache_revision, id(record))
             cached_verification = self._verification_cache.get(verification_key)
             if cached_verification is not None:
                 return cached_verification
@@ -129,10 +129,10 @@ class Verifier:
             causal_path=causal_path,
             rules=rule_results,
         )
-        if store_revision is not None:
+        if cache_revision is not None:
             if len(self._verification_cache) > 4096:
                 self._verification_cache.clear()
-            self._verification_cache[(store_revision, id(record))] = result
+            self._verification_cache[(cache_revision, id(record))] = result
         return result
 
     def verify_immutability(self, record: Record) -> RuleResult:
@@ -361,9 +361,22 @@ class Verifier:
             return value if isinstance(value, int) else None
         return None
 
-    def _prepare_revision_caches(self, store_revision: int) -> None:
-        if self._cache_revision == store_revision:
+    def _cache_revision_key(self) -> int | None:
+        store_revision = self._store_revision()
+        if store_revision is None:
+            return None
+        if self.crypto is None:
+            return store_revision
+        crypto_revision = getattr(self.crypto, "revision", None)
+        if callable(crypto_revision):
+            c_rev = crypto_revision()
+            if isinstance(c_rev, int):
+                return (store_revision << 32) ^ c_rev
+        return store_revision
+
+    def _prepare_revision_caches(self, cache_revision: int) -> None:
+        if self._cache_revision == cache_revision:
             return
-        self._cache_revision = store_revision
+        self._cache_revision = cache_revision
         self._verification_cache.clear()
         self._conflict_cache.clear()

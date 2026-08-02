@@ -1,0 +1,40 @@
+Sun Aug  2 19:20:32 2026    evidence\experiments\2026-08-02T162032Z_program11_inmemory_profile.prof
+
+         333535 function calls (313522 primitive calls) in 0.231 seconds
+
+   Ordered by: cumulative time
+   List reduced from 91 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.004    0.004    0.250    0.250 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:36(run_benchmarks)
+        1    0.000    0.000    0.246    0.246 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:48(_benchmark_in_memory)
+        1    0.008    0.008    0.246    0.246 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:75(_benchmark_store)
+        1    0.000    0.000    0.083    0.083 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:51(replay)
+        1    0.021    0.021    0.075    0.075 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py:134(_make_seed_records)
+    10000    0.027    0.000    0.036    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:61(append)
+        1    0.000    0.000    0.030    0.030 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:73(_replay_workflows)
+    10002    0.011    0.000    0.030    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\record.py:49(__post_init__)
+        1    0.014    0.014    0.030    0.030 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:87(_replay_workflows_direct)
+        1    0.014    0.014    0.029    0.029 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:139(_replay_coordination)
+        1    0.007    0.007    0.022    0.022 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\graph.py:29(descendants)
+    66672    0.022    0.000    0.022    0.000 {method 'get' of 'dict' objects}
+    10001    0.007    0.000    0.020    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:74(verify)
+30006/10002    0.018    0.000    0.019    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\record.py:20(_freeze)
+    53350    0.016    0.000    0.016    0.000 {method 'append' of 'list' objects}
+    10000    0.009    0.000    0.016    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:98(child_ids_view)
+        1    0.008    0.008    0.014    0.014 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:67(_replay_identities)
+    10000    0.003    0.000    0.011    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\graph.py:15(children)
+     3333    0.005    0.000    0.009    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:105(child_ids_of_type)
+        1    0.000    0.000    0.009    0.009 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:136(_replay_reputation)
+        1    0.000    0.000    0.009    0.009 C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\collections\__init__.py:599(__init__)
+        1    0.000    0.000    0.009    0.009 C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\collections\__init__.py:673(update)
+        1    0.007    0.007    0.009    0.009 {built-in method _collections._count_elements}
+    10001    0.002    0.000    0.008    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:364(_cache_revision_key)
+    10000    0.005    0.000    0.007    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:91(children)
+    10003    0.004    0.000    0.005    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:358(_store_revision)
+    10002    0.003    0.000    0.003    0.000 {built-in method now}
+        3    0.002    0.001    0.002    0.001 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py:112(all)
+    10001    0.002    0.000    0.002    0.000 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\replay.py:137(<genexpr>)
+        2    0.001    0.000    0.002    0.001 C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\verifier.py:225(verify_authorization)
+
+

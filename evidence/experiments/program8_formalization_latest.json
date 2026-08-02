@@ -1,6 +1,6 @@
 {
   "program": "Program 8 - Formalization",
-  "timestamp": "2026-08-01T18:19:23.912305+00:00",
+  "timestamp": "2026-08-02T16:20:29.254410+00:00",
   "overall_outcome": "TRS survives",
   "checks": {
     "T8.1 Fail-safe authorization": {
