@@ -63,3 +63,21 @@ Each program should be classified as one of:
 - `TRS refined`
 - `TRS broken`
 - `NEED_MORE_EVIDENCE`
+
+## Current results (provisional close)
+
+- Program 5 (Scale): `TRS survives`
+  - Executed at 10k, 20k, 30k across in-memory, SQLite, LMDB, RocksDB.
+  - Scale evidence collected in `evidence/experiments/program5_scale_latest.json`.
+- Program 6 (Byzantine): `TRS survives`
+- Program 7 (Implementation Independence): `TRS survives`
+- Program 8 (Formalization): `TRS survives`
+- Program 9 (Reference Apps): `TRS survives`
+- Program 10 (Independent Attack): `NEED_MORE_EVIDENCE`
+  - Internal submission completed: `research/cycles/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION.md`
+  - Internal run survived (attacks blocked, fuzz passed, byzantine campaign survived).
+  - External/independent evaluator run still pending for final closure.
+
+## Amendment decision
+
+`TRS-0002` not triggered by CYCLE-0002 evidence to date.

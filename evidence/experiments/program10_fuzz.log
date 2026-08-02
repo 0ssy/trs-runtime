@@ -1,0 +1,7 @@
+test_malformed_envelope_never_crashes_adapter (tests.test_fuzz_malformed_inputs.FuzzMalformedInputsTests.test_malformed_envelope_never_crashes_adapter) ... ok
+test_random_payload_for_declared_primitive_never_crashes_verifier (tests.test_fuzz_malformed_inputs.FuzzMalformedInputsTests.test_random_payload_for_declared_primitive_never_crashes_verifier) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.822s
+
+OK
