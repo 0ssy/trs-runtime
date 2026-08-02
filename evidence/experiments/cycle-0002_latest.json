@@ -1,0 +1,43 @@
+{
+  "cycle": "CYCLE-0002",
+  "timestamp": "2026-08-01T18:19:24.448324+00:00",
+  "results": [
+    {
+      "program": "Program 5 - Scale",
+      "exit_code": 1,
+      "status": "failed",
+      "output_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\experiments\\0007-scale\\run_scale_campaign.py\", line 54, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\experiments\\0007-scale\\run_scale_campaign.py\", line 35, in main\n    \"results\": run_benchmarks(records=int(record_count)),\n               ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\runtime\\benchmark.py\", line 35, in run_benchmarks\n    \"in_memory\": asdict(_benchmark_in_memory(records)),\n                        ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\runtime\\benchmark.py\", line 45, in _benchmark_in_memory\n    return _benchmark_store(\"in_memory\", store, verifier, records, disk_path=None)\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\runtime\\benchmark.py\", line 107, in _benchmark_store\n    _ = ReplayEngine(store).replay()\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\runtime\\replay.py\", line 33, in replay\n    workflows = self._replay_workflows(records)\n  File \"C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\runtime\\replay.py\", line 63, in _replay_workflows\n    descendants_by_id[record_id].update(descendants_by_id.get(child_id, set()))\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n"
+    },
+    {
+      "program": "Program 6 - Byzantine",
+      "exit_code": 0,
+      "status": "ok",
+      "output_tail": "Wrote byzantine campaign artifact: evidence\\experiments\\program6_byzantine_latest.json\n"
+    },
+    {
+      "program": "Program 7 - Implementation Independence",
+      "exit_code": 0,
+      "status": "ok",
+      "output_tail": "Wrote implementation-independence artifact: evidence\\experiments\\program7_implementation_independence_latest.json\n"
+    },
+    {
+      "program": "Program 8 - Formalization",
+      "exit_code": 0,
+      "status": "ok",
+      "output_tail": "Wrote formalization artifact: evidence\\experiments\\program8_formalization_latest.json\n"
+    },
+    {
+      "program": "Program 9 - Reference Apps",
+      "exit_code": 0,
+      "status": "ok",
+      "output_tail": "Wrote reference-app artifact: evidence\\experiments\\program9_reference_apps_latest.json\n"
+    },
+    {
+      "program": "Program 10 - Independent Attack Packet",
+      "exit_code": 0,
+      "status": "ok",
+      "output_tail": "Wrote independent-attack packet: evidence\\experiments\\program10_independent_attack_packet.json\n"
+    }
+  ],
+  "overall_status": "failed"
+}

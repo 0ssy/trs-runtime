@@ -1,0 +1,19 @@
+{
+  "program": "Program 8 - Formalization",
+  "timestamp": "2026-08-01T18:19:23.912305+00:00",
+  "overall_outcome": "TRS survives",
+  "checks": {
+    "T8.1 Fail-safe authorization": {
+      "pass": true,
+      "note": "unauthorized record rejected"
+    },
+    "T8.2 Payload independence": {
+      "pass": true,
+      "note": "declared primitive governs validation"
+    },
+    "T8.3 Append-only uniqueness": {
+      "pass": true,
+      "note": "duplicate id rejected"
+    }
+  }
+}

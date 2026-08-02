@@ -50,31 +50,21 @@ class ReplayEngine:
 
     def _replay_workflows(self, records) -> dict[str, list[str]]:
         children_by_parent: dict[str, set[str]] = defaultdict(set)
+        record_order: list[str] = []
         for record in records:
+            record_order.append(record.id)
             for parent_id in record.causes:
                 children_by_parent[parent_id].add(record.id)
 
-        memo: dict[str, set[str]] = {}
-        visiting: set[str] = set()
-
-        def collect_descendants(record_id: str) -> set[str]:
-            if record_id in memo:
-                return memo[record_id]
-            if record_id in visiting:
-                return set()
-
-            visiting.add(record_id)
-            descendants: set[str] = set()
+        descendants_by_id: dict[str, set[str]] = {record_id: set() for record_id in record_order}
+        for record_id in reversed(record_order):
             for child_id in children_by_parent.get(record_id, set()):
-                descendants.add(child_id)
-                descendants.update(collect_descendants(child_id))
-            visiting.remove(record_id)
-            memo[record_id] = descendants
-            return descendants
+                descendants_by_id[record_id].add(child_id)
+                descendants_by_id[record_id].update(descendants_by_id.get(child_id, set()))
 
         workflow: dict[str, list[str]] = {}
         for record in records:
-            workflow[record.id] = sorted(collect_descendants(record.id))
+            workflow[record.id] = sorted(descendants_by_id.get(record.id, set()))
         return workflow
 
     def _replay_contracts(self, records) -> list[str]:

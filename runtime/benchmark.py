@@ -30,13 +30,19 @@ class BenchmarkMetrics:
     disk_usage_bytes: int
 
 
-def run_benchmarks(records: int = 2000) -> dict[str, dict]:
-    return {
-        "in_memory": asdict(_benchmark_in_memory(records)),
-        "sqlite": asdict(_benchmark_persistent(records, "sqlite")),
-        "lmdb": asdict(_benchmark_persistent(records, "lmdb")),
-        "rocksdb": asdict(_benchmark_persistent(records, "rocksdb")),
-    }
+SUPPORTED_BACKENDS = ("in_memory", "sqlite", "lmdb", "rocksdb")
+
+
+def run_benchmarks(records: int = 2000, backends: tuple[str, ...] = SUPPORTED_BACKENDS) -> dict[str, dict]:
+    results: dict[str, dict] = {}
+    for backend in backends:
+        if backend == "in_memory":
+            results[backend] = asdict(_benchmark_in_memory(records))
+        elif backend in ("sqlite", "lmdb", "rocksdb"):
+            results[backend] = asdict(_benchmark_persistent(records, backend))
+        else:
+            raise ValueError(f"unsupported backend: {backend}")
+    return results
 
 
 def _benchmark_in_memory(records: int) -> BenchmarkMetrics:

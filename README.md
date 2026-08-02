@@ -20,6 +20,7 @@ TRS runtime implementation with strict payload-independence:
 - `tests/`: focused unit tests
 - `attacks/`: executable adversarial attack scripts
 - `research/attacks/`: persisted attack records
+- `research/cycles/`: research cycle summaries and amendment decisions
 - `logs/development/`: short daily engineering logs
 - `evidence/`: persisted test-run and benchmark artifacts
 - `experiments/`: disposable engineering validation scripts
@@ -95,6 +96,12 @@ python experiments/0005-multi-node/run_multi_node_sim.py
 
 ```bash
 python experiments/0006-validation/run_validation_cycle.py --gate-mode pr
+```
+
+## Run next research cycle (Programs 5-10)
+
+```bash
+python experiments/0013-cycle-0002/run_cycle_0002.py --scale-records 10000 100000
 ```
 
 If you want to continue while still recording benchmark regressions:

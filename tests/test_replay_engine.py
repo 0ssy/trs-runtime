@@ -76,6 +76,36 @@ class ReplayEngineTests(unittest.TestCase):
         self.assertEqual(snapshot.coordination.unresolved_intentions, ["i2"])
         self.assertEqual(snapshot.coordination.orphan_commitments, ["c2"])
 
+    def test_replay_handles_deep_workflow_chains(self) -> None:
+        store = RecordStore()
+        root = Record(
+            id="g0",
+            type=PrimitiveType.OBSERVATION,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "boot", "value": 1},
+            signature="sig:g0",
+        )
+        store.append(root)
+        previous = "g0"
+        for index in range(1, 1300):
+            record = Record(
+                id=f"r{index}",
+                type=PrimitiveType.INTENTION,
+                author="alice",
+                timestamp=datetime.now(timezone.utc),
+                schema="trs.intention.v1",
+                payload={"goal": f"goal-{index}", "horizon": "Q1"},
+                causes=(previous,),
+                signature=f"sig:r{index}",
+            )
+            store.append(record)
+            previous = record.id
+
+        snapshot = ReplayEngine(store).replay()
+        self.assertEqual(len(snapshot.workflows["g0"]), 1299)
+
 
 if __name__ == "__main__":
     unittest.main()

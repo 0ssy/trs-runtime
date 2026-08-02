@@ -7,16 +7,23 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from runtime.benchmark import run_benchmarks
+from runtime.benchmark import SUPPORTED_BACKENDS, run_benchmarks
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run TRS runtime benchmarks")
     parser.add_argument("--records", type=int, default=2000, help="number of records to benchmark")
     parser.add_argument("--out", type=str, default="", help="optional output JSON path")
+    parser.add_argument(
+        "--backend",
+        choices=("all",) + SUPPORTED_BACKENDS,
+        default="all",
+        help="run a single backend or all backends",
+    )
     args = parser.parse_args()
 
-    results = run_benchmarks(records=args.records)
+    backends = SUPPORTED_BACKENDS if args.backend == "all" else (args.backend,)
+    results = run_benchmarks(records=args.records, backends=backends)
     payload = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "records": args.records,

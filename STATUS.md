@@ -9,6 +9,8 @@
 - TRS-0001: Accepted
 - TRS-0002: None
 - Research Method Matrix: `docs/RESEARCH_EXECUTION_MATRIX.md` active
+- Current cycle record: `research/cycles/CYCLE-0001.md` (TRS-0002 not triggered)
+- Next cycle plan: `research/cycles/CYCLE-0002.md` (Programs 5–10 scaffolded)
 
 ## Runtime
 

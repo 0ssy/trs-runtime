@@ -1,0 +1,51 @@
+{
+  "program": "Program 9 - Reference Apps",
+  "timestamp": "2026-08-01T18:19:24.256176+00:00",
+  "overall_outcome": "TRS survives",
+  "apps": {
+    "identity_ledger": {
+      "root": [
+        "g0"
+      ],
+      "alice": [
+        "i1"
+      ],
+      "bob": [
+        "c1"
+      ],
+      "carol": [
+        "c2"
+      ]
+    },
+    "contract_engine": [
+      "c1",
+      "c2"
+    ],
+    "workflow_engine": {
+      "g0": [
+        "c1",
+        "c2",
+        "i1"
+      ],
+      "i1": [
+        "c1"
+      ],
+      "c1": [],
+      "c2": []
+    },
+    "reputation_engine": {
+      "root": 1,
+      "alice": 1,
+      "bob": 1,
+      "carol": 1
+    },
+    "capability_view": {
+      "c1": [
+        "g0"
+      ],
+      "c2": [
+        "g0"
+      ]
+    }
+  }
+}
