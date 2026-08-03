@@ -52,3 +52,114 @@ class ProRataPolicy:
             for claim in conflict_set.claims
         ]
         return AllocationDecision(subject=conflict_set.subject, allocations=allocations)
+
+
+class PriorityPolicy:
+    def __init__(self, priorities: dict[str, int] | None = None) -> None:
+        self.priorities = priorities or {}
+
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        allocations = [Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=0.0) for claim in conflict_set.claims]
+        if conflict_set.available <= 0:
+            return AllocationDecision(subject=conflict_set.subject, allocations=allocations)
+        remaining = float(conflict_set.available)
+        indexed = sorted(
+            enumerate(conflict_set.claims),
+            key=lambda pair: (-self.priorities.get(pair[1].claimant, 0), pair[0]),
+        )
+        grants: dict[str, float] = {}
+        for _, claim in indexed:
+            grant = min(max(0.0, claim.amount), remaining)
+            grants[claim.claim_id] = grant
+            remaining -= grant
+            if remaining <= 0:
+                break
+        return AllocationDecision(
+            subject=conflict_set.subject,
+            allocations=[
+                Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=grants.get(claim.claim_id, 0.0))
+                for claim in conflict_set.claims
+            ],
+        )
+
+
+class WeightedPolicy:
+    def __init__(self, weights: dict[str, float] | None = None) -> None:
+        self.weights = weights or {}
+
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        weighted_total = 0.0
+        weighted_claims: list[tuple[Claim, float]] = []
+        for claim in conflict_set.claims:
+            weight = max(0.0, self.weights.get(claim.claimant, 1.0))
+            weighted = max(0.0, claim.amount) * weight
+            weighted_claims.append((claim, weighted))
+            weighted_total += weighted
+        if weighted_total <= 0.0 or conflict_set.available <= 0.0:
+            return AllocationDecision(
+                subject=conflict_set.subject,
+                allocations=[
+                    Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=0.0)
+                    for claim in conflict_set.claims
+                ],
+            )
+        scale = conflict_set.available / weighted_total
+        return AllocationDecision(
+            subject=conflict_set.subject,
+            allocations=[
+                Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=weighted * scale)
+                for claim, weighted in weighted_claims
+            ],
+        )
+
+
+class AuctionPolicy:
+    def __init__(self, bids: dict[str, float] | None = None) -> None:
+        self.bids = bids or {}
+
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        if not conflict_set.claims or conflict_set.available <= 0.0:
+            return AllocationDecision(subject=conflict_set.subject, allocations=[])
+        winner = max(
+            conflict_set.claims,
+            key=lambda claim: (self.bids.get(claim.claimant, claim.amount), claim.amount),
+        )
+        allocations = []
+        for claim in conflict_set.claims:
+            grant = min(max(0.0, winner.amount), conflict_set.available) if claim.claim_id == winner.claim_id else 0.0
+            allocations.append(Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=grant))
+        return AllocationDecision(subject=conflict_set.subject, allocations=allocations)
+
+
+class EmergencyOverridePolicy:
+    def __init__(self, emergency_claimant: str) -> None:
+        self.emergency_claimant = emergency_claimant
+
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        if conflict_set.available <= 0:
+            return AllocationDecision(
+                subject=conflict_set.subject,
+                allocations=[
+                    Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=0.0)
+                    for claim in conflict_set.claims
+                ],
+            )
+        emergency_claim = next((claim for claim in conflict_set.claims if claim.claimant == self.emergency_claimant), None)
+        if emergency_claim is None:
+            return ProRataPolicy().allocate(conflict_set)
+        remaining = float(conflict_set.available)
+        emergency_grant = min(max(0.0, emergency_claim.amount), remaining)
+        remaining -= emergency_grant
+        others = [claim for claim in conflict_set.claims if claim.claim_id != emergency_claim.claim_id]
+        base = ProRataPolicy().allocate(
+            ConflictSet(subject=conflict_set.subject, available=remaining, claims=others)
+        )
+        by_id = {allocation.claim_id: allocation.granted for allocation in base.allocations}
+        by_id[emergency_claim.claim_id] = emergency_grant
+        return AllocationDecision(
+            subject=conflict_set.subject,
+            allocations=[
+                Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=by_id.get(claim.claim_id, 0.0))
+                for claim in conflict_set.claims
+            ],
+        )

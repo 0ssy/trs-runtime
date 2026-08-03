@@ -4,6 +4,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
+from runtime.network_sync import NetworkSyncResult, sync_nodes
 from runtime.query import QueryEngine
 from runtime.record import PrimitiveType, Record
 from runtime.replay import ReplayEngine, ReplaySnapshot
@@ -20,12 +21,13 @@ class SubmittedIntention:
 
 
 class TerraNodeRuntimeAdapter:
-    def __init__(self) -> None:
+    def __init__(self, *, node_id: str = "") -> None:
         self.store = RecordStore()
         self.verifier = Verifier(self.store)
         self.query = QueryEngine(self.store)
         self.replay_engine = ReplayEngine(self.store)
         self._sequence = 0
+        self._node_id = node_id.strip()
         self._root_by_subject: dict[str, str] = {}
         self._capability_by_subject: dict[str, str] = {}
 
@@ -128,10 +130,9 @@ class TerraNodeRuntimeAdapter:
     def replay(self) -> ReplaySnapshot:
         return self.replay_engine.replay()
 
-    def _ensure_subject_bootstrap(self, *, subject: str, available: float) -> None:
+    def seed_subject(self, *, subject: str, available: float, root_id: str, capability_id: str) -> None:
         if subject in self._root_by_subject:
             return
-        root_id = self._next_id("root")
         root = Record(
             id=root_id,
             type=PrimitiveType.OBSERVATION,
@@ -144,11 +145,9 @@ class TerraNodeRuntimeAdapter:
         )
         root_result = self.verifier.verify(root)
         if not root_result.valid:
-            raise ValueError(f"root rejected: {root_result.errors}")
+            raise ValueError(f"seed root rejected: {root_result.errors}")
         self.store.append(root)
-        self._root_by_subject[subject] = root_id
 
-        capability_id = self._next_id("cap")
         capability = Record(
             id=capability_id,
             type=PrimitiveType.COMMITMENT,
@@ -163,9 +162,28 @@ class TerraNodeRuntimeAdapter:
         )
         cap_result = self.verifier.verify(capability)
         if not cap_result.valid:
-            raise ValueError(f"capability rejected: {cap_result.errors}")
+            raise ValueError(f"seed capability rejected: {cap_result.errors}")
         self.store.append(capability)
+
+        self._root_by_subject[subject] = root_id
         self._capability_by_subject[subject] = capability_id
+
+    def sync_with_peer(self, peer: "TerraNodeRuntimeAdapter") -> tuple[NetworkSyncResult, NetworkSyncResult]:
+        peer_to_self = sync_nodes(peer.store, self.store, self.verifier)
+        self_to_peer = sync_nodes(self.store, peer.store, peer.verifier)
+        self._rebuild_subject_indexes()
+        peer._rebuild_subject_indexes()
+        return peer_to_self, self_to_peer
+
+    def _ensure_subject_bootstrap(self, *, subject: str, available: float) -> None:
+        if subject in self._root_by_subject:
+            return
+        self.seed_subject(
+            subject=subject,
+            available=available,
+            root_id=self._next_id("root"),
+            capability_id=self._next_id("cap"),
+        )
 
     def _subject_available(self, root_id: str) -> float:
         root = self.store.get(root_id)
@@ -198,4 +216,20 @@ class TerraNodeRuntimeAdapter:
 
     def _next_id(self, prefix: str) -> str:
         self._sequence += 1
+        if self._node_id:
+            return f"{self._node_id}-{prefix}-{self._sequence:06d}"
         return f"{prefix}-{self._sequence:06d}"
+
+    def _rebuild_subject_indexes(self) -> None:
+        self._root_by_subject.clear()
+        self._capability_by_subject.clear()
+        roots: dict[str, str] = {}
+        for record in self.store.all():
+            if record.type == PrimitiveType.OBSERVATION:
+                value = record.payload.get("value")
+                if isinstance(value, Mapping) and "available" in value:
+                    roots.setdefault(record.subject, record.id)
+            if record.type == PrimitiveType.COMMITMENT and record.payload.get("action") == "delegate-allocation":
+                self._capability_by_subject.setdefault(record.subject, record.id)
+        for subject, root_id in roots.items():
+            self._root_by_subject[subject] = root_id
