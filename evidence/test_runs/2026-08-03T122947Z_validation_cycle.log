@@ -1,0 +1,139 @@
+
+=== Unit tests ===
+$ C:\Users\josep\AppData\Local\Programs\Python\Python313\python.exe -m unittest discover -s tests -p test_*.py
+.....E....E...ss.....E......ss..........
+======================================================================
+ERROR: test_run_benchmarks_returns_expected_backends_and_metrics (test_benchmark_smoke.BenchmarkSmokeTests.test_run_benchmarks_returns_expected_backends_and_metrics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\tests\test_benchmark_smoke.py", line 10, in test_run_benchmarks_returns_expected_backends_and_metrics
+    results = run_benchmarks(records=120)
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py", line 42, in run_benchmarks
+    results[backend] = asdict(_benchmark_persistent(records, backend))
+                              ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py", line 61, in _benchmark_persistent
+    store = LMDBStorage(path)
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py", line 250, in __init__
+    raise RuntimeError("lmdb package is required for LMDBStorage")
+RuntimeError: lmdb package is required for LMDBStorage
+
+======================================================================
+ERROR: test_fuzz_malformed_inputs (unittest.loader._FailedTest.test_fuzz_malformed_inputs)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_fuzz_malformed_inputs
+Traceback (most recent call last):
+  File "C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\tests\test_fuzz_malformed_inputs.py", line 6, in <module>
+    from hypothesis import given, settings, strategies as st
+ModuleNotFoundError: No module named 'hypothesis'
+
+
+======================================================================
+ERROR: test_property_invariants (unittest.loader._FailedTest.test_property_invariants)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_property_invariants
+Traceback (most recent call last):
+  File "C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Users\josep\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\tests\test_property_invariants.py", line 6, in <module>
+    from hypothesis import given, settings, strategies as st
+ModuleNotFoundError: No module named 'hypothesis'
+
+
+----------------------------------------------------------------------
+Ran 40 tests in 1.938s
+
+FAILED (errors=3, skipped=4)
+
+(exit=1)
+
+=== Conformance tests ===
+$ C:\Users\josep\AppData\Local\Programs\Python\Python313\python.exe -m unittest discover -s conformance -p test_*.py
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK
+
+(exit=0)
+
+=== Attack suite ===
+$ C:\Users\josep\AppData\Local\Programs\Python\Python313\python.exe attacks/run_attacks.py
+attack_001_duplicate_ids: BLOCKED | errors=['4.1 Immutability: record id already exists: dup']
+attack_002_forged_authority: BLOCKED | errors=['6.1 Authorization Traceability: missing authorization records: ghost-capability']
+attack_003_cycle_creation: BLOCKED | errors=['4.2 Causality: missing causes: self-cycle', '4.4 Closure: missing causes: self-cycle']
+attack_004_schema_mismatch: BLOCKED | errors=['5.1 Schema Declaration: schema trs.observation.v1 does not match declared primitive Commitment']
+attack_005_conflicting_commitments: BLOCKED | children=['c1', 'c2'], r2_errors=[]
+attack_006_invalid_genesis: BLOCKED | errors=['5.2 Signature Presence: missing signature']
+attack_007_transitive_capability: BLOCKED | d1_errors=['6.1 Authorization Traceability: missing authorization records: ghost-root'], d2_errors=['6.1 Authorization Traceability: missing authorization records: d1']
+attack_008_payload_sniffing: BLOCKED | errors=['5.3 Payload Shape: missing payload keys: subject, value']
+attack_009_query_mutation: BLOCKED | before=2, after=2
+attack_010_hidden_conflict: BLOCKED | visible=['h1', 'h2']
+
+Summary: 10/10 attacks blocked
+
+(exit=0)
+
+=== Mutation checks ===
+$ C:\Users\josep\AppData\Local\Programs\Python\Python313\python.exe experiments/0003-mutation/run_mutation_checks.py
+{
+  "total": 5,
+  "killed": 5,
+  "survived": 0,
+  "results": [
+    {
+      "mutant": "immutability_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "signature_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "payload_shape_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "authorization_bypass",
+      "killed": true,
+      "details": "killed"
+    },
+    {
+      "mutant": "query_mutation",
+      "killed": true,
+      "details": "killed"
+    }
+  ]
+}
+
+(exit=0)
+
+=== Benchmark gate ===
+$ C:\Users\josep\AppData\Local\Programs\Python\Python313\python.exe benchmarks/gate_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
+Traceback (most recent call last):
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\benchmarks\gate_benchmarks.py", line 152, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\benchmarks\gate_benchmarks.py", line 111, in main
+    "results": run_benchmarks(records=int(config["records"])),
+               ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py", line 42, in run_benchmarks
+    results[backend] = asdict(_benchmark_persistent(records, backend))
+                              ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\benchmark.py", line 61, in _benchmark_persistent
+    store = LMDBStorage(path)
+  File "C:\Users\josep\OneDrive\Desktop\trs-runtime\runtime\storage.py", line 250, in __init__
+    raise RuntimeError("lmdb package is required for LMDBStorage")
+RuntimeError: lmdb package is required for LMDBStorage
+
+(exit=1)
