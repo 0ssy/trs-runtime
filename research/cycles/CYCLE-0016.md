@@ -2,7 +2,7 @@
 
 ## Status
 
-Open.
+In progress (internal distributed adversarial baseline complete; external live campaign pending).
 
 ## Depends on
 
@@ -22,6 +22,21 @@ Does a live, distributed deployment resist adversarial behavior at operational s
 - Attack campaign logs and exploit attempts.
 - Detection/response traces.
 - Mitigation patches and verification reruns.
+
+## Baseline initialized
+
+- Campaign scope draft: `research/redteam/CYCLE0016_CAMPAIGN_SCOPE.md`
+- Harness: `research/redteam/run_cycle_0016_redteam_sim.py`
+- Latest summary: `evidence/redteam/cycle0016_latest.json`
+- Timestamped artifact: `evidence/redteam/2026-08-03T134711Z_cycle0016_redteam_sim.json`
+
+### Current baseline result
+
+- Multi-node adversarial sync simulation: pass
+- Injected malicious record rejected by honest nodes: pass
+- Honest-node inventory consistency: pass
+- Attack suite (`attacks/run_attacks.py`): pass
+- External live red-team campaign: pending for closure
 
 ## Pass criteria
 

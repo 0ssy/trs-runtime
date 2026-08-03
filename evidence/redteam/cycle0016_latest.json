@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-08-03T134711Z",
+  "status": "in_progress",
+  "seed_records": 250,
+  "malicious_record_id": "malicious-forged-0001",
+  "rejected_by_target": {
+    "node-a": [
+      "malicious-forged-0001",
+      "malicious-forged-0001"
+    ],
+    "node-b": [
+      "malicious-forged-0001",
+      "malicious-forged-0001"
+    ],
+    "node-c": [
+      "malicious-forged-0001",
+      "malicious-forged-0001"
+    ]
+  },
+  "malicious_present_on_honest_nodes": {
+    "node-a": false,
+    "node-b": false,
+    "node-c": false
+  },
+  "honest_inventories_equal": true,
+  "multi_node_converged_flag": false,
+  "attack_suite": {
+    "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe attacks/run_attacks.py",
+    "exit_code": 0,
+    "summary": "Summary: 10/10 attacks blocked",
+    "stdout": "attack_001_duplicate_ids: BLOCKED | errors=['4.1 Immutability: record id already exists: dup']\nattack_002_forged_authority: BLOCKED | errors=['6.1 Authorization Traceability: missing authorization records: ghost-capability']\nattack_003_cycle_creation: BLOCKED | errors=['4.2 Causality: missing causes: self-cycle', '4.4 Closure: missing causes: self-cycle']\nattack_004_schema_mismatch: BLOCKED | errors=['5.1 Schema Declaration: schema trs.observation.v1 does not match declared primitive Commitment']\nattack_005_conflicting_commitments: BLOCKED | children=['c1', 'c2'], r2_errors=[]\nattack_006_invalid_genesis: BLOCKED | errors=['5.2 Signature Presence: missing signature']\nattack_007_transitive_capability: BLOCKED | d1_errors=['6.1 Authorization Traceability: missing authorization records: ghost-root'], d2_errors=['6.1 Authorization Traceability: missing authorization records: d1']\nattack_008_payload_sniffing: BLOCKED | errors=['5.3 Payload Shape: missing payload keys: subject, value']\nattack_009_query_mutation: BLOCKED | before=2, after=2\nattack_010_hidden_conflict: BLOCKED | visible=['h1', 'h2']\n\nSummary: 10/10 attacks blocked\n",
+    "stderr": ""
+  },
+  "baseline_pass": true,
+  "closure_note": "External live red-team campaign remains required for cycle closure."
+}

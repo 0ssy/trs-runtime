@@ -2,7 +2,7 @@
 
 ## Status
 
-Open.
+In progress (governance baseline/check initialized; adoption exercise pending).
 
 ## Depends on
 
@@ -22,6 +22,22 @@ Is TRS amendment authority governed by explicit process rather than ad-hoc contr
 - Governance charter and ratification record.
 - Amendment process runbook.
 - Sample amendment decision trace demonstrating process compliance.
+
+## Baseline initialized
+
+- Charter draft: `research/governance/TRS_GOVERNANCE_CHARTER.md`
+- Runbook draft: `research/governance/TRS_AMENDMENT_RUNBOOK.md`
+- Checker: `research/governance/run_cycle_0015_governance_check.py`
+- Latest summary: `evidence/governance/cycle0015_latest.json`
+- Timestamped artifacts:
+  - `evidence/governance/2026-08-03T134537Z_cycle0015_governance_check.json`
+  - `evidence/governance/2026-08-03T134537Z_cycle0015_sample_decision_trace.json`
+
+### Current baseline result
+
+- Governance document structure checks: pass
+- Sample decision trace artifact: present
+- Independent multi-party governance adoption: pending for closure
 
 ## Pass criteria
 

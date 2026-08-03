@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-08-03T134408Z",
+  "status": "in_progress",
+  "all_internal_checks_passed": true,
+  "checks": [
+    {
+      "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe -m unittest -v tests.test_crypto_phase12",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_delegation_required_for_authorization_chain_when_crypto_enabled (tests.test_crypto_phase12.CryptoPhase12Tests.test_delegation_required_for_authorization_chain_when_crypto_enabled) ... ok\ntest_ed25519_sign_and_verify (tests.test_crypto_phase12.CryptoPhase12Tests.test_ed25519_sign_and_verify) ... ok\ntest_key_rotation_still_verifies_previous_signatures (tests.test_crypto_phase12.CryptoPhase12Tests.test_key_rotation_still_verifies_previous_signatures) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.080s\n\nOK\n"
+    },
+    {
+      "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe -m unittest -v tests.test_verifier",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_authorization_trace_passes_with_path (tests.test_verifier.VerifierTests.test_authorization_trace_passes_with_path) ... ok\ntest_causality_fails_when_cause_missing (tests.test_verifier.VerifierTests.test_causality_fails_when_cause_missing) ... ok\ntest_declared_primitive_controls_payload_validation (tests.test_verifier.VerifierTests.test_declared_primitive_controls_payload_validation) ... ok\ntest_non_silent_conflict_cache_invalidates_on_append (tests.test_verifier.VerifierTests.test_non_silent_conflict_cache_invalidates_on_append) ... ok\ntest_verification_cache_invalidates_on_append (tests.test_verifier.VerifierTests.test_verification_cache_invalidates_on_append) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe attacks/run_attacks.py",
+      "exit_code": 0,
+      "stdout": "attack_001_duplicate_ids: BLOCKED | errors=['4.1 Immutability: record id already exists: dup']\nattack_002_forged_authority: BLOCKED | errors=['6.1 Authorization Traceability: missing authorization records: ghost-capability']\nattack_003_cycle_creation: BLOCKED | errors=['4.2 Causality: missing causes: self-cycle', '4.4 Closure: missing causes: self-cycle']\nattack_004_schema_mismatch: BLOCKED | errors=['5.1 Schema Declaration: schema trs.observation.v1 does not match declared primitive Commitment']\nattack_005_conflicting_commitments: BLOCKED | children=['c1', 'c2'], r2_errors=[]\nattack_006_invalid_genesis: BLOCKED | errors=['5.2 Signature Presence: missing signature']\nattack_007_transitive_capability: BLOCKED | d1_errors=['6.1 Authorization Traceability: missing authorization records: ghost-root'], d2_errors=['6.1 Authorization Traceability: missing authorization records: d1']\nattack_008_payload_sniffing: BLOCKED | errors=['5.3 Payload Shape: missing payload keys: subject, value']\nattack_009_query_mutation: BLOCKED | before=2, after=2\nattack_010_hidden_conflict: BLOCKED | visible=['h1', 'h2']\n\nSummary: 10/10 attacks blocked\n",
+      "stderr": ""
+    }
+  ],
+  "external_audit": {
+    "status": "pending",
+    "required": true,
+    "note": "Independent external security review is required before cycle closure."
+  },
+  "entry_gate_assessment": {
+    "production_crypto_path": "present",
+    "threat_model": "drafted",
+    "audit_scope": "drafted"
+  }
+}

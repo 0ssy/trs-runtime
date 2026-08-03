@@ -2,7 +2,7 @@
 
 ## Status
 
-Open.
+In progress (mechanized state-exploration baseline running).
 
 ## Depends on
 
@@ -22,6 +22,18 @@ Do machine-checked models uphold TRS axioms and conflict/closure guarantees unde
 - Formal model source and run commands.
 - Model-check/proof output artifacts.
 - Counterexample traces (if any) with mapping back to TRS clauses.
+
+## Baseline initialized
+
+- Harness: `research/formal/run_cycle_0013_model_check.py`
+- Latest summary: `evidence/formal/cycle0013_latest.json`
+- Timestamped artifact: `evidence/formal/2026-08-03T134219Z_cycle0013_model_check.json`
+
+### Current baseline result
+
+- States explored: 181
+- Terminal states: 18
+- Violations: none
 
 ## Pass criteria
 

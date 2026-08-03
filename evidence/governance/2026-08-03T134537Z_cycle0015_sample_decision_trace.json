@@ -1,0 +1,22 @@
+{
+  "amendment_id": "TRS-0999",
+  "transitions": [
+    {
+      "state": "Proposed",
+      "by_role": "Spec Editor"
+    },
+    {
+      "state": "Under Review",
+      "by_role": "Implementation Reviewer"
+    },
+    {
+      "state": "Evidence Verified",
+      "by_role": "Evidence Reviewer"
+    },
+    {
+      "state": "Ratified",
+      "by_role": "Steward Council"
+    }
+  ],
+  "audit_trail_complete": true
+}
