@@ -6,9 +6,16 @@ TerraNode Program 1 is a consumer-validation experiment over TRS runtime.
 
 - `terranode/policy.py`: pure allocation policy types and logic.
 - `terranode/runtime_adapter.py`: TRS integration boundary.
+- `terranode/trust.py`: trust/reputation weighting model and policy adapter.
+- `terranode/authority.py`: multi-authority mediation layer.
+- `terranode/semantics.py`: explicit semantic mapping registry.
+- `terranode/capability.py`: consumer-side capability scope/expiry/supersession checks.
+- `terranode/boundary.py`: public submission gateway with quotas and validation.
+- `terranode/human.py`: offline channel queue/flush workflow.
 - `terranode/main.py`: scarcity demonstration flow.
 - `tests/`: policy, adapter, and end-to-end tests.
 - `docs/ROADMAP_P2_P9.md`: dependency-ordered post-v1.0 research stack.
+- `docs/PRE_PILOT_STACK_9_5_TO_9_11.md`: mandatory pre-pilot validation stack.
 - `examples/scarcity_demo.py`: runnable demo entrypoint.
 
 ## Run tests
@@ -19,6 +26,12 @@ python -m unittest -v terranode.tests.test_adapter
 python -m unittest -v terranode.tests.test_program1
 python -m unittest -v terranode.tests.test_program2_distributed
 python -m unittest -v terranode.tests.test_program3_policy_independence
+python -m unittest -v terranode.tests.test_program4_trust_weighted
+python -m unittest -v terranode.tests.test_program5_multi_authority
+python -m unittest -v terranode.tests.test_program6_semantic_interoperability
+python -m unittest -v terranode.tests.test_program7_capability_security
+python -m unittest -v terranode.tests.test_program8_public_submission_boundary
+python -m unittest -v terranode.tests.test_program9_human_systems
 ```
 
 ## Run demo

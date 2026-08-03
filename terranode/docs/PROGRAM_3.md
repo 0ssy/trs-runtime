@@ -1,5 +1,9 @@
 # Program 3 — Policy Independence
 
+## Status
+
+Complete (TRS survives).
+
 ## Research question
 
 Is `AllocationPolicy` a stable abstraction that allows policy replacement without adapter/runtime rewrites?
@@ -17,3 +21,10 @@ Requires Program 2 distributed baseline complete.
 ## Executable evidence
 
 - `terranode/tests/test_program3_policy_independence.py`
+- `evidence/test_runs/2026-08-03T125317Z_terranode_program2_program3.log`
+
+## Outcome
+
+- ProRata, Priority, Weighted, Auction, and EmergencyOverride policies all run through the same adapter flow.
+- Adapter surface remains unchanged across policy substitutions.
+- No TRS runtime (`runtime/`) modification was required to satisfy Program 3 gates.

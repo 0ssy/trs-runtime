@@ -1,0 +1,21 @@
+=== TerraNode Programs 2-3 Evidence Run ===
+UTC Timestamp: 2026-08-03T125317Z
+
+$ .\venv\Scripts\python.exe -m unittest -v terranode.tests.test_program2_distributed terranode.tests.test_program3_policy_independence
+test_partition_reconnect_converges_without_runtime_changes (terranode.tests.test_program2_distributed.Program2DistributedTests.test_partition_reconnect_converges_without_runtime_changes) ... ok
+test_multiple_policies_run_with_same_adapter_flow (terranode.tests.test_program3_policy_independence.Program3PolicyIndependenceTests.test_multiple_policies_run_with_same_adapter_flow) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.005s
+
+OK
+
+$ .\venv\Scripts\python.exe terranode\examples\program2_distributed_demo.py
+Before reconnect: node-a claims=1 node-b claims=1
+After reconnect: shared claims=2
+alice: 57.14 kg
+bob: 42.86 kg
+Converged inventories: True
+
+UnittestExit=0
+DemoExit=0

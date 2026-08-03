@@ -1,0 +1,17 @@
+=== TerraNode Programs 4-9 Evidence Run ===
+UTC Timestamp: 2026-08-03T125659Z
+
+$ .\venv\Scripts\python.exe -m unittest -v terranode.tests.test_program4_trust_weighted terranode.tests.test_program5_multi_authority terranode.tests.test_program6_semantic_interoperability terranode.tests.test_program7_capability_security terranode.tests.test_program8_public_submission_boundary terranode.tests.test_program9_human_systems
+test_trust_weighted_policy_stays_policy_layer (terranode.tests.test_program4_trust_weighted.Program4TrustWeightedTests.test_trust_weighted_policy_stays_policy_layer) ... ok
+test_overlapping_authorities_mediate_without_runtime_changes (terranode.tests.test_program5_multi_authority.Program5MultiAuthorityTests.test_overlapping_authorities_mediate_without_runtime_changes) ... ok
+test_comparison_undefined_without_mapping_and_defined_with_mapping (terranode.tests.test_program6_semantic_interoperability.Program6SemanticInteropTests.test_comparison_undefined_without_mapping_and_defined_with_mapping) ... ok
+test_forged_authority_and_non_transitive_and_expiry_blocked (terranode.tests.test_program7_capability_security.Program7CapabilitySecurityTests.test_forged_authority_and_non_transitive_and_expiry_blocked) ... ok
+test_gateway_blocks_malformed_and_rate_limits_untrusted_writers (terranode.tests.test_program8_public_submission_boundary.Program8PublicBoundaryTests.test_gateway_blocks_malformed_and_rate_limits_untrusted_writers) ... ok
+test_offline_clients_flush_and_reconnect_preserve_history (terranode.tests.test_program9_human_systems.Program9HumanSystemsTests.test_offline_clients_flush_and_reconnect_preserve_history) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK
+
+UnittestExit=0
