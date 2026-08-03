@@ -37,7 +37,8 @@ Is the system cryptographically and operationally safe enough for real-world ris
   - `tests.test_crypto_phase12`
   - `tests.test_verifier`
   - `attacks/run_attacks.py`
-- External independent audit: pending (required for closure)
+- External attack submission received (`evidence/external/2026-08-03_submission/...`) and indicates no exploit breach but benchmark regressions.
+- External independent security audit: still pending (required for closure)
 
 ## Pass criteria
 

@@ -37,7 +37,10 @@ Is TRS amendment authority governed by explicit process rather than ad-hoc contr
 
 - Governance document structure checks: pass
 - Sample decision trace artifact: present
-- Independent multi-party governance adoption: pending for closure
+- External governance artifacts ingested:
+  - `evidence/external/2026-08-03_submission/RATIFICATION_TRS_0002.md`
+  - `evidence/external/2026-08-03_submission/BLOCKER_RESOLUTION_REPORT.md`
+- Independent multi-party governance adoption: partially evidenced; full recurring ratification process still pending for closure
 
 ## Pass criteria
 

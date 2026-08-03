@@ -9,9 +9,9 @@
 - TRS-0001: Accepted
 - TRS-0002: Accepted
 - Research Method Matrix: `docs/RESEARCH_EXECUTION_MATRIX.md` active
-- Current cycle record: `research/cycles/CYCLE-0001.md` (TRS-0002 not triggered)
-- Current cycle record: `research/cycles/CYCLE-0002.md` (closed; external Program 10 submission complete)
-- Current cycle record: `research/cycles/CYCLE-0003.md` (Program 11 closed; TRS refined; TRS-0002 not triggered)
+- Cycle records: `research/cycles/CYCLE-0001.md` .. `research/cycles/CYCLE-0016.md`
+- Ecosystem charter: `research/ECOSYSTEM_RESEARCH_CHARTER.md`
+- Consolidated outcomes: `research/RESULTS_LEDGER.md`
 
 ## Runtime
 
@@ -47,6 +47,16 @@
 - `evidence/traces/2026-08-01_multi_node_sim.json` (regenerated on current code)
 - `evidence/test_runs/2026-08-02T162349Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
 - `evidence/test_runs/2026-08-02T165226Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
+- `evidence/test_runs/2026-08-03T123037Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
+- `evidence/test_runs/2026-08-03T130045Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
+- `evidence/test_runs/2026-08-03T125317Z_terranode_program2_program3.log` (TerraNode Programs 2–3 pass)
+- `evidence/test_runs/2026-08-03T125659Z_terranode_program4_program9.log` (TerraNode Programs 4–9 pass)
+- `evidence/interop/cycle0012_latest.json` + `evidence/interop/cycle0012_cross_latest.json` (Program 9.5 baselines)
+- `evidence/formal/cycle0013_latest.json` (Program 9.6 baseline)
+- `evidence/security/cycle0014_latest.json` (Program 9.7 internal readiness baseline)
+- `evidence/governance/cycle0015_latest.json` (Program 9.8 governance baseline)
+- `evidence/redteam/cycle0016_latest.json` (Program 9.9 adversarial baseline)
+- `evidence/external/2026-08-03_submission/*` (external attack/governance submissions ingested)
 
 ## Reference Runtime
 

@@ -36,7 +36,10 @@ Does a live, distributed deployment resist adversarial behavior at operational s
 - Injected malicious record rejected by honest nodes: pass
 - Honest-node inventory consistency: pass
 - Attack suite (`attacks/run_attacks.py`): pass
-- External live red-team campaign: pending for closure
+- External submission ingested:
+  - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.pdf`
+  - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.txt`
+- External live red-team campaign at current topology/scale: still pending for closure
 
 ## Pass criteria
 
