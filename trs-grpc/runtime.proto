@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package trs.runtime.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+service RuntimeService {
+  rpc Health(google.protobuf.Empty) returns (HealthResponse);
+  rpc GetRecord(GetRecordRequest) returns (GetRecordResponse);
+  rpc Submit(SubmitRequest) returns (SubmitResponse);
+  rpc Query(QueryRequest) returns (QueryResponse);
+  rpc Sync(SyncRequest) returns (SyncResponse);
+  rpc Replay(google.protobuf.Empty) returns (ReplayResponse);
+}
+
+enum PrimitiveType {
+  PRIMITIVE_TYPE_UNSPECIFIED = 0;
+  PRIMITIVE_TYPE_OBSERVATION = 1;
+  PRIMITIVE_TYPE_COMMITMENT = 2;
+  PRIMITIVE_TYPE_INTENTION = 3;
+}
+
+message RecordEnvelope {
+  string id = 1;
+  PrimitiveType type = 2;
+  string author = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  string schema = 5;
+  google.protobuf.Struct payload = 6;
+  repeated string causes = 7;
+  repeated string authorization = 8;
+  string signature = 9;
+  string subject = 10;
+}
+
+message HealthResponse {
+  string status = 1;
+  string runtime = 2;
+  string node = 3;
+}
+
+message GetRecordRequest {
+  string id = 1;
+}
+
+message GetRecordResponse {
+  RecordEnvelope record = 1;
+}
+
+message SubmitRequest {
+  RecordEnvelope record = 1;
+}
+
+message SubmitResponse {
+  bool accepted = 1;
+  string record_id = 2;
+  repeated string errors = 3;
+}
+
+message QueryRequest {
+  google.protobuf.Struct query = 1;
+}
+
+message QueryResponse {
+  repeated RecordEnvelope records = 1;
+}
+
+message SyncRequest {
+  repeated RecordEnvelope records = 1;
+}
+
+message SyncResponse {
+  int32 accepted_count = 1;
+  int32 rejected_count = 2;
+  repeated string appended_ids = 3;
+  repeated StringList rejected_errors = 4;
+}
+
+message StringList {
+  repeated string values = 1;
+}
+
+message ReplayResponse {
+  google.protobuf.Struct snapshot = 1;
+}

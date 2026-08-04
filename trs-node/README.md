@@ -5,6 +5,7 @@ Network service wrapper for `trs-runtime`. This project exposes runtime operatio
 ## Endpoints
 
 - `GET /health`
+- `GET /record/{id}`
 - `POST /submit`
 - `POST /query`
 - `POST /sync`
@@ -14,6 +15,7 @@ Network service wrapper for `trs-runtime`. This project exposes runtime operatio
 Published OpenAPI artifact:
 
 - `openapi/trs-node.openapi.json`
+- `../trs-openapi/openapi.yaml` (authoritative ecosystem contract)
 
 ## Run
 

@@ -28,6 +28,8 @@ TRS runtime implementation with strict payload-independence:
 - `schemas/`: schema artifacts (placeholder)
 - `payloads/`: payload artifacts (placeholder)
 - `docs/`: amendment log and external specification artifacts
+- `trs-openapi/`: canonical network contract for node + SDK parity
+- `trs-grpc/`: canonical gRPC contract for generated clients and services
 
 ## Canonical documentation files
 

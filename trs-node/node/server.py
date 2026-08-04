@@ -7,7 +7,7 @@ import uuid
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from .api import health, query, replay, submit, sync
+from .api import health, query, record, replay, submit, sync
 from .config import NodeConfig
 from .runtime_service import RuntimeService
 
@@ -44,6 +44,7 @@ def create_app(config: NodeConfig | None = None, service: RuntimeService | None 
 
     app.include_router(health.router(resolved_config))
     app.include_router(submit.router(resolved_service))
+    app.include_router(record.router(resolved_service))
     app.include_router(query.router(resolved_service))
     app.include_router(sync.router(resolved_service))
     app.include_router(replay.router(resolved_service))

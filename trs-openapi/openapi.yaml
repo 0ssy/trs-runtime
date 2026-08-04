@@ -1,0 +1,333 @@
+openapi: 3.1.0
+info:
+  title: trs-node
+  version: 0.1.0
+  description: Canonical HTTP contract for TRS node and SDK parity.
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Health
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /record/{id}:
+    get:
+      operationId: getRecord
+      summary: Get record by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordEnvelope"
+        "404":
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+  /submit:
+    post:
+      operationId: submit
+      summary: Submit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+  /query:
+    post:
+      operationId: query
+      summary: Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueryRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+  /sync:
+    post:
+      operationId: sync
+      summary: Sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+  /replay:
+    post:
+      operationId: replay
+      summary: Replay
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplaySnapshot"
+components:
+  schemas:
+    PrimitiveType:
+      type: string
+      enum:
+        - Observation
+        - Commitment
+        - Intention
+    RecordEnvelope:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - type
+        - author
+        - timestamp
+        - schema
+        - payload
+        - signature
+        - causes
+        - authorization
+      properties:
+        id:
+          type: string
+        type:
+          $ref: "#/components/schemas/PrimitiveType"
+        author:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        schema:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+        causes:
+          type: array
+          items:
+            type: string
+        authorization:
+          type: array
+          items:
+            type: string
+        signature:
+          type: string
+        subject:
+          type: string
+    SubmitRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - record
+      properties:
+        record:
+          $ref: "#/components/schemas/RecordEnvelope"
+    SubmitResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - accepted
+        - record_id
+        - errors
+      properties:
+        accepted:
+          type: boolean
+        record_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+    QueryRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - query
+      properties:
+        query:
+          type: object
+          additionalProperties: true
+    QueryResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - records
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecordEnvelope"
+    SyncRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - records
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecordEnvelope"
+    SyncResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - accepted_count
+        - rejected_count
+        - appended_ids
+        - rejected_errors
+      properties:
+        accepted_count:
+          type: integer
+          minimum: 0
+        rejected_count:
+          type: integer
+          minimum: 0
+        appended_ids:
+          type: array
+          items:
+            type: string
+        rejected_errors:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+    HealthStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - runtime
+        - node
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+        runtime:
+          type: string
+        node:
+          type: string
+    ReplaySnapshot:
+      type: object
+      additionalProperties: false
+      required:
+        - identities
+        - workflows
+        - contracts
+        - reputation
+        - coordination
+      properties:
+        identities:
+          type: object
+          additionalProperties: true
+        workflows:
+          type: object
+          additionalProperties: true
+        contracts:
+          type: object
+          additionalProperties: true
+        reputation:
+          type: object
+          additionalProperties: true
+        coordination:
+          type: object
+          additionalProperties: false
+          required:
+            - intention_to_commitments
+            - unresolved_intentions
+            - orphan_commitments
+          properties:
+            intention_to_commitments:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+            unresolved_intentions:
+              type: array
+              items:
+                type: string
+            orphan_commitments:
+              type: array
+              items:
+                type: string
+    ErrorDetail:
+      type: object
+      additionalProperties: true
+      required:
+        - detail
+      properties:
+        detail:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+                additionalProperties: true

@@ -61,6 +61,19 @@ class NodeApiTests(unittest.TestCase):
         self.assertFalse(body["accepted"])
         self.assertTrue(any("5.3 Payload Shape" in error for error in body["errors"]))
 
+    def test_get_record_by_id(self) -> None:
+        self.client.post("/submit", json={"record": _record("g1")})
+        response = self.client.get("/record/g1")
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["id"], "g1")
+        self.assertEqual(body["type"], "Observation")
+
+    def test_get_record_by_id_not_found(self) -> None:
+        response = self.client.get("/record/missing")
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("not found", response.json()["detail"])
+
     def test_query_round_trip(self) -> None:
         self.client.post("/submit", json={"record": _record("g1")})
         self.client.post("/submit", json={"record": _record("i1", primitive="Intention", causes=["g1"])})

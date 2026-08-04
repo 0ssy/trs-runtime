@@ -8,6 +8,7 @@ from runtime.record import PrimitiveType, Record
 from runtime.replay import ReplayEngine
 from runtime.terranode_adapter import TerraNodeRuntimeAdapter
 
+from .serialization import record_to_json
 
 @dataclass(frozen=True)
 class SubmitOutcome:
@@ -39,6 +40,12 @@ class RuntimeService:
 
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return self.adapter.query(expression)
+
+    def get_record(self, record_id: str) -> dict[str, Any] | None:
+        record = self.adapter.get_record(record_id)
+        if record is None:
+            return None
+        return record_to_json(record)
 
     def sync(self, records: list[Mapping[str, Any]]) -> SyncOutcome:
         incoming = [self._record_from_envelope(envelope) for envelope in records]
