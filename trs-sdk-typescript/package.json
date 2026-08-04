@@ -1,0 +1,16 @@
+{
+  "name": "trs-sdk-typescript",
+  "version": "0.1.0",
+  "description": "TypeScript SDK client for trs-node",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
+

@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trs-explorer"
+version = "0.1.0"
+description = "Visual explorer for TRS graphs and replay via trs-sdk-python"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.111",
+  "uvicorn>=0.30",
+  "trs-sdk-python>=0.1.0",
+]
+

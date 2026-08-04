@@ -9,6 +9,11 @@ Network service wrapper for `trs-runtime`. This project exposes runtime operatio
 - `POST /query`
 - `POST /sync`
 - `POST /replay`
+- `GET /openapi.json`
+
+Published OpenAPI artifact:
+
+- `openapi/trs-node.openapi.json`
 
 ## Run
 

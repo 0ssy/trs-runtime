@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TRS Explorer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>TRS Explorer</h1>
+      <p>Visual graph, timeline, and explainability over immutable coordination records.</p>
+      <div id="health"></div>
+    </header>
+
+    <section class="toolbar">
+      <input id="search" placeholder="subject:Warehouse-7 author:Alice primitive:Intention" />
+      <button id="search-btn">Search</button>
+      <button id="reset-btn">Reset</button>
+    </section>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Graph</h2>
+        <ul id="graph-list" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Record Detail</h2>
+        <div id="detail">Select a record.</div>
+      </section>
+
+      <section class="panel">
+        <h2>Replay Timeline</h2>
+        <ul id="timeline" class="list"></ul>
+      </section>
+    </main>
+
+    <section class="panel explain">
+      <h2>Explainability</h2>
+      <p>Paste a record JSON and validate through the runtime verifier.</p>
+      <textarea id="record-json" rows="10"></textarea>
+      <button id="explain-btn">Explain</button>
+      <pre id="explain-output"></pre>
+    </section>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+
