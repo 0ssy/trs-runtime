@@ -1,0 +1,20 @@
+:root {
+  --trs-highlight: #ffebaf;
+  --trs-accent: #4c9db0;
+  --trs-text: #1f2a2e;
+}
+
+body {
+  color: var(--trs-text);
+}
+
+.trs-callout {
+  background: var(--trs-highlight);
+  border-left: 6px solid var(--trs-accent);
+  padding: 12px;
+}
+
+a {
+  color: var(--trs-accent);
+}
+

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trs-cli"
+version = "0.1.0"
+description = "Command line client for trs-node via trs-sdk-python"
+requires-python = ">=3.11"
+dependencies = [
+  "trs-sdk-python>=0.1.0",
+]
+
+[project.scripts]
+trs = "trs_cli.main:main"
+
