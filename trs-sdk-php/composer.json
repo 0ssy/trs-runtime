@@ -1,0 +1,11 @@
+{
+  "name": "trs/sdk-php",
+  "description": "PHP SDK for trs-node",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "TrsSdk\\\\": "src/"
+    }
+  }
+}
+
