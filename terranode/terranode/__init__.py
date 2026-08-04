@@ -23,6 +23,33 @@ from .sdk import TerraNodePythonClient
 from .human import OfflineChannelClient
 from .semantics import MappingCommitment, SemanticRegistry
 from .trust import TrustModel, TrustSignal, TrustWeightedPolicy
+from .application import (
+    ApplicationBacklog,
+    RecordProof,
+    SubmissionReceipt,
+    VerticalSliceResult,
+    app_validation_backlog,
+    run_vertical_slice,
+)
+from .identity_application import (
+    IdentityRecordProof,
+    IdentitySubmissionReceipt,
+    IdentitySubmissionRequest,
+    IdentityVerticalSliceResult,
+    run_identity_vertical_slice,
+)
+from .reputation_application import (
+    ReputationRecordProof,
+    ReputationSignalReceipt,
+    ReputationSignalRequest,
+    ReputationVerticalSliceResult,
+    run_reputation_vertical_slice,
+)
+from .workflow_application import (
+    WorkflowRecordProof,
+    WorkflowVerticalSliceResult,
+    run_workflow_vertical_slice,
+)
 
 __all__ = [
     "Allocation",
@@ -50,12 +77,31 @@ __all__ = [
     "PrivacyCredential",
     "PriorityPolicy",
     "ProRataPolicy",
+    "RecordProof",
+    "SubmissionReceipt",
     "SelectiveDisclosureProof",
     "TerraNodePythonClient",
     "TrustModel",
     "TrustSignal",
     "TrustWeightedPolicy",
+    "VerticalSliceResult",
     "WeightedPolicy",
+    "ApplicationBacklog",
+    "IdentityRecordProof",
+    "IdentitySubmissionReceipt",
+    "IdentitySubmissionRequest",
+    "IdentityVerticalSliceResult",
+    "ReputationRecordProof",
+    "ReputationSignalReceipt",
+    "ReputationSignalRequest",
+    "ReputationVerticalSliceResult",
+    "WorkflowRecordProof",
+    "WorkflowVerticalSliceResult",
+    "app_validation_backlog",
+    "run_identity_vertical_slice",
+    "run_reputation_vertical_slice",
+    "run_vertical_slice",
+    "run_workflow_vertical_slice",
     "verify_selective_disclosure",
     "run_demo",
     "TerraNodeRuntimeAdapter",

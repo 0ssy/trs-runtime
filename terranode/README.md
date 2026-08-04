@@ -15,6 +15,10 @@ TerraNode Program 1 is a consumer-validation experiment over TRS runtime.
 - `terranode/network/`: distributed node, transport, and partition simulation layer.
 - `terranode/sdk/`: SDK entrypoints (starting with Python).
 - `terranode/privacy.py`: selective-disclosure baseline module.
+- `terranode/application.py`: app-first validation backlog and first vertical slice runner.
+- `terranode/identity_application.py`: identity-service vertical slice with failure and proof artifacts.
+- `terranode/reputation_application.py`: reputation-service vertical slice with trust-weighted workflow artifacts.
+- `terranode/workflow_application.py`: workflow-engine vertical slice with offline ingestion and convergence artifacts.
 - `terranode/main.py`: scarcity demonstration flow.
 - `tests/`: policy, adapter, and end-to-end tests.
 - `docs/ROADMAP_P2_P9.md`: dependency-ordered post-v1.0 research stack.
@@ -38,10 +42,18 @@ python -m unittest -v terranode.tests.test_program8_public_submission_boundary
 python -m unittest -v terranode.tests.test_program9_human_systems
 python -m unittest -v terranode.tests.test_program9_10_sdk
 python -m unittest -v terranode.tests.test_program9_11_privacy
+python -m unittest -v terranode.tests.test_app_vertical_slice
+python -m unittest -v terranode.tests.test_app_identity_vertical_slice
+python -m unittest -v terranode.tests.test_app_reputation_vertical_slice
+python -m unittest -v terranode.tests.test_app_workflow_vertical_slice
 ```
 
 ## Run demo
 
 ```bash
 python terranode/examples/scarcity_demo.py
+python terranode/examples/app_vertical_slice.py
+python terranode/examples/identity_vertical_slice.py
+python terranode/examples/reputation_vertical_slice.py
+python terranode/examples/workflow_vertical_slice.py
 ```
