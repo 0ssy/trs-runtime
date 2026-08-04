@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-08-04T071332Z",
+  "status": "in_progress",
+  "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe -m unittest -v terranode.tests.test_program9_11_privacy",
+  "exit_code": 0,
+  "privacy_baseline_passed": true,
+  "stdout": "",
+  "stderr": "test_selective_disclosure_proves_required_attributes_only (terranode.tests.test_program9_11_privacy.Program911PrivacyTests.test_selective_disclosure_proves_required_attributes_only) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+  "initial_claims": [
+    "membership",
+    "age_over_18",
+    "allocation_tier"
+  ],
+  "closure_note": "ZK/VC-grade proof systems and external privacy review remain required."
+}

@@ -6,6 +6,8 @@ from terranode.terranode.policy import (
     AllocationPolicy,
     AuctionPolicy,
     EmergencyOverridePolicy,
+    FairSharePolicy,
+    LotteryPolicy,
     PriorityPolicy,
     ProRataPolicy,
     WeightedPolicy,
@@ -20,7 +22,9 @@ class Program3PolicyIndependenceTests(unittest.TestCase):
             PriorityPolicy({"alice": 2, "bob": 1}),
             WeightedPolicy({"alice": 1.2, "bob": 0.8}),
             AuctionPolicy({"alice": 80.0, "bob": 60.0}),
+            LotteryPolicy(seed="program3"),
             EmergencyOverridePolicy("alice"),
+            FairSharePolicy(),
         ]
         for index, policy in enumerate(policies, start=1):
             with self.subTest(policy=policy.__class__.__name__):

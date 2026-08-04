@@ -51,12 +51,16 @@
 - `evidence/test_runs/2026-08-03T130045Z_validation_cycle.log` (nightly + allow-benchmark-regressions: pass)
 - `evidence/test_runs/2026-08-03T125317Z_terranode_program2_program3.log` (TerraNode Programs 2–3 pass)
 - `evidence/test_runs/2026-08-03T125659Z_terranode_program4_program9.log` (TerraNode Programs 4–9 pass)
+- `evidence/test_runs/2026-08-04T071409Z_terranode_full_suite.log` (TerraNode suite including Program 9.10/9.11 baselines)
 - `evidence/interop/cycle0012_latest.json` + `evidence/interop/cycle0012_cross_latest.json` (Program 9.5 baselines)
 - `evidence/formal/cycle0013_latest.json` (Program 9.6 baseline)
 - `evidence/security/cycle0014_latest.json` (Program 9.7 internal readiness baseline)
 - `evidence/governance/cycle0015_latest.json` (Program 9.8 governance baseline)
 - `evidence/redteam/cycle0016_latest.json` (Program 9.9 adversarial baseline)
+- `evidence/sdk/cycle0017_latest.json` (Program 9.10 SDK baseline)
+- `evidence/privacy/cycle0018_latest.json` (Program 9.11 privacy baseline)
 - `evidence/external/2026-08-03_submission/*` (external attack/governance submissions ingested)
+- `evidence/handoff/pre_pilot_external_handoff_latest.json` (unified external handoff for 9.5/9.7/9.8/9.9)
 
 ## Reference Runtime
 

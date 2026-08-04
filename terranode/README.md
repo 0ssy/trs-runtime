@@ -12,6 +12,9 @@ TerraNode Program 1 is a consumer-validation experiment over TRS runtime.
 - `terranode/capability.py`: consumer-side capability scope/expiry/supersession checks.
 - `terranode/boundary.py`: public submission gateway with quotas and validation.
 - `terranode/human.py`: offline channel queue/flush workflow.
+- `terranode/network/`: distributed node, transport, and partition simulation layer.
+- `terranode/sdk/`: SDK entrypoints (starting with Python).
+- `terranode/privacy.py`: selective-disclosure baseline module.
 - `terranode/main.py`: scarcity demonstration flow.
 - `tests/`: policy, adapter, and end-to-end tests.
 - `docs/ROADMAP_P2_P9.md`: dependency-ordered post-v1.0 research stack.
@@ -25,6 +28,7 @@ python -m unittest -v terranode.tests.test_policy
 python -m unittest -v terranode.tests.test_adapter
 python -m unittest -v terranode.tests.test_program1
 python -m unittest -v terranode.tests.test_program2_distributed
+python -m unittest -v terranode.tests.test_program2_network
 python -m unittest -v terranode.tests.test_program3_policy_independence
 python -m unittest -v terranode.tests.test_program4_trust_weighted
 python -m unittest -v terranode.tests.test_program5_multi_authority
@@ -32,6 +36,8 @@ python -m unittest -v terranode.tests.test_program6_semantic_interoperability
 python -m unittest -v terranode.tests.test_program7_capability_security
 python -m unittest -v terranode.tests.test_program8_public_submission_boundary
 python -m unittest -v terranode.tests.test_program9_human_systems
+python -m unittest -v terranode.tests.test_program9_10_sdk
+python -m unittest -v terranode.tests.test_program9_11_privacy
 ```
 
 ## Run demo

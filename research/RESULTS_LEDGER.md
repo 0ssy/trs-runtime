@@ -47,6 +47,8 @@ Latest full-cycle evidence:
 | CYCLE-0014 | Program 9.7 crypto + external audit | In progress | Internal readiness pass; external audit pending | `research/cycles/CYCLE-0014.md`, `evidence/security/cycle0014_latest.json` |
 | CYCLE-0015 | Program 9.8 governance | In progress | Governance baseline/check pass; multi-party adoption pending | `research/cycles/CYCLE-0015.md`, `evidence/governance/cycle0015_latest.json` |
 | CYCLE-0016 | Program 9.9 live-scale red-team | In progress | Internal distributed adversarial baseline pass; external live campaign pending | `research/cycles/CYCLE-0016.md`, `evidence/redteam/cycle0016_latest.json` |
+| CYCLE-0017 | Program 9.10 SDK + onboarding | In progress | Python SDK baseline pass; multi-language SDK and external onboarding pending | `research/cycles/CYCLE-0017.md`, `evidence/sdk/cycle0017_latest.json` |
+| CYCLE-0018 | Program 9.11 privacy layer | In progress | Selective-disclosure baseline pass; ZK/VC-grade system and external review pending | `research/cycles/CYCLE-0018.md`, `evidence/privacy/cycle0018_latest.json` |
 
 ## External submissions ingested
 
@@ -54,6 +56,7 @@ Latest full-cycle evidence:
 - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.txt`
 - `evidence/external/2026-08-03_submission/BLOCKER_RESOLUTION_REPORT.md`
 - `evidence/external/2026-08-03_submission/RATIFICATION_TRS_0002.md`
+- `evidence/handoff/pre_pilot_external_handoff_latest.json` (unified handoff pack for 9.5/9.7/9.8/9.9)
 
 ## Open closure blockers before pilot
 

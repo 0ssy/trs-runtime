@@ -2,7 +2,7 @@
 
 ## Status
 
-Open.
+In progress (selective-disclosure baseline started; advanced ZK/VC layer pending).
 
 ## Depends on
 
@@ -22,6 +22,20 @@ Can identity-related claims be proven with selective disclosure while preserving
 - Proof flow design and implementation artifacts.
 - Tests showing required-claim proofs with minimized disclosure.
 - Privacy/security review outcomes.
+
+## Baseline initialized
+
+- Harness: `research/privacy/run_cycle_0018_privacy_baseline.py`
+- Latest summary: `evidence/privacy/cycle0018_latest.json`
+- Timestamped artifact: `evidence/privacy/2026-08-04T071332Z_cycle0018_privacy_baseline.json`
+- Initial privacy module:
+  - `terranode/terranode/privacy.py`
+  - `terranode/tests/test_program9_11_privacy.py`
+
+### Current baseline result
+
+- Selective-disclosure baseline test: pass
+- ZK-grade proof systems and external privacy review: pending for closure
 
 ## Pass criteria
 

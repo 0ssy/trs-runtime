@@ -38,6 +38,7 @@ Is the system cryptographically and operationally safe enough for real-world ris
   - `tests.test_verifier`
   - `attacks/run_attacks.py`
 - External attack submission received (`evidence/external/2026-08-03_submission/...`) and indicates no exploit breach but benchmark regressions.
+- External handoff package includes 9.7 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
 - External independent security audit: still pending (required for closure)
 
 ## Pass criteria

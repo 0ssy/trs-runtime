@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-08-04T071332Z",
+  "status": "in_progress",
+  "command": "C:\\Users\\josep\\OneDrive\\Desktop\\trs-runtime\\venv\\Scripts\\python.exe -m unittest -v terranode.tests.test_program9_10_sdk",
+  "exit_code": 0,
+  "python_sdk_baseline_passed": true,
+  "stdout": "",
+  "stderr": "test_python_sdk_claim_submission_and_resolution (terranode.tests.test_program9_10_sdk.Program910SdkTests.test_python_sdk_claim_submission_and_resolution) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nOK\n",
+  "target_sdk_languages": [
+    "Python",
+    "Rust",
+    "Go",
+    "TypeScript",
+    "Java",
+    "C#"
+  ],
+  "closure_note": "Non-Python SDK implementations and external onboarding trial remain required."
+}

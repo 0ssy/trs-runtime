@@ -2,7 +2,7 @@
 
 ## Status
 
-Open.
+In progress (Python SDK baseline started; multi-language and external onboarding pending).
 
 ## Depends on
 
@@ -22,6 +22,20 @@ Can external teams integrate with TRS/TerraNode without insider assistance?
 - SDK release artifacts and examples.
 - Third-party onboarding trial logs.
 - External conformance outcomes.
+
+## Baseline initialized
+
+- Harness: `research/sdk/run_cycle_0017_sdk_baseline.py`
+- Latest summary: `evidence/sdk/cycle0017_latest.json`
+- Timestamped artifact: `evidence/sdk/2026-08-04T071332Z_cycle0017_sdk_baseline.json`
+- Initial Python SDK surface:
+  - `terranode/terranode/sdk/python_client.py`
+  - `terranode/tests/test_program9_10_sdk.py`
+
+### Current baseline result
+
+- Python SDK integration baseline: pass
+- Additional SDK language implementations and third-party onboarding: pending for closure
 
 ## Pass criteria
 

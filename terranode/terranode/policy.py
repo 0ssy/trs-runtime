@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 from typing import Protocol
 
 
@@ -161,5 +162,78 @@ class EmergencyOverridePolicy:
             allocations=[
                 Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=by_id.get(claim.claim_id, 0.0))
                 for claim in conflict_set.claims
+            ],
+        )
+
+
+class LotteryPolicy:
+    def __init__(self, *, seed: str = "terranode-lottery") -> None:
+        self.seed = seed
+
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        if not conflict_set.claims or conflict_set.available <= 0.0:
+            return AllocationDecision(
+                subject=conflict_set.subject,
+                allocations=[
+                    Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=0.0)
+                    for claim in conflict_set.claims
+                ],
+            )
+        winner = max(
+            conflict_set.claims,
+            key=lambda claim: hashlib.sha256(f"{self.seed}:{claim.claim_id}".encode("utf-8")).hexdigest(),
+        )
+        granted = min(max(0.0, winner.amount), conflict_set.available)
+        return AllocationDecision(
+            subject=conflict_set.subject,
+            allocations=[
+                Allocation(
+                    claim_id=claim.claim_id,
+                    claimant=claim.claimant,
+                    granted=granted if claim.claim_id == winner.claim_id else 0.0,
+                )
+                for claim in conflict_set.claims
+            ],
+        )
+
+
+class FairSharePolicy:
+    def allocate(self, conflict_set: ConflictSet) -> AllocationDecision:
+        claims = list(conflict_set.claims)
+        if not claims or conflict_set.available <= 0.0:
+            return AllocationDecision(
+                subject=conflict_set.subject,
+                allocations=[
+                    Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=0.0)
+                    for claim in claims
+                ],
+            )
+
+        remaining = float(conflict_set.available)
+        unmet = {claim.claim_id: max(0.0, claim.amount) for claim in claims}
+        grants = {claim.claim_id: 0.0 for claim in claims}
+
+        while remaining > 0.0 and unmet:
+            share = remaining / len(unmet)
+            consumed = 0.0
+            finished: list[str] = []
+            for claim_id, needed in unmet.items():
+                grant = min(needed, share)
+                grants[claim_id] += grant
+                consumed += grant
+                unmet[claim_id] = needed - grant
+                if unmet[claim_id] <= 1e-9:
+                    finished.append(claim_id)
+            remaining -= consumed
+            for claim_id in finished:
+                unmet.pop(claim_id, None)
+            if consumed <= 1e-12:
+                break
+
+        return AllocationDecision(
+            subject=conflict_set.subject,
+            allocations=[
+                Allocation(claim_id=claim.claim_id, claimant=claim.claimant, granted=grants.get(claim.claim_id, 0.0))
+                for claim in claims
             ],
         )

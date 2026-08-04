@@ -42,6 +42,7 @@ Can a second, independent implementation built from frozen TRS documents interop
 - Inventory hash parity: pass
 - Conflict visibility preserved: pass
 - Replay unresolved intentions: none
+- External handoff package includes 9.5 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
 
 ## Remaining closure requirement
 

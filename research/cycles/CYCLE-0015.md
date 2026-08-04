@@ -40,6 +40,7 @@ Is TRS amendment authority governed by explicit process rather than ad-hoc contr
 - External governance artifacts ingested:
   - `evidence/external/2026-08-03_submission/RATIFICATION_TRS_0002.md`
   - `evidence/external/2026-08-03_submission/BLOCKER_RESOLUTION_REPORT.md`
+- External handoff package includes 9.8 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
 - Independent multi-party governance adoption: partially evidenced; full recurring ratification process still pending for closure
 
 ## Pass criteria

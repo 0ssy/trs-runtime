@@ -32,3 +32,32 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.secrets
+secrets/
+
+# Local runtime and node artifacts
+*.sqlite
+*.sqlite3
+*.db
+*.log
+logs/
+trs-node/.pytest_cache/
+trs-node/.mypy_cache/
+trs-node/.ruff_cache/
+trs-node/.coverage
+trs-node/.coverage.*
+trs-node/htmlcov/
+trs-node/venv/
+trs-node/.venv/

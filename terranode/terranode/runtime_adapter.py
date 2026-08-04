@@ -175,6 +175,24 @@ class TerraNodeRuntimeAdapter:
         peer._rebuild_subject_indexes()
         return peer_to_self, self_to_peer
 
+    def ingest_records(self, records: list[Record]) -> NetworkSyncResult:
+        if not records:
+            return NetworkSyncResult(missing_ids=[], appended_ids=[], rejected_ids=[], verification_results=[])
+        missing_ids = [record.id for record in records if not self.store.exists(record.id)]
+        from runtime.network_sync import ingest_records_unordered
+
+        unordered = ingest_records_unordered(self.store, records, self.verifier)
+        self._rebuild_subject_indexes()
+        return NetworkSyncResult(
+            missing_ids=missing_ids,
+            appended_ids=unordered.appended_ids,
+            rejected_ids=unordered.rejected_ids,
+            verification_results=unordered.verification_results,
+        )
+
+    def refresh_indexes(self) -> None:
+        self._rebuild_subject_indexes()
+
     def _ensure_subject_bootstrap(self, *, subject: str, available: float) -> None:
         if subject in self._root_by_subject:
             return
