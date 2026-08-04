@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trs-sdk-python"
+version = "0.1.0"
+description = "Python SDK client for trs-node"
+requires-python = ">=3.11"
+
