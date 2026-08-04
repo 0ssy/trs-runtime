@@ -30,6 +30,7 @@ TRS runtime implementation with strict payload-independence:
 - `docs/`: amendment log and external specification artifacts
 - `trs-openapi/`: canonical network contract for node + SDK parity
 - `trs-grpc/`: canonical gRPC contract for generated clients and services
+- `trs-examples/`: small runnable reference apps for TRS usage patterns
 
 ## Canonical documentation files
 
