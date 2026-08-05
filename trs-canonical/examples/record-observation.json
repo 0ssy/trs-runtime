@@ -1,0 +1,15 @@
+{
+  "authorization": [],
+  "author": "root",
+  "causes": [],
+  "id": "g1",
+  "payload": {
+    "subject": "boot",
+    "value": 1
+  },
+  "schema": "trs.observation.v1",
+  "signature": "sig:g1",
+  "subject": "boot",
+  "timestamp": "2026-01-01T00:00:00+00:00",
+  "type": "Observation"
+}

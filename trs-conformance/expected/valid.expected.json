@@ -1,0 +1,30 @@
+{
+  "valid-minimal-genesis": {
+    "status": "pass",
+    "records_valid": [
+      "g1"
+    ]
+  },
+  "valid-authorization-chain": {
+    "status": "pass",
+    "records_valid": [
+      "g-auth-1",
+      "cap-auth-1",
+      "i-auth-1",
+      "c-auth-1"
+    ]
+  },
+  "valid-conflict-visible": {
+    "status": "pass",
+    "records_valid": [
+      "g-conf-1",
+      "i-conf-1",
+      "i-conf-2"
+    ],
+    "conflict_expectation": {
+      "rule": "4.5",
+      "status": "PASS",
+      "record_id": "i-conf-2"
+    }
+  }
+}

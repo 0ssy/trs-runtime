@@ -1,0 +1,11 @@
+{
+  "profile": "TRS-CANONICAL-1",
+  "vectors": [
+    {
+      "id": "canonical-001",
+      "description": "minimal observation object key ordering",
+      "input_file": "../examples/record-observation.json",
+      "expected_canonical_json": "{\"authorization\":[],\"author\":\"root\",\"causes\":[],\"id\":\"g1\",\"payload\":{\"subject\":\"boot\",\"value\":1},\"schema\":\"trs.observation.v1\",\"signature\":\"sig:g1\",\"subject\":\"boot\",\"timestamp\":\"2026-01-01T00:00:00+00:00\",\"type\":\"Observation\"}"
+    }
+  ]
+}

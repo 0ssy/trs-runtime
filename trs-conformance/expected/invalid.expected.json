@@ -1,0 +1,50 @@
+{
+  "invalid-duplicate-id": {
+    "status": "pass",
+    "must_fail_records": [
+      "dup-1"
+    ],
+    "error_contains": [
+      "4.1 Immutability"
+    ]
+  },
+  "invalid-missing-cause": {
+    "status": "pass",
+    "must_fail_records": [
+      "i-missing-cause"
+    ],
+    "error_contains": [
+      "4.2 Causality",
+      "missing causes"
+    ]
+  },
+  "invalid-schema-mismatch": {
+    "status": "pass",
+    "must_fail_records": [
+      "schema-bad-1"
+    ],
+    "error_contains": [
+      "5.1 Schema Declaration"
+    ]
+  },
+  "invalid-payload-shape": {
+    "status": "pass",
+    "must_fail_records": [
+      "payload-bad-1"
+    ],
+    "error_contains": [
+      "5.3 Payload Shape",
+      "missing payload keys"
+    ]
+  },
+  "invalid-missing-authorization-reference": {
+    "status": "pass",
+    "must_fail_records": [
+      "c-auth-miss-1"
+    ],
+    "error_contains": [
+      "6.1 Authorization Traceability",
+      "missing authorization records"
+    ]
+  }
+}

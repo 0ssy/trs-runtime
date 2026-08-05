@@ -1,0 +1,20 @@
+{
+  "vector_id": "invalid-missing-cause",
+  "records": [
+    {
+      "id": "i-missing-cause",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "do-work",
+        "horizon": "today"
+      },
+      "causes": ["does-not-exist"],
+      "authorization": [],
+      "signature": "sig:i-missing-cause",
+      "subject": "work"
+    }
+  ]
+}

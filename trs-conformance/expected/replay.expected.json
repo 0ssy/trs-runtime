@@ -1,0 +1,15 @@
+{
+  "replay-basic-coordination": {
+    "status": "pass",
+    "expect": {
+      "coordination.unresolved_intentions_contains": [
+        "i-replay-2"
+      ],
+      "coordination.intention_to_commitments_contains": {
+        "i-replay-1": [
+          "c-replay-1"
+        ]
+      }
+    }
+  }
+}

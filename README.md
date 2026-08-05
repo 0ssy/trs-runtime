@@ -31,6 +31,13 @@ TRS runtime implementation with strict payload-independence:
 - `trs-openapi/`: canonical network contract for node + SDK parity
 - `trs-grpc/`: canonical gRPC contract for generated clients and services
 - `trs-examples/`: small runnable reference apps for TRS usage patterns
+- `trs-conformance/`: implementation-neutral conformance vectors and expected outcomes
+- `trs-canonical/`: canonical serialization, hashing, and signing profiles
+- `trs-network/`: normative HTTP wire protocol profile
+- `trs-interop/`: cross-implementation interoperability matrix and reports
+- `trs-formal/`: formal-method models (TLA+ starter)
+- `trs-governance/`: amendment workflow, voting, accepted/rejected records
+- `trs-independent-implementations/`: independent implementation evidence intake
 
 ## Canonical documentation files
 

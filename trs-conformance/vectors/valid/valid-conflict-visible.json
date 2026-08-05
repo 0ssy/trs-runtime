@@ -1,0 +1,50 @@
+{
+  "vector_id": "valid-conflict-visible",
+  "records": [
+    {
+      "id": "g-conf-1",
+      "type": "Observation",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "resource",
+        "value": "init"
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:g-conf-1",
+      "subject": "resource"
+    },
+    {
+      "id": "i-conf-1",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:01+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "reserve",
+        "horizon": "today"
+      },
+      "causes": ["g-conf-1"],
+      "authorization": [],
+      "signature": "sig:i-conf-1",
+      "subject": "resource"
+    },
+    {
+      "id": "i-conf-2",
+      "type": "Intention",
+      "author": "bob",
+      "timestamp": "2026-01-01T00:00:02+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "reserve-high-priority",
+        "horizon": "today"
+      },
+      "causes": ["g-conf-1"],
+      "authorization": [],
+      "signature": "sig:i-conf-2",
+      "subject": "resource"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "profile": "TRS-SIGNATURE-1",
+  "vectors": [
+    {
+      "id": "sig-001",
+      "hash_vector_id": "hash-001",
+      "sign_input_prefix": "TRS-SIGNATURE-1\\n",
+      "algorithm": "Ed25519",
+      "public_key_hex": "TBD",
+      "signature_hex": "TBD"
+    }
+  ]
+}

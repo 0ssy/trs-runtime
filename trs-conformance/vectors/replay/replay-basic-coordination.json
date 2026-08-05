@@ -1,0 +1,65 @@
+{
+  "vector_id": "replay-basic-coordination",
+  "records": [
+    {
+      "id": "g-replay-1",
+      "type": "Observation",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "coord",
+        "value": 1
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:g-replay-1",
+      "subject": "coord"
+    },
+    {
+      "id": "i-replay-1",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:01+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "do-a",
+        "horizon": "today"
+      },
+      "causes": ["g-replay-1"],
+      "authorization": [],
+      "signature": "sig:i-replay-1",
+      "subject": "coord"
+    },
+    {
+      "id": "i-replay-2",
+      "type": "Intention",
+      "author": "bob",
+      "timestamp": "2026-01-01T00:00:02+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "do-b",
+        "horizon": "today"
+      },
+      "causes": ["g-replay-1"],
+      "authorization": [],
+      "signature": "sig:i-replay-2",
+      "subject": "coord"
+    },
+    {
+      "id": "c-replay-1",
+      "type": "Commitment",
+      "author": "allocator",
+      "timestamp": "2026-01-01T00:00:03+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "complete-intention",
+        "due_by": "2027-01-01"
+      },
+      "causes": ["g-replay-1", "i-replay-1"],
+      "authorization": [],
+      "signature": "sig:c-replay-1",
+      "subject": "coord"
+    }
+  ]
+}

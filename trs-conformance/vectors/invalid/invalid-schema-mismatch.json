@@ -1,0 +1,20 @@
+{
+  "vector_id": "invalid-schema-mismatch",
+  "records": [
+    {
+      "id": "schema-bad-1",
+      "type": "Commitment",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "action": "deliver",
+        "due_by": "2027-01-01"
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:schema-bad-1",
+      "subject": "contract-x"
+    }
+  ]
+}

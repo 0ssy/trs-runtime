@@ -1,0 +1,11 @@
+{
+  "profile": "TRS-HASH-1",
+  "vectors": [
+    {
+      "id": "hash-001",
+      "canonicalization_vector_id": "canonical-001",
+      "hash_input_prefix": "TRS-HASH-1\\n",
+      "expected_sha256_hex": "TBD_BY_IMPLEMENTATION_RUNNER"
+    }
+  ]
+}

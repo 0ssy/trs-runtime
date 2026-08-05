@@ -1,0 +1,66 @@
+{
+  "vector_id": "auth-delegation-trace",
+  "records": [
+    {
+      "id": "g-auth-trace-1",
+      "type": "Observation",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "auth",
+        "value": "boot"
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:g-auth-trace-1",
+      "subject": "auth"
+    },
+    {
+      "id": "cap-auth-trace-1",
+      "type": "Commitment",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:01+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "delegate-authority",
+        "due_by": "2027-01-01"
+      },
+      "causes": ["g-auth-trace-1"],
+      "authorization": ["g-auth-trace-1"],
+      "signature": "sig:cap-auth-trace-1",
+      "subject": "auth"
+    },
+    {
+      "id": "i-auth-trace-1",
+      "type": "Intention",
+      "author": "worker",
+      "timestamp": "2026-01-01T00:00:02+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "execute",
+        "horizon": "now"
+      },
+      "causes": ["g-auth-trace-1"],
+      "authorization": [],
+      "signature": "sig:i-auth-trace-1",
+      "subject": "auth"
+    },
+    {
+      "id": "c-auth-trace-1",
+      "type": "Commitment",
+      "author": "worker",
+      "timestamp": "2026-01-01T00:00:03+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "execute-authorized",
+        "due_by": "2027-01-01"
+      },
+      "causes": ["g-auth-trace-1", "i-auth-trace-1"],
+      "authorization": ["cap-auth-trace-1"],
+      "signature": "sig:c-auth-trace-1",
+      "subject": "auth"
+    }
+  ],
+  "target_record_id": "c-auth-trace-1"
+}

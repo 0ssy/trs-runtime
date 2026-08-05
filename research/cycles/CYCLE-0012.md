@@ -44,6 +44,17 @@ Can a second, independent implementation built from frozen TRS documents interop
 - Replay unresolved intentions: none
 - External handoff package includes 9.5 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
 
+## External report ingested (2026-08-04)
+
+- Recorded in: `research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md`
+- Reported status: functioning external implementation with no contradiction findings.
+- Reported clarification candidates:
+  - subject representation;
+  - non-silent conflict wording;
+  - authorization/delegation payload interoperability shape.
+- TRS-0002 trigger status from report: not triggered.
+- Closure note: strict Program 9.5 independence classification remains pending explicit attestation that only specification documents were used.
+
 ## Remaining closure requirement
 
 External, non-reference-team implementation handoff and interoperability run must still be executed before closing CYCLE-0012.

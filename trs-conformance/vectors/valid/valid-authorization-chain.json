@@ -1,0 +1,67 @@
+{
+  "vector_id": "valid-authorization-chain",
+  "records": [
+    {
+      "id": "g-auth-1",
+      "type": "Observation",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "warehouse-7",
+        "value": {
+          "available": 100
+        }
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:g-auth-1",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cap-auth-1",
+      "type": "Commitment",
+      "author": "root",
+      "timestamp": "2026-01-01T00:00:01+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "delegate-allocation",
+        "due_by": "2027-01-01"
+      },
+      "causes": ["g-auth-1"],
+      "authorization": ["g-auth-1"],
+      "signature": "sig:cap-auth-1",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "i-auth-1",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:02+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "allocate",
+        "horizon": "today"
+      },
+      "causes": ["g-auth-1"],
+      "authorization": [],
+      "signature": "sig:i-auth-1",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "c-auth-1",
+      "type": "Commitment",
+      "author": "allocator",
+      "timestamp": "2026-01-01T00:00:03+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "grant-allocation",
+        "due_by": "2027-01-01"
+      },
+      "causes": ["g-auth-1", "i-auth-1"],
+      "authorization": ["cap-auth-1"],
+      "signature": "sig:c-auth-1",
+      "subject": "warehouse-7"
+    }
+  ]
+}

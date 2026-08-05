@@ -1,0 +1,13 @@
+{
+  "auth-delegation-trace": {
+    "status": "pass",
+    "target_record_id": "c-auth-trace-1",
+    "expect": {
+      "authorization_path_contains": [
+        "cap-auth-trace-1",
+        "g-auth-trace-1"
+      ],
+      "record_valid": true
+    }
+  }
+}

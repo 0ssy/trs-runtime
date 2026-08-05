@@ -1,0 +1,20 @@
+{
+  "valid": [
+    "vectors/valid/valid-minimal-genesis.json",
+    "vectors/valid/valid-authorization-chain.json",
+    "vectors/valid/valid-conflict-visible.json"
+  ],
+  "invalid": [
+    "vectors/invalid/invalid-duplicate-id.json",
+    "vectors/invalid/invalid-missing-cause.json",
+    "vectors/invalid/invalid-schema-mismatch.json",
+    "vectors/invalid/invalid-payload-shape.json",
+    "vectors/invalid/invalid-missing-authorization-reference.json"
+  ],
+  "replay": [
+    "vectors/replay/replay-basic-coordination.json"
+  ],
+  "authorization": [
+    "vectors/authorization/auth-delegation-trace.json"
+  ]
+}

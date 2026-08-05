@@ -1,0 +1,10 @@
+{
+  "implementation_name": "example-runtime",
+  "implementation_language": "example-language",
+  "implementation_version": "0.1.0",
+  "conformance_status": "pass|fail|pending",
+  "sync_with_reference_status": "pass|fail|pending",
+  "replay_compatibility_status": "pass|fail|pending",
+  "notes": [],
+  "evidence_paths": []
+}

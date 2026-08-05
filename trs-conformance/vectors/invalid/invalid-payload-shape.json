@@ -1,0 +1,19 @@
+{
+  "vector_id": "invalid-payload-shape",
+  "records": [
+    {
+      "id": "payload-bad-1",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "incomplete"
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:payload-bad-1",
+      "subject": "work"
+    }
+  ]
+}
