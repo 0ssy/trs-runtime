@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
+import tempfile
 import unittest
 
 from fastapi.testclient import TestClient
 
+from node.runtime_service import RuntimeService
 from node.server import create_app
+from runtime.storage import SQLiteStorage
 
 
 def _record(record_id: str, *, primitive: str = "Observation", causes: list[str] | None = None) -> dict:
@@ -110,6 +114,22 @@ class NodeApiTests(unittest.TestCase):
 
         target_records = target.post("/query", json={"query": {}}).json()["records"]
         self.assertEqual({record["id"] for record in target_records}, {"g1", "i1"})
+
+    def test_sqlite_serve_profile_persists_across_restart(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = str(Path(tmp) / "trs-node.db")
+            first_client = TestClient(create_app(service=RuntimeService(store=SQLiteStorage(db_path))))
+            submit_response = first_client.post("/submit", json={"record": _record("g1")})
+            self.assertEqual(submit_response.status_code, 200)
+            self.assertTrue(submit_response.json()["accepted"])
+            first_client.close()
+
+            second_client = TestClient(create_app(service=RuntimeService(store=SQLiteStorage(db_path))))
+            query_response = second_client.post("/query", json={"query": {}})
+            self.assertEqual(query_response.status_code, 200)
+            records = query_response.json()["records"]
+            self.assertEqual([record["id"] for record in records], ["g1"])
+            second_client.close()
 
 
 if __name__ == "__main__":

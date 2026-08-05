@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 from runtime.record import PrimitiveType, Record
 from runtime.replay import ReplayEngine
+from runtime.storage import StorageEngine
 from runtime.terranode_adapter import TerraNodeRuntimeAdapter
 
 from .serialization import record_to_json
@@ -26,8 +27,8 @@ class SyncOutcome:
 
 
 class RuntimeService:
-    def __init__(self) -> None:
-        self.adapter = TerraNodeRuntimeAdapter()
+    def __init__(self, store: StorageEngine | None = None) -> None:
+        self.adapter = TerraNodeRuntimeAdapter(store=store)
         self.replay_engine = ReplayEngine(self.adapter.store)
 
     def submit(self, envelope: Mapping[str, Any]) -> SubmitOutcome:

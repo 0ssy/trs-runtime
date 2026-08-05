@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-08-05T151416Z",
+  "base_url": "http://127.0.0.1:54757",
+  "db_path": "evidence\\interop\\2026-08-05T151416Z_cycle0012_sdk_cross_runtime.db",
+  "node_log_path": "evidence\\interop\\2026-08-05T151416Z_cycle0012_sdk_cross_runtime_node.log",
+  "rust": {
+    "sdk": "rust",
+    "health_ok": true,
+    "submit_accepted": true,
+    "sync_accepted_count": 1,
+    "sync_rejected_count": 0,
+    "query_author_count": 2,
+    "replay_unresolved_intentions": [
+      "rust-int-1"
+    ],
+    "artifact_path": "evidence\\interop\\2026-08-05T151416Z_cycle0012_rust_sdk_flow.json"
+  },
+  "java": {
+    "sdk": "java",
+    "health_ok": true,
+    "submit_accepted": true,
+    "sync_accepted_count": 1,
+    "sync_rejected_count": 0,
+    "query_author_count": 2,
+    "replay_unresolved_intentions": [
+      "java-int-1",
+      "rust-int-1"
+    ],
+    "artifact_path": "evidence\\interop\\2026-08-05T151416Z_cycle0012_java_sdk_flow.json"
+  },
+  "record_count": 4,
+  "record_ids": [
+    "java-int-1",
+    "java-obs-1",
+    "rust-int-1",
+    "rust-obs-1"
+  ],
+  "cross_runtime_pass": true,
+  "summary_path": "evidence\\interop\\2026-08-05T151416Z_cycle0012_sdk_cross_runtime_summary.json"
+}

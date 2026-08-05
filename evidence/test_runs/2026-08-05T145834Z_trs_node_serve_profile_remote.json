@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-08-05T145834Z",
+  "host": "127.0.0.1",
+  "port": 8092,
+  "db_path": "evidence/test_runs/gate4_serve_profile.db",
+  "submit": {
+    "accepted": true,
+    "record_id": "obs-1",
+    "errors": []
+  },
+  "sync": {
+    "accepted_count": 1,
+    "rejected_count": 0,
+    "appended_ids": [
+      "int-1"
+    ],
+    "rejected_errors": []
+  },
+  "query_intention_count": 1,
+  "replay_unresolved_intentions": [
+    "int-1"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "baseline_summary_path": "evidence\\interop\\cycle0012_latest.json",
+  "fixture_path": "evidence\\interop\\2026-08-05T141459Z_cycle0012_fixture.json",
+  "source_count": 8,
+  "imported_count": 8,
+  "rejected_ids": [],
+  "inventory_hash_match": true,
+  "conflict_visible": true,
+  "unresolved_intentions": [],
+  "independent_shape_errors": {},
+  "independent_dependency_errors": {
+    "cycle0012-ref-cap-000002": [
+      "missing causes: cycle0012-ref-root-000001",
+      "missing authorization: cycle0012-ref-root-000001"
+    ],
+    "cycle0012-ref-closure-000006": [
+      "missing causes: cycle0012-ref-commitment-000005"
+    ],
+    "cycle0012-ref-closure-000008": [
+      "missing causes: cycle0012-ref-commitment-000007"
+    ],
+    "cycle0012-ref-commitment-000005": [
+      "missing causes: cycle0012-ref-intention-000003"
+    ],
+    "cycle0012-ref-commitment-000007": [
+      "missing causes: cycle0012-ref-intention-000004"
+    ],
+    "cycle0012-ref-intention-000003": [
+      "missing causes: cycle0012-ref-root-000001"
+    ],
+    "cycle0012-ref-intention-000004": [
+      "missing causes: cycle0012-ref-root-000001"
+    ]
+  }
+}

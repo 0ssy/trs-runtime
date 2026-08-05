@@ -1,0 +1,26 @@
+{
+  "base_url": "http://127.0.0.1:54757",
+  "health": {
+    "node": "0.1.0",
+    "runtime": "1.0.0",
+    "status": "ok"
+  },
+  "query_author_count": 2,
+  "replay_unresolved_intentions": [
+    "rust-int-1"
+  ],
+  "sdk": "rust",
+  "submit": {
+    "accepted": true,
+    "errors": [],
+    "record_id": "rust-obs-1"
+  },
+  "sync": {
+    "accepted_count": 1,
+    "appended_ids": [
+      "rust-int-1"
+    ],
+    "rejected_count": 0,
+    "rejected_errors": []
+  }
+}

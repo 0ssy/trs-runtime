@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress (mechanized state-exploration baseline running).
+In progress (expanded mechanized model-check and TLC run both passing on bounded model; broader proof-depth expansion still open).
 
 ## Depends on
 
@@ -26,14 +26,36 @@ Do machine-checked models uphold TRS axioms and conflict/closure guarantees unde
 ## Baseline initialized
 
 - Harness: `research/formal/run_cycle_0013_model_check.py`
+- TLC harness: `research/formal/run_cycle_0013_tlc.py`
 - Latest summary: `evidence/formal/cycle0013_latest.json`
-- Timestamped artifact: `evidence/formal/2026-08-03T134219Z_cycle0013_model_check.json`
+- Latest TLC summary: `evidence/formal/cycle0013_tlc_latest.json`
+- Timestamped artifacts:
+  - `evidence/formal/2026-08-03T134219Z_cycle0013_model_check.json`
+  - `evidence/formal/2026-08-05T144432Z_cycle0013_model_check.json`
+  - `evidence/formal/2026-08-05T145123Z_cycle0013_tlc.json`
+  - `evidence/formal/tlc/2026-08-05T145123Z_cycle0013_tlc.log`
 
 ### Current baseline result
 
-- States explored: 181
-- Terminal states: 18
+- States explored: 441
+- Terminal states: 1
+- Max depth: 16
+- Invariants checked:
+  - append-only growth per node
+  - causal and authorization closure per node
+  - conflict visibility when dual intentions coexist
+  - replay equivalence for equal inventories
+  - terminal convergence under synchronization
+  - terminal closure (no unresolved intentions)
 - Violations: none
+
+### TLC result (bounded TLA+ run)
+
+- Status: pass
+- States generated: 2083
+- Distinct states: 441
+- Search depth: 17
+- Duration: 3s
 
 ## Pass criteria
 

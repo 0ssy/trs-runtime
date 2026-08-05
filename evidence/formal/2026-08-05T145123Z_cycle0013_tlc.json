@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "states_generated": 2083,
+  "distinct_states": 441,
+  "search_depth": 17,
+  "duration_seconds": 3,
+  "log_path": "evidence\\formal\\tlc\\2026-08-05T145123Z_cycle0013_tlc.log",
+  "timestamp": "2026-08-05T145123Z",
+  "command": [
+    "java",
+    "-cp",
+    "C:\\Users\\josep\\AppData\\Local\\Temp\\tla2tools.jar",
+    "tlc2.TLC",
+    "-cleanup",
+    "-deadlock",
+    "-config",
+    "TrsCore.cfg",
+    "TrsCore.tla"
+  ]
+}

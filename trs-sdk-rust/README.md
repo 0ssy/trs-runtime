@@ -21,3 +21,8 @@ let _health = client.health()?;
 # Ok::<(), trs_sdk_rust::TrsError>(())
 ```
 
+## Live interop flow (against trs-node)
+
+```powershell
+cargo run --example interop_node_flow -- http://127.0.0.1:8080 .\interop_rust_flow.json
+```

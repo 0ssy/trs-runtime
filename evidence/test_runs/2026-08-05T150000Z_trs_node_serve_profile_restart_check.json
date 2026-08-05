@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-08-05T150000Z",
+  "records_after_restart": 2,
+  "record_ids": [
+    "obs-1",
+    "int-1"
+  ]
+}

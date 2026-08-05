@@ -12,6 +12,7 @@
 - Cycle records: `research/cycles/CYCLE-0001.md` .. `research/cycles/CYCLE-0016.md`
 - Ecosystem charter: `research/ECOSYSTEM_RESEARCH_CHARTER.md`
 - Consolidated outcomes: `research/RESULTS_LEDGER.md`
+- Immediate standardization gates: `research/EVIDENCE_SCOREBOARD.md` and `evidence/scoreboard/latest.json`
 
 ## Runtime
 

@@ -8,6 +8,7 @@ import os
 class NodeConfig:
     host: str = os.getenv("TRS_NODE_HOST", "127.0.0.1")
     port: int = int(os.getenv("TRS_NODE_PORT", "8080"))
+    db_path: str | None = os.getenv("TRS_NODE_DB")
     request_timeout_seconds: float = float(os.getenv("TRS_NODE_REQUEST_TIMEOUT_SECONDS", "10"))
     max_request_bytes: int = int(os.getenv("TRS_NODE_MAX_REQUEST_BYTES", str(1024 * 1024)))
     runtime_version: str = os.getenv("TRS_RUNTIME_VERSION", "1.0.0")

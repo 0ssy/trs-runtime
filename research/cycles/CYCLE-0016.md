@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress (internal distributed adversarial baseline complete; external live campaign pending).
+Closed (external break-it campaign completed with processed submissions and no semantic contradiction).
 
 ## Depends on
 
@@ -40,7 +40,7 @@ Does a live, distributed deployment resist adversarial behavior at operational s
   - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.pdf`
   - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.txt`
 - External handoff package includes 9.9 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
-- External live red-team campaign at current topology/scale: still pending for closure
+- External live red-team campaign at current topology/scale: complete
 
 ## Pass criteria
 

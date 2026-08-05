@@ -1,0 +1,164 @@
+{
+  "records": [
+    {
+      "id": "cycle0012-ref-cap-000002",
+      "type": "Commitment",
+      "author": "root",
+      "timestamp": "2026-08-05T14:14:59.578394+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "delegate-allocation",
+        "due_by": "2027-01-01"
+      },
+      "causes": [
+        "cycle0012-ref-root-000001"
+      ],
+      "authorization": [
+        "cycle0012-ref-root-000001"
+      ],
+      "signature": "sig:cycle0012-ref-cap-000002",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-closure-000006",
+      "type": "Observation",
+      "author": "allocator",
+      "timestamp": "2026-08-05T14:14:59.580814+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "intention-closure",
+        "value": {
+          "intention_id": "cycle0012-ref-intention-000003",
+          "status": "completed"
+        }
+      },
+      "causes": [
+        "cycle0012-ref-intention-000003",
+        "cycle0012-ref-commitment-000005"
+      ],
+      "authorization": [],
+      "signature": "sig:cycle0012-ref-closure-000006",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-closure-000008",
+      "type": "Observation",
+      "author": "allocator",
+      "timestamp": "2026-08-05T14:14:59.580993+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "intention-closure",
+        "value": {
+          "intention_id": "cycle0012-ref-intention-000004",
+          "status": "completed"
+        }
+      },
+      "causes": [
+        "cycle0012-ref-intention-000004",
+        "cycle0012-ref-commitment-000007"
+      ],
+      "authorization": [],
+      "signature": "sig:cycle0012-ref-closure-000008",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-commitment-000005",
+      "type": "Commitment",
+      "author": "allocator",
+      "timestamp": "2026-08-05T14:14:59.580616+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "grant-allocation",
+        "due_by": "2027-01-01",
+        "claim_id": "cycle0012-ref-intention-000003",
+        "claimant": "alice",
+        "granted": 57.142857142857146
+      },
+      "causes": [
+        "cycle0012-ref-root-000001",
+        "cycle0012-ref-intention-000003"
+      ],
+      "authorization": [
+        "cycle0012-ref-cap-000002"
+      ],
+      "signature": "sig:cycle0012-ref-commitment-000005",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-commitment-000007",
+      "type": "Commitment",
+      "author": "allocator",
+      "timestamp": "2026-08-05T14:14:59.580897+00:00",
+      "schema": "trs.commitment.v1",
+      "payload": {
+        "action": "grant-allocation",
+        "due_by": "2027-01-01",
+        "claim_id": "cycle0012-ref-intention-000004",
+        "claimant": "bob",
+        "granted": 42.85714285714286
+      },
+      "causes": [
+        "cycle0012-ref-root-000001",
+        "cycle0012-ref-intention-000004"
+      ],
+      "authorization": [
+        "cycle0012-ref-cap-000002"
+      ],
+      "signature": "sig:cycle0012-ref-commitment-000007",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-intention-000003",
+      "type": "Intention",
+      "author": "alice",
+      "timestamp": "2026-08-05T14:14:59.578722+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "resource-allocation",
+        "horizon": "program-1",
+        "amount": 80.0
+      },
+      "causes": [
+        "cycle0012-ref-root-000001"
+      ],
+      "authorization": [],
+      "signature": "sig:cycle0012-ref-intention-000003",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-intention-000004",
+      "type": "Intention",
+      "author": "bob",
+      "timestamp": "2026-08-05T14:14:59.578894+00:00",
+      "schema": "trs.intention.v1",
+      "payload": {
+        "goal": "resource-allocation",
+        "horizon": "program-1",
+        "amount": 60.0
+      },
+      "causes": [
+        "cycle0012-ref-root-000001"
+      ],
+      "authorization": [],
+      "signature": "sig:cycle0012-ref-intention-000004",
+      "subject": "warehouse-7"
+    },
+    {
+      "id": "cycle0012-ref-root-000001",
+      "type": "Observation",
+      "author": "root",
+      "timestamp": "2026-08-05T14:14:59.578111+00:00",
+      "schema": "trs.observation.v1",
+      "payload": {
+        "subject": "warehouse-7",
+        "value": {
+          "available": 100.0
+        }
+      },
+      "causes": [],
+      "authorization": [],
+      "signature": "sig:cycle0012-ref-root-000001",
+      "subject": "warehouse-7"
+    }
+  ]
+}

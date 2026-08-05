@@ -20,7 +20,14 @@ Published OpenAPI artifact:
 ## Run
 
 ```bash
-python -m node.app
+# In-memory mode
+python -m node.app serve
+
+# Deployable persistent profile
+python -m node.app serve --db .\data\trs-node.db
+
+# If installed as a package script
+trs-node serve --db .\data\trs-node.db
 ```
 
 ## Test

@@ -1,0 +1,16 @@
+{
+  "fixture_path": "evidence\\interop\\2026-08-05T141459Z_cycle0012_fixture.json",
+  "summary_path": "evidence\\interop\\2026-08-05T141459Z_cycle0012_summary.json",
+  "source_count": 8,
+  "imported_count": 8,
+  "rejected_ids": [],
+  "source_hash": "7732212918c1c04853773aa4105dca1f92b1567fe31dd7125734eed84b3f997f",
+  "imported_hash": "7732212918c1c04853773aa4105dca1f92b1567fe31dd7125734eed84b3f997f",
+  "conflict_visible": true,
+  "replay_unresolved_intentions": [],
+  "frozen_doc_hashes": {
+    "docs\\TRS-v1.0.pdf": "MISSING",
+    "docs\\DesignRecord.pdf": "MISSING",
+    "docs\\Amendment_Log.md": "91857034e72b3a4884e242900c300b8412c75f4e73dc8423be6d082035335dcd"
+  }
+}

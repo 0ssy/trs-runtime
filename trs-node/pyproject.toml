@@ -12,3 +12,6 @@ dependencies = [
   "uvicorn>=0.30",
   "httpx2>=0.22",
 ]
+
+[project.scripts]
+trs-node = "node.app:main"

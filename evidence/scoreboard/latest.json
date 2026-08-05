@@ -1,0 +1,40 @@
+{
+  "as_of": "2026-08-05T17:44:31Z",
+  "gates": {
+    "independent_implementations_10_plus": {
+      "status": "in_progress",
+      "target": ">=10",
+      "current": "external report ingested; attestation pending"
+    },
+    "cross_runtime_interoperability": {
+      "status": "in_progress",
+      "target": "python-rust-java pairwise sync+replay compatible",
+      "current": "baseline+cross import pass is stable; Rust SDK and Java SDK interop against deployable node passed (cross_runtime_pass=true); independent non-reference runtime pairwise runs still pending"
+    },
+    "formal_verification_completion": {
+      "status": "done",
+      "target": "TLA+ invariants checked with TLC outputs",
+      "current": "expanded two-node append/sync mechanized model-check passed (441 states, no violations) and TLC run passed (2083 generated, 441 distinct, depth 17, no errors)"
+    },
+    "deployable_node_server_profile": {
+      "status": "done",
+      "target": "serve mode with persistent db and remote client operations",
+      "current": "trs-node serve --db implemented; remote submit/query/sync/replay and restart persistence checks passed"
+    },
+    "benchmark_gate_pr_strict": {
+      "status": "in_progress",
+      "target": "strict PR benchmark gate passes without allow flag",
+      "current": "strict validation failed at 2026-08-05T143533Z (benchmark gate); 7-run rebaseline+tolerant gate passes"
+    },
+    "v1_0_0_release_freeze": {
+      "status": "pending",
+      "target": "tag + notes + checksums + frozen manifest",
+      "current": "not published"
+    },
+    "external_break_it_campaign": {
+      "status": "done",
+      "target": "public intake and processed external adversarial submissions",
+      "current": "campaign intake executed; external adversarial submissions processed and classified"
+    }
+  }
+}

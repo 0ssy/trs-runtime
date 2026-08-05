@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+from typing import Iterable
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -133,11 +134,65 @@ def _unresolved_intentions(records: list[ModelRecord]) -> list[str]:
     return sorted(intentions - closed)
 
 
+def _build_transitions(
+    operations: dict[str, ModelRecord], log_a: frozenset[str], log_b: frozenset[str]
+) -> list[tuple[str, frozenset[str], frozenset[str]]]:
+    transitions: list[tuple[str, frozenset[str], frozenset[str]]] = []
+    ids_a = set(log_a)
+    ids_b = set(log_b)
+
+    for op, record in operations.items():
+        if op not in ids_a and _is_enabled(record, ids_a):
+            transitions.append((f"append_a:{op}", frozenset(ids_a | {op}), log_b))
+        if op not in ids_b and _is_enabled(record, ids_b):
+            transitions.append((f"append_b:{op}", log_a, frozenset(ids_b | {op})))
+
+    for op in sorted(ids_a - ids_b):
+        record = operations[op]
+        if _is_enabled(record, ids_b):
+            transitions.append((f"sync_a_to_b:{op}", log_a, frozenset(ids_b | {op})))
+
+    for op in sorted(ids_b - ids_a):
+        record = operations[op]
+        if _is_enabled(record, ids_a):
+            transitions.append((f"sync_b_to_a:{op}", frozenset(ids_a | {op}), log_b))
+
+    return transitions
+
+
+def _log_records(operations: dict[str, ModelRecord], log_ids: frozenset[str]) -> list[ModelRecord]:
+    return [operations[op] for op in sorted(log_ids)]
+
+
+def _causal_closure_holds(records: Iterable[ModelRecord], log_ids: frozenset[str]) -> bool:
+    known = set(log_ids)
+    for record in records:
+        if not set(record.causes).issubset(known):
+            return False
+        if not set(record.authorization).issubset(known):
+            return False
+    return True
+
+
+def _replay_projection(records: Iterable[ModelRecord]) -> tuple[tuple[str, ...], tuple[tuple[str, float], ...]]:
+    unresolved = tuple(_unresolved_intentions(list(records)))
+    grants: list[tuple[str, float]] = []
+    for record in records:
+        if record.type != "Commitment":
+            continue
+        if record.payload.get("action") != "grant-allocation":
+            continue
+        claim_id = record.payload.get("claim_id")
+        granted = record.payload.get("granted")
+        if isinstance(claim_id, str) and isinstance(granted, (int, float)):
+            grants.append((claim_id, float(granted)))
+    return unresolved, tuple(sorted(grants))
+
+
 def run_model_check() -> dict[str, object]:
     operations = _build_operations()
-    op_order = tuple(operations.keys())
-    frontier: list[tuple[str, ...]] = [tuple()]
-    visited: set[tuple[str, ...]] = set()
+    frontier: list[tuple[frozenset[str], frozenset[str]]] = [(frozenset(), frozenset())]
+    visited: set[tuple[frozenset[str], frozenset[str]]] = set()
     terminal_states = 0
     violations: list[str] = []
     max_depth = 0
@@ -147,35 +202,58 @@ def run_model_check() -> dict[str, object]:
         if state in visited:
             continue
         visited.add(state)
-        max_depth = max(max_depth, len(state))
-        existing_ids = set(state)
-        enabled = []
-        for op in op_order:
-            if op in existing_ids:
-                continue
-            record = operations[op]
-            if _is_enabled(record, existing_ids):
-                enabled.append(op)
-        records = [operations[op] for op in state]
+        log_a, log_b = state
+        max_depth = max(max_depth, len(log_a) + len(log_b))
+        records_a = _log_records(operations, log_a)
+        records_b = _log_records(operations, log_b)
 
-        if len(existing_ids) != len(state):
-            violations.append("duplicate id encountered")
-        unresolved = _unresolved_intentions(records)
-        if not enabled:
+        if not _causal_closure_holds(records_a, log_a):
+            violations.append(f"causal closure violated in node A: {sorted(log_a)}")
+        if not _causal_closure_holds(records_b, log_b):
+            violations.append(f"causal closure violated in node B: {sorted(log_b)}")
+
+        if {"ia", "ib"}.issubset(log_a) and not _conflict_visible(records_a):
+            violations.append(f"conflict invisibility in node A: {sorted(log_a)}")
+        if {"ia", "ib"}.issubset(log_b) and not _conflict_visible(records_b):
+            violations.append(f"conflict invisibility in node B: {sorted(log_b)}")
+
+        if log_a == log_b:
+            if _replay_projection(records_a) != _replay_projection(records_b):
+                violations.append(f"replay mismatch at equal inventory: {sorted(log_a)}")
+
+        transitions = _build_transitions(operations, log_a, log_b)
+        if not transitions:
             terminal_states += 1
-            if unresolved:
-                violations.append(f"terminal state with unresolved intentions: {','.join(unresolved)}")
+            unresolved_a = _unresolved_intentions(records_a)
+            unresolved_b = _unresolved_intentions(records_b)
+            if unresolved_a:
+                violations.append(
+                    f"terminal node A unresolved intentions ({','.join(unresolved_a)}): {sorted(log_a)}"
+                )
+            if unresolved_b:
+                violations.append(
+                    f"terminal node B unresolved intentions ({','.join(unresolved_b)}): {sorted(log_b)}"
+                )
+            if log_a != log_b:
+                violations.append(
+                    f"terminal non-converged inventories A={sorted(log_a)} B={sorted(log_b)}"
+                )
 
-        if _conflict_visible(records) is False and {"ia", "ib"}.issubset(existing_ids):
-            violations.append("conflict invisibility after dual intentions")
-
-        for op in enabled:
-            frontier.append(state + (op,))
+        for _, next_a, next_b in transitions:
+            frontier.append((next_a, next_b))
 
     outcome = {
         "states_explored": len(visited),
         "terminal_states": terminal_states,
         "max_depth": max_depth,
+        "invariants_checked": [
+            "append-only growth per node",
+            "causal and authorization closure per node",
+            "conflict visibility when dual intentions coexist",
+            "replay equivalence for equal inventories",
+            "terminal convergence under synchronization",
+            "terminal closure (no unresolved intentions)",
+        ],
         "violations": sorted(set(violations)),
     }
     return outcome
