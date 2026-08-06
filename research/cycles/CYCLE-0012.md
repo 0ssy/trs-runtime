@@ -35,9 +35,10 @@ Can a second, independent implementation built from frozen TRS documents interop
   - `evidence/interop/2026-08-03T134124Z_cycle0012_fixture.json`
   - `evidence/interop/2026-08-03T134124Z_cycle0012_summary.json`
   - `evidence/interop/2026-08-03T134124Z_cycle0012_cross_impl_summary.json`
-  - `evidence/interop/2026-08-05T151416Z_cycle0012_rust_sdk_flow.json`
-  - `evidence/interop/2026-08-05T151416Z_cycle0012_java_sdk_flow.json`
-  - `evidence/interop/2026-08-05T151416Z_cycle0012_sdk_cross_runtime_summary.json`
+  - `evidence/interop/2026-08-05T151750Z_cycle0012_rust_sdk_flow.json`
+  - `evidence/interop/2026-08-05T151750Z_cycle0012_java_sdk_flow.json`
+  - `evidence/interop/2026-08-05T151750Z_cycle0012_sdk_cross_runtime_summary.json`
+  - `evidence/interop/2026-08-06T104325Z_gate1_independent_impls_status.json`
 
 ### Current baseline result
 
@@ -50,6 +51,22 @@ Can a second, independent implementation built from frozen TRS documents interop
 - Rust SDK live interop to deployable node: pass
 - Java SDK live interop to deployable node: pass
 - External handoff package includes 9.5 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
+- Gate 1 tracker artifact: `evidence/interop/gate1_independent_impls_latest.json` (`registered=10`, `qualified=0`, `blocked=10`, `target=10`)
+- Technical-port aggregate review set imported:
+  - `trs-independent-implementations/TECHNICAL_PORTS.md`
+  - `trs-independent-implementations/TECHNICAL_PORTS_VALIDATION.json`
+  - `trs-independent-implementations/TECHNICAL_GATE1_STATUS.json`
+
+### impl-0001 ambiguity register (implementation-affecting)
+
+- **A-001:** `DesignRecord.pdf` vs `Design_Record.pdf` filename mismatch.
+- **A-002:** Genesis representation ambiguity (`causes: []` vs explicit genesis field).
+- **A-003:** Cryptographic signature contract unspecified by vectors.
+- **A-004:** Capability payload grammar and grant-to-action matching under-specified.
+- **A-005:** Observation `origin` normative, but missing in supplied vectors.
+- **A-006:** Schema reference semantics under-specified (string tag vs schema-record reference).
+- **A-007:** "Mutually exclusive" not formally defined for opaque payloads; operational rule used.
+- **A-008:** Gate 1 status utility absent from supplied archive; compatible tracker added locally.
 
 ## External report ingested (2026-08-04)
 

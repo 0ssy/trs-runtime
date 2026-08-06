@@ -1,0 +1,166 @@
+{
+  "implementation_name": "impl-0001-independent-python",
+  "implementation_version": "0.1.0",
+  "status": "pass",
+  "results": [
+    {
+      "vector_id": "valid-minimal-genesis",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "g1"
+        ],
+        "failed_records": [],
+        "errors": [],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "valid-authorization-chain",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "g-auth-1",
+          "cap-auth-1",
+          "i-auth-1",
+          "c-auth-1"
+        ],
+        "failed_records": [],
+        "errors": [],
+        "conflict_visible": true
+      }
+    },
+    {
+      "vector_id": "valid-conflict-visible",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "g-conf-1",
+          "i-conf-1",
+          "i-conf-2"
+        ],
+        "failed_records": [],
+        "errors": [],
+        "conflict_visible": true
+      }
+    },
+    {
+      "vector_id": "invalid-duplicate-id",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "dup-1"
+        ],
+        "failed_records": [
+          "dup-1"
+        ],
+        "errors": [
+          "4.1 Immutability: duplicate record id"
+        ],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "invalid-missing-cause",
+      "status": "pass",
+      "details": {
+        "verified_records": [],
+        "failed_records": [
+          "i-missing-cause"
+        ],
+        "errors": [
+          "4.2 Causality: missing causes: does-not-exist"
+        ],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "invalid-schema-mismatch",
+      "status": "pass",
+      "details": {
+        "verified_records": [],
+        "failed_records": [
+          "schema-bad-1"
+        ],
+        "errors": [
+          "5.1 Schema Declaration: schema mismatch for type Commitment"
+        ],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "invalid-payload-shape",
+      "status": "pass",
+      "details": {
+        "verified_records": [],
+        "failed_records": [
+          "payload-bad-1"
+        ],
+        "errors": [
+          "5.3 Payload Shape: missing payload keys: horizon"
+        ],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "invalid-missing-authorization-reference",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "g-auth-miss-1",
+          "i-auth-miss-1"
+        ],
+        "failed_records": [
+          "c-auth-miss-1"
+        ],
+        "errors": [
+          "6.1 Authorization Traceability: missing authorization records: missing-capability-record"
+        ],
+        "conflict_visible": false
+      }
+    },
+    {
+      "vector_id": "replay-basic-coordination",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "c-replay-1",
+          "g-replay-1",
+          "i-replay-1",
+          "i-replay-2"
+        ],
+        "failed_records": [],
+        "errors": [],
+        "replay": {
+          "unresolved_intentions": [
+            "i-replay-1",
+            "i-replay-2"
+          ],
+          "intention_to_commitments": {
+            "i-replay-1": [
+              "c-replay-1"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "vector_id": "auth-delegation-trace",
+      "status": "pass",
+      "details": {
+        "verified_records": [
+          "g-auth-trace-1",
+          "cap-auth-trace-1",
+          "i-auth-trace-1",
+          "c-auth-trace-1"
+        ],
+        "failed_records": [],
+        "errors": [],
+        "authorization_path": [
+          "cap-auth-trace-1",
+          "g-auth-trace-1"
+        ]
+      }
+    }
+  ]
+}

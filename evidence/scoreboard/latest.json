@@ -1,10 +1,10 @@
 {
-  "as_of": "2026-08-05T17:44:31Z",
+  "as_of": "2026-08-06T10:43:25Z",
   "gates": {
     "independent_implementations_10_plus": {
       "status": "in_progress",
       "target": ">=10",
-      "current": "external report ingested; attestation pending"
+      "current": "strict gate1 audit run: 10 registered packages, 0 qualified, 10 blocked; blockers include non-pass review statuses and missing required review artifacts per package"
     },
     "cross_runtime_interoperability": {
       "status": "in_progress",

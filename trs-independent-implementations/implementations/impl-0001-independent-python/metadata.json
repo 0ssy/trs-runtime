@@ -1,0 +1,19 @@
+{
+  "implementation_name": "impl-0001-independent-python",
+  "implementation_version": "0.1.0",
+  "conformance_status": "pass",
+  "interoperability_status": "pass",
+  "ambiguity_report_status": "pass",
+  "independence_attestation_status": "fail",
+  "evidence_paths": [
+    "evidence/conformance-results.json",
+    "evidence/conformance-run.log",
+    "evidence/interop-results.json",
+    "evidence/interop-run.log",
+    "evidence/baseline-interop-run.log",
+    "evidence/cross-interop-run.log",
+    "implementation-report.md",
+    "ambiguity-report.md",
+    "independence-attestation.md"
+  ]
+}

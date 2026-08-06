@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-08-06T104633Z",
+  "target_count": 10,
+  "registered_count": 10,
+  "qualified_count": 0,
+  "blocked_count": 10,
+  "remaining_to_target": 10,
+  "gate1_pass": false,
+  "implementations": [
+    {
+      "implementation_id": "impl-0001-independent-python",
+      "implementation_name": "impl-0001-independent-python",
+      "language": "unknown",
+      "team": "unknown",
+      "conformance_status": "pass",
+      "interoperability_status": "pass",
+      "ambiguity_report_status": "pass",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0001-independent-python",
+      "evidence_paths": [
+        "evidence/conformance-results.json",
+        "evidence/conformance-run.log",
+        "evidence/interop-results.json",
+        "evidence/interop-run.log",
+        "evidence/baseline-interop-run.log",
+        "evidence/cross-interop-run.log",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [
+        "README.md"
+      ],
+      "missing_required_dirs": [
+        "src"
+      ],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "independence_attestation_status is fail",
+        "missing required files: README.md",
+        "missing required dirs: src"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0002-rust",
+      "implementation_name": "impl-0002-rust",
+      "language": "Rust",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0002-rust",
+      "evidence_paths": [
+        "src/main.rs",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0003-java",
+      "implementation_name": "impl-0003-java",
+      "language": "Java",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0003-java",
+      "evidence_paths": [
+        "src/TrsTechnicalSmoke.java",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0004-go",
+      "implementation_name": "impl-0004-go",
+      "language": "Go",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0004-go",
+      "evidence_paths": [
+        "src/main.go",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0005-csharp",
+      "implementation_name": "impl-0005-csharp",
+      "language": "C#",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0005-csharp",
+      "evidence_paths": [
+        "src/Program.cs",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0006-typescript",
+      "implementation_name": "impl-0006-typescript",
+      "language": "TypeScript",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0006-typescript",
+      "evidence_paths": [
+        "src/index.ts",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0007-kotlin",
+      "implementation_name": "impl-0007-kotlin",
+      "language": "Kotlin",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0007-kotlin",
+      "evidence_paths": [
+        "src/Main.kt",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0008-swift",
+      "implementation_name": "impl-0008-swift",
+      "language": "Swift",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0008-swift",
+      "evidence_paths": [
+        "src/main.swift",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0009-cpp",
+      "implementation_name": "impl-0009-cpp",
+      "language": "C++",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0009-cpp",
+      "evidence_paths": [
+        "src/main.cpp",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0010-ruby",
+      "implementation_name": "impl-0010-ruby",
+      "language": "Ruby",
+      "team": "unknown",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "fail",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0010-ruby",
+      "evidence_paths": [
+        "src/main.rb",
+        "README.md",
+        "implementation-report.md",
+        "ambiguity-report.md",
+        "independence-attestation.md"
+      ],
+      "missing_required_files": [],
+      "missing_required_dirs": [],
+      "missing_evidence_paths": [],
+      "blocker_reasons": [
+        "conformance_status is pending",
+        "interoperability_status is pending",
+        "ambiguity_report_status is pending",
+        "independence_attestation_status is fail"
+      ],
+      "qualifies_for_gate_count": false
+    }
+  ]
+}

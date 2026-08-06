@@ -1,0 +1,17 @@
+{
+  "implementation_name": "impl-0005-csharp",
+  "language": "C#",
+  "implementation_kind": "technical-test-port",
+  "conformance_status": "pending",
+  "interoperability_status": "pending",
+  "ambiguity_report_status": "pending",
+  "independence_attestation_status": "fail",
+  "gate1_qualified": false,
+  "evidence_paths": [
+    "src/Program.cs",
+    "README.md",
+    "implementation-report.md",
+    "ambiguity-report.md",
+    "independence-attestation.md"
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "gate": "gate1-independent-implementations",
+  "implementation_count": 10,
+  "qualified_count": 0,
+  "implementations": [
+    {
+      "implementation": "impl-0001-independent-python",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0002-rust",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0003-java",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0004-go",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0005-csharp",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0006-typescript",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0007-kotlin",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0008-swift",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0009-cpp",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    },
+    {
+      "implementation": "impl-0010-ruby",
+      "qualified": false,
+      "statuses": {
+        "conformance_status": "pending",
+        "interoperability_status": "pending",
+        "ambiguity_report_status": "pending",
+        "independence_attestation_status": "fail"
+      }
+    }
+  ]
+}

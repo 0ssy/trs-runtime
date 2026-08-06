@@ -1,0 +1,17 @@
+{
+  "implementation_name": "impl-0004-go",
+  "language": "Go",
+  "implementation_kind": "technical-test-port",
+  "conformance_status": "pending",
+  "interoperability_status": "pending",
+  "ambiguity_report_status": "pending",
+  "independence_attestation_status": "fail",
+  "gate1_qualified": false,
+  "evidence_paths": [
+    "src/main.go",
+    "README.md",
+    "implementation-report.md",
+    "ambiguity-report.md",
+    "independence-attestation.md"
+  ]
+}

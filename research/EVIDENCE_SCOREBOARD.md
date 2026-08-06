@@ -14,7 +14,7 @@ Do not treat TRS as interoperable standard-ready until all gates below are green
   - interoperability result,
   - ambiguity report,
   - independence attestation.
-- **Current:** in progress (external implementation report ingested; strict attestation pending).
+- **Current:** in progress (`0/10` qualified; `10` blocked under strict review). Latest status artifact: `evidence/interop/2026-08-06T104325Z_gate1_independent_impls_status.json`.
 - **Evidence:** `research/cycles/CYCLE-0012.md`, `research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md`, `trs-independent-implementations/`.
 
 ## Gate 2 — Cross-runtime interoperability

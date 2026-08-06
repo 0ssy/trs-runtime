@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-08-05T175146Z",
+  "target_count": 10,
+  "registered_count": 10,
+  "qualified_count": 0,
+  "remaining_to_target": 10,
+  "gate1_pass": false,
+  "implementations": [
+    {
+      "implementation_id": "impl-0001-external-rust",
+      "implementation_name": "External Rust Implementation #1",
+      "language": "Rust",
+      "team": "External Team #1",
+      "conformance_status": "pending",
+      "interoperability_status": "pass",
+      "ambiguity_report_status": "pass",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0001-external-rust",
+      "evidence_paths": [
+        "research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md",
+        "evidence/interop/cycle0012_cross_latest.json"
+      ],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0002-placeholder",
+      "implementation_name": "Independent Impl #2",
+      "language": "TBD",
+      "team": "External Team #2",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0002-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0003-placeholder",
+      "implementation_name": "Independent Impl #3",
+      "language": "TBD",
+      "team": "External Team #3",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0003-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0004-placeholder",
+      "implementation_name": "Independent Impl #4",
+      "language": "TBD",
+      "team": "External Team #4",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0004-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0005-placeholder",
+      "implementation_name": "Independent Impl #5",
+      "language": "TBD",
+      "team": "External Team #5",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0005-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0006-placeholder",
+      "implementation_name": "Independent Impl #6",
+      "language": "TBD",
+      "team": "External Team #6",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0006-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0007-placeholder",
+      "implementation_name": "Independent Impl #7",
+      "language": "TBD",
+      "team": "External Team #7",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0007-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0008-placeholder",
+      "implementation_name": "Independent Impl #8",
+      "language": "TBD",
+      "team": "External Team #8",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0008-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0009-placeholder",
+      "implementation_name": "Independent Impl #9",
+      "language": "TBD",
+      "team": "External Team #9",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0009-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    },
+    {
+      "implementation_id": "impl-0010-placeholder",
+      "implementation_name": "Independent Impl #10",
+      "language": "TBD",
+      "team": "External Team #10",
+      "conformance_status": "pending",
+      "interoperability_status": "pending",
+      "ambiguity_report_status": "pending",
+      "independence_attestation_status": "pending",
+      "package_path": "trs-independent-implementations\\implementations\\impl-0010-placeholder",
+      "evidence_paths": [],
+      "qualifies_for_gate_count": false
+    }
+  ]
+}
