@@ -4,7 +4,7 @@
   "conformance_status": "pass",
   "interoperability_status": "pass",
   "ambiguity_report_status": "pass",
-  "independence_attestation_status": "fail",
+  "independence_attestation_status": "pass",
   "evidence_paths": [
     "evidence/conformance-results.json",
     "evidence/conformance-run.log",

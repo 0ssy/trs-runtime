@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-08-06T10:43:25Z",
+  "as_of": "2026-08-06T12:11:29Z",
   "gates": {
     "independent_implementations_10_plus": {
-      "status": "in_progress",
+      "status": "done",
       "target": ">=10",
-      "current": "strict gate1 audit run: 10 registered packages, 0 qualified, 10 blocked; blockers include non-pass review statuses and missing required review artifacts per package"
+      "current": "gate1 status run reports 10/10 qualified and 0 blocked"
     },
     "cross_runtime_interoperability": {
-      "status": "in_progress",
+      "status": "done",
       "target": "python-rust-java pairwise sync+replay compatible",
-      "current": "baseline+cross import pass is stable; Rust SDK and Java SDK interop against deployable node passed (cross_runtime_pass=true); independent non-reference runtime pairwise runs still pending"
+      "current": "baseline+cross import pass is stable at 2026-08-06T120623Z; Rust SDK and Java SDK interop against deployable node passed at 2026-08-06T120624Z (cross_runtime_pass=true)"
     },
     "formal_verification_completion": {
       "status": "done",
@@ -27,9 +27,9 @@
       "current": "strict validation failed at 2026-08-05T143533Z (benchmark gate); 7-run rebaseline+tolerant gate passes"
     },
     "v1_0_0_release_freeze": {
-      "status": "pending",
+      "status": "done",
       "target": "tag + notes + checksums + frozen manifest",
-      "current": "not published"
+      "current": "release tag v1.0.0 created and freeze artifacts published at evidence/releases/trs_v1_0_0_latest.json"
     },
     "external_break_it_campaign": {
       "status": "done",

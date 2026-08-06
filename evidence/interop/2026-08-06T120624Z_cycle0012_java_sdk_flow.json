@@ -1,0 +1,1 @@
+{"sdk":"java","base_url":"http://127.0.0.1:60898","health":{"status":"ok","runtime":"1.0.0","node":"0.1.0"},"submit":{"errors":[],"accepted":true,"record_id":"java-obs-1"},"sync":{"accepted_count":1,"rejected_count":0,"rejected_errors":[],"appended_ids":["java-int-1"]},"query_author_count":2,"replay_unresolved_intentions":["java-int-1","rust-int-1"]}

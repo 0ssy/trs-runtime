@@ -5,6 +5,7 @@ This ledger records completed and in-progress outcomes with direct evidence poin
 ## Frozen-spec baseline
 
 - TRS v1.0: frozen
+- Release freeze package `v1.0.0`: published
 - Accepted amendments:
   - TRS-0001
   - TRS-0002 (subject-scoped non-silent conflict semantics)
@@ -13,6 +14,7 @@ Primary evidence:
 
 - `docs/Amendment_Log.md`
 - `conformance/conflict/test_conflict_visibility.py`
+- `evidence/releases/trs_v1_0_0_latest.json`
 
 ## Core runtime verification baseline
 
@@ -42,7 +44,7 @@ Latest full-cycle evidence:
 | CYCLE-0009 | TerraNode Program 7 capability security | Closed | TRS survives | `research/cycles/CYCLE-0009.md`, `evidence/test_runs/2026-08-03T125659Z_terranode_program4_program9.log` |
 | CYCLE-0010 | TerraNode Program 8 public submission boundary | Closed | TRS survives | `research/cycles/CYCLE-0010.md`, `evidence/test_runs/2026-08-03T125659Z_terranode_program4_program9.log` |
 | CYCLE-0011 | TerraNode Program 9 human systems baseline | Closed | TRS survives | `research/cycles/CYCLE-0011.md`, `evidence/test_runs/2026-08-03T125659Z_terranode_program4_program9.log` |
-| CYCLE-0012 | Program 9.5 independent implementation interop | In progress | Baseline and cross-import pass; Rust+Java SDK live interop to deployable node passed; strict Gate 1 audit shows 10 registered, 0 qualified, 10 blocked pending independent review completion | `research/cycles/CYCLE-0012.md`, `research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md`, `trs-independent-implementations/TECHNICAL_PORTS.md`, `trs-independent-implementations/TECHNICAL_GATE1_STATUS.json`, `trs-independent-implementations/REVIEW_PROTOCOL.md`, `evidence/interop/cycle0012_latest.json`, `evidence/interop/cycle0012_cross_latest.json`, `evidence/interop/cycle0012_sdk_cross_runtime_latest.json`, `evidence/interop/gate1_independent_impls_latest.json` |
+| CYCLE-0012 | Program 9.5 independent implementation interop | Closed | Gate 1 complete (10/10 qualified) and Gate 2 cross-runtime interop complete (baseline/cross-import pass plus Rust+Java SDK live interop to deployable node) | `research/cycles/CYCLE-0012.md`, `research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md`, `trs-independent-implementations/TECHNICAL_PORTS.md`, `trs-independent-implementations/TECHNICAL_GATE1_STATUS.json`, `evidence/interop/cycle0012_latest.json`, `evidence/interop/cycle0012_cross_latest.json`, `evidence/interop/cycle0012_sdk_cross_runtime_latest.json`, `evidence/interop/gate1_independent_impls_latest.json` |
 | CYCLE-0013 | Program 9.6 mechanized verification | In progress | Expanded two-node append/sync model-check pass (441 states, no violations) plus TLC pass (2083 generated / 441 distinct states); broader proof-depth expansion pending | `research/cycles/CYCLE-0013.md`, `evidence/formal/cycle0013_latest.json`, `evidence/formal/cycle0013_tlc_latest.json` |
 | CYCLE-0014 | Program 9.7 crypto + external audit | In progress | Internal readiness pass; external audit pending | `research/cycles/CYCLE-0014.md`, `evidence/security/cycle0014_latest.json` |
 | CYCLE-0015 | Program 9.8 governance | In progress | Governance baseline/check pass; multi-party adoption pending | `research/cycles/CYCLE-0015.md`, `evidence/governance/cycle0015_latest.json` |
@@ -60,9 +62,8 @@ Latest full-cycle evidence:
 
 ## Open closure blockers before pilot
 
-1. 9.5 external independent implementation and cross-interop run.
-2. 9.7 external professional security audit completion.
-3. 9.8 recurring multi-party governance ratification in operation.
-4. 9.9 external live red-team campaign completion.
-5. 9.10 SDK + third-party onboarding execution.
-6. 9.11 selective disclosure/privacy-preserving identity execution.
+1. 9.7 external professional security audit completion.
+2. 9.8 recurring multi-party governance ratification in operation.
+3. 9.9 external live red-team campaign completion.
+4. 9.10 SDK + third-party onboarding execution.
+5. 9.11 selective disclosure/privacy-preserving identity execution.

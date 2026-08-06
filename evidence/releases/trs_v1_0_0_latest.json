@@ -1,0 +1,9 @@
+{
+  "release": "v1.0.0",
+  "generated_at_utc": "2026-08-06T12:11:29Z",
+  "tag": "v1.0.0",
+  "commit": "945a069778a64caced9d086b73eefdcd46855ad0",
+  "manifest": "evidence\\releases\\2026-08-06T121129Z_trs_v1_0_0_manifest.json",
+  "checksums": "evidence\\releases\\2026-08-06T121129Z_trs_v1_0_0_checksums.txt",
+  "release_notes": "evidence\\releases\\2026-08-06T121129Z_trs_v1_0_0_release_notes.md"
+}

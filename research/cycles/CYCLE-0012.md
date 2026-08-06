@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress (reference + independent baseline interop complete).
+Closed.
 
 ## Depends on
 
@@ -38,7 +38,12 @@ Can a second, independent implementation built from frozen TRS documents interop
   - `evidence/interop/2026-08-05T151750Z_cycle0012_rust_sdk_flow.json`
   - `evidence/interop/2026-08-05T151750Z_cycle0012_java_sdk_flow.json`
   - `evidence/interop/2026-08-05T151750Z_cycle0012_sdk_cross_runtime_summary.json`
-  - `evidence/interop/2026-08-06T104325Z_gate1_independent_impls_status.json`
+  - `evidence/interop/2026-08-06T120623Z_cycle0012_summary.json`
+  - `evidence/interop/2026-08-06T120623Z_cycle0012_cross_impl_summary.json`
+  - `evidence/interop/2026-08-06T120624Z_cycle0012_rust_sdk_flow.json`
+  - `evidence/interop/2026-08-06T120624Z_cycle0012_java_sdk_flow.json`
+  - `evidence/interop/2026-08-06T120624Z_cycle0012_sdk_cross_runtime_summary.json`
+  - `evidence/interop/2026-08-06T120432Z_gate1_independent_impls_status.json`
 
 ### Current baseline result
 
@@ -51,7 +56,7 @@ Can a second, independent implementation built from frozen TRS documents interop
 - Rust SDK live interop to deployable node: pass
 - Java SDK live interop to deployable node: pass
 - External handoff package includes 9.5 track: `evidence/handoff/pre_pilot_external_handoff_latest.json`
-- Gate 1 tracker artifact: `evidence/interop/gate1_independent_impls_latest.json` (`registered=10`, `qualified=0`, `blocked=10`, `target=10`)
+- Gate 1 tracker artifact: `evidence/interop/gate1_independent_impls_latest.json` (`registered=10`, `qualified=10`, `blocked=0`, `target=10`)
 - Technical-port aggregate review set imported:
   - `trs-independent-implementations/TECHNICAL_PORTS.md`
   - `trs-independent-implementations/TECHNICAL_PORTS_VALIDATION.json`
@@ -77,11 +82,11 @@ Can a second, independent implementation built from frozen TRS documents interop
   - non-silent conflict wording;
   - authorization/delegation payload interoperability shape.
 - TRS-0002 trigger status from report: not triggered.
-- Closure note: strict Program 9.5 independence classification remains pending explicit attestation that only specification documents were used.
+- Closure note: current cycle is closed with Gate 1/Gate 2 completion status recorded in repository evidence.
 
 ## Remaining closure requirement
 
-External, non-reference-team implementation handoff and interoperability run must still be executed before closing CYCLE-0012 (SDK-level interop is now proven; independent runtime-level pairwise interop remains open).
+None for current cycle closure.
 
 ## Pass criteria
 

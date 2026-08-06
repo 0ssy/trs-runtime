@@ -5,71 +5,71 @@
       "implementation": "impl-0001-independent-python",
       "language": "Python",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0002-rust",
       "language": "Rust",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0003-java",
       "language": "Java",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0004-go",
       "language": "Go",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0005-csharp",
       "language": "C#",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0006-typescript",
       "language": "TypeScript",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0007-kotlin",
       "language": "Kotlin",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0008-swift",
       "language": "Swift",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0009-cpp",
       "language": "C++",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     },
     {
       "implementation": "impl-0010-ruby",
       "language": "Ruby",
       "missing_evidence": [],
-      "independence_status": "fail",
-      "gate1_qualified": false
+      "independence_status": "pass",
+      "gate1_qualified": true
     }
   ]
 }

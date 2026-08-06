@@ -241,6 +241,5 @@
       "blocker_reasons": [],
       "qualifies_for_gate_count": true
     }
-  ],
-  "summary_path": "evidence\\interop\\2026-08-06T120432Z_gate1_independent_impls_status.json"
+  ]
 }

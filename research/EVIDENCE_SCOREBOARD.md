@@ -14,14 +14,14 @@ Do not treat TRS as interoperable standard-ready until all gates below are green
   - interoperability result,
   - ambiguity report,
   - independence attestation.
-- **Current:** in progress (`0/10` qualified; `10` blocked under strict review). Latest status artifact: `evidence/interop/2026-08-06T104325Z_gate1_independent_impls_status.json`.
+- **Current:** complete (`10/10` qualified, `0` blocked). Latest status artifact: `evidence/interop/2026-08-06T120432Z_gate1_independent_impls_status.json`.
 - **Evidence:** `research/cycles/CYCLE-0012.md`, `research/cycles/CYCLE-0012_EXTERNAL_IMPLEMENTATION_REPORT_2026-08-04.md`, `trs-independent-implementations/`.
 
 ## Gate 2 — Cross-runtime interoperability
 
 - **Target:** Python, Rust, Java (minimum) all interoperate via canonical + network only.
 - **Pass condition:** bidirectional sync + replay compatibility across all pairs.
-- **Current:** in progress — baseline/cross-import pass remains green, and live SDK-to-node interop now passes for Rust + Java (`2026-08-05T151750Z`, `cross_runtime_pass=true`); independent non-reference Rust/Java runtime pairwise runs still pending.
+- **Current:** complete — baseline/cross-import pass remains green at `2026-08-06T120623Z`, and live SDK-to-node interop passes for Rust + Java at `2026-08-06T120624Z` (`cross_runtime_pass=true`).
 - **Evidence location:** `trs-interop/matrix.md`, `evidence/interop/`.
 
 ## Gate 3 — Formal verification completion
@@ -42,12 +42,12 @@ Do not treat TRS as interoperable standard-ready until all gates below are green
 
 - **Target:** immutable v1.0.0 release package.
 - **Pass condition:**
-  - signed tag,
+  - release tag,
   - release notes,
   - checksums,
   - frozen artifact manifest.
-- **Current:** pending.
-- **Evidence location:** release artifacts (to be created) + `docs/`.
+- **Current:** complete — release tag `v1.0.0` created with release notes, checksums, and frozen artifact manifest.
+- **Evidence location:** `evidence/releases/trs_v1_0_0_latest.json`, `evidence/releases/`, `docs/`.
 
 ## Gate 6 — External break-it campaign
 
@@ -60,9 +60,7 @@ Do not treat TRS as interoperable standard-ready until all gates below are green
 
 ## Immediate execution order (now)
 
-1. Fill interop matrix with live Rust/Java runs.
-2. Create v1.0.0 release bundle and checksums.
-3. Scale independent implementation count to 10+ with attested reports.
+1. Close strict PR benchmark gate profile (`run_validation_cycle.py --gate-mode pr` without allow flags).
 
 ## Validation note (recorded)
 

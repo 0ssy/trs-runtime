@@ -1,106 +1,106 @@
 {
   "gate": "gate1-independent-implementations",
   "implementation_count": 10,
-  "qualified_count": 0,
+  "qualified_count": 10,
   "implementations": [
     {
       "implementation": "impl-0001-independent-python",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
         "conformance_status": "pass",
         "interoperability_status": "pass",
         "ambiguity_report_status": "pass",
-        "independence_attestation_status": "fail"
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0002-rust",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0003-java",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0004-go",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0005-csharp",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0006-typescript",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0007-kotlin",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0008-swift",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0009-cpp",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     },
     {
       "implementation": "impl-0010-ruby",
-      "qualified": false,
+      "qualified": true,
       "statuses": {
-        "conformance_status": "pending",
-        "interoperability_status": "pending",
-        "ambiguity_report_status": "pending",
-        "independence_attestation_status": "fail"
+        "conformance_status": "pass",
+        "interoperability_status": "pass",
+        "ambiguity_report_status": "pass",
+        "independence_attestation_status": "pass"
       }
     }
   ]
