@@ -60,9 +60,15 @@ Do not treat TRS as interoperable standard-ready until all gates below are green
 
 ## Immediate execution order (now)
 
-1. Close strict PR benchmark gate profile (`run_validation_cycle.py --gate-mode pr` without allow flags).
+All current evidence gates are green.
+
+## Post-gate exploration
+
+- Active cycle: `CYCLE-0019` completed first pass (user-first abstraction stress, misuse probes, coordination discovery).
+- Evidence index: `evidence/discovery/cycle0019_latest.json`.
 
 ## Validation note (recorded)
 
 - Strict PR validation (`run_validation_cycle.py --gate-mode pr`) failed at `2026-08-05T143533Z` on benchmark gate.
-- Rebaseline + median-of-7 reruns substantially stabilized results; tolerant benchmark gate run passed.
+- Rebaseline + median-of-7 reruns substantially stabilized results.
+- Strict PR validation re-run passed at `2026-08-06T121825Z` (`evidence/test_runs/2026-08-06T121825Z_validation_cycle.log`).

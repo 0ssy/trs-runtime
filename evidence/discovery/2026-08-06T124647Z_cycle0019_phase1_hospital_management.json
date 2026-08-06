@@ -1,0 +1,43 @@
+{
+  "cycle": "CYCLE-0019",
+  "phase": "phase_1",
+  "application": "Hospital management",
+  "evaluated_at_utc": "2026-08-06T12:46:47Z",
+  "verdict": {
+    "natural_fit": true,
+    "fourth_primitive_pressure": false,
+    "axiom_violation_pressure": false
+  },
+  "mapping": {
+    "observation_examples": [
+      "patient triage measurements observed",
+      "lab result and imaging findings observed",
+      "bed occupancy and staffing status observed"
+    ],
+    "intention_examples": [
+      "clinician intends treatment plan update",
+      "scheduler intends procedure allocation",
+      "care team intends discharge transition"
+    ],
+    "commitment_examples": [
+      "authorized clinician commits medical order",
+      "department commits resource allocation decision",
+      "pharmacy commits dispense action under policy constraints"
+    ]
+  },
+  "trs_mechanics_used": [
+    "causality",
+    "authorization",
+    "replay",
+    "conflict_visibility"
+  ],
+  "conflict_shape": {
+    "example": "concurrent incompatible medication intents from separate teams",
+    "expected_behavior": "conflicts remain explicit and traceable; escalation policy resolves without silent overwrite"
+  },
+  "replay_shape": {
+    "example": "audit adverse event by replaying orders, observations, and authorization path",
+    "expected_behavior": "deterministic replay yields accountable treatment timeline and decision provenance"
+  },
+  "notes": "Clinical coordination maps naturally to immutable records; privacy and regulatory controls stay in authorization/profile layers."
+}

@@ -1,0 +1,206 @@
+{
+  "cycle": "CYCLE-0019",
+  "generated_at_utc": "2026-08-06T12:26:43Z",
+  "status": "in_progress",
+  "phase_1_applications": [
+    {
+      "name": "GitHub",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped with O/I/C and core mechanics (causality, authorization, replay, conflict visibility). Evidence: evidence\\discovery\\2026-08-06T122949Z_cycle0019_phase1_github.json"
+    },
+    {
+      "name": "Kubernetes",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped with O/I/C via reconciliation traces and controller-policy layering. Evidence: evidence\\discovery\\2026-08-06T123127Z_cycle0019_phase1_kubernetes.json"
+    },
+    {
+      "name": "WhatsApp",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped with O/I/C for messaging and group governance; transport/crypto remain profile layers. Evidence: evidence\\discovery\\2026-08-06T123332Z_cycle0019_phase1_whatsapp.json"
+    },
+    {
+      "name": "Google Docs",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped with O/I/C for collaborative editing and permission control; CRDT/OT remains profile logic. Evidence: evidence\\discovery\\2026-08-06T123507Z_cycle0019_phase1_google_docs.json"
+    },
+    {
+      "name": "Hospital management",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped with O/I/C for clinical coordination and resource allocation; privacy/regulatory controls remain profile-layer. Evidence: evidence\\discovery\\2026-08-06T124647Z_cycle0019_phase1_hospital_management.json"
+    },
+    {
+      "name": "Air traffic control",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for clearances, separation conflicts, and replayable incident audits. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Banking",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for ledger events, transfer intents, and authorized commitments. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Multiplayer games",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for action adjudication, conflict visibility, and anti-cheat replay. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Package delivery",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for scan observations, routing intents, and courier commitments. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Smart cities",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for cross-agency coordination and explicit policy-layer arbitration. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Robotics",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for sensing, planning, and actuation commitments under safety authorization. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "University administration",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for enrollment, grading, and role-bound approvals. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    },
+    {
+      "name": "Manufacturing",
+      "status": "complete",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Mapped in batch with O/I/C for work orders, telemetry, and resource contention handling. Evidence: evidence\\discovery\\2026-08-06T125017Z_cycle0019_phase1_remaining_batch.json"
+    }
+  ],
+  "phase_2_misuse_probes": [
+    {
+      "name": "SQL transactions",
+      "status": "complete",
+      "classification": "partial",
+      "reason": "Modelable for intent/commit audit trail; strict isolation/rollback semantics require profile-layer transaction protocol.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "Kubernetes reconciliation",
+      "status": "complete",
+      "classification": "yes",
+      "reason": "Observation-driven reconciliation maps directly to O/I/C with authorization and replay.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "Git",
+      "status": "complete",
+      "classification": "yes",
+      "reason": "Commit/merge workflows naturally map to immutable causally-linked records with explicit conflict visibility.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "TCP",
+      "status": "complete",
+      "classification": "partial",
+      "reason": "Coordination state can be modeled, but transport-level timing/retransmission/window mechanics remain protocol-layer.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "OAuth",
+      "status": "complete",
+      "classification": "partial",
+      "reason": "Consent/delegation flows map, but token crypto lifecycle and handshake semantics remain profile-layer standards.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "Courtroom",
+      "status": "complete",
+      "classification": "yes",
+      "reason": "Filings, testimony, rulings, and obligations map to O/I/C with strong replayable provenance.",
+      "contradiction_fixture": ""
+    },
+    {
+      "name": "OS scheduler",
+      "status": "complete",
+      "classification": "partial",
+      "reason": "Scheduling decisions are representable, while real-time dispatch internals remain execution-layer mechanics.",
+      "contradiction_fixture": ""
+    }
+  ],
+  "phase_3_discoveries": [
+    {
+      "statement": "Silent overwrite failures become visible as explicit conflicts.",
+      "mechanisms": [
+        "conflict_visibility",
+        "causality"
+      ],
+      "contradiction": false
+    },
+    {
+      "statement": "Forensic reconstruction shifts from ad-hoc logs to deterministic replay.",
+      "mechanisms": [
+        "replay",
+        "causality",
+        "authorization"
+      ],
+      "contradiction": false
+    },
+    {
+      "statement": "Delegation ambiguity is reduced by explicit authorization traceability.",
+      "mechanisms": [
+        "authorization",
+        "causality"
+      ],
+      "contradiction": false
+    },
+    {
+      "statement": "Core TRS remains stable while domain policies vary independently above it.",
+      "mechanisms": [
+        "observation",
+        "intention",
+        "commitment"
+      ],
+      "contradiction": false
+    },
+    {
+      "statement": "Hard real-time and transport guarantees remain profile-layer, not new primitives.",
+      "mechanisms": [
+        "authorization",
+        "replay"
+      ],
+      "contradiction": false
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-08-06T12:11:29Z",
+  "as_of": "2026-08-06T12:18:25Z",
   "gates": {
     "independent_implementations_10_plus": {
       "status": "done",
@@ -22,9 +22,9 @@
       "current": "trs-node serve --db implemented; remote submit/query/sync/replay and restart persistence checks passed"
     },
     "benchmark_gate_pr_strict": {
-      "status": "in_progress",
+      "status": "done",
       "target": "strict PR benchmark gate passes without allow flag",
-      "current": "strict validation failed at 2026-08-05T143533Z (benchmark gate); 7-run rebaseline+tolerant gate passes"
+      "current": "strict PR validation passed at 2026-08-06T121825Z via experiments/0006-validation/run_validation_cycle.py --gate-mode pr"
     },
     "v1_0_0_release_freeze": {
       "status": "done",

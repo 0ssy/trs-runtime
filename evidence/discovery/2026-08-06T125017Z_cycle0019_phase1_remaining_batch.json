@@ -1,0 +1,64 @@
+{
+  "cycle": "CYCLE-0019",
+  "phase": "phase_1",
+  "evaluated_at_utc": "2026-08-06T12:50:17Z",
+  "scope": "remaining applications batch",
+  "results": [
+    {
+      "application": "Air traffic control",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Flight state observations, controller intentions, and authorized commitments to clearances map cleanly; conflict visibility supports separation violations and contention handling."
+    },
+    {
+      "application": "Banking",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Ledger events as observations, transfer intents, and authorized commitments map naturally; fraud/risk policies remain higher-layer logic."
+    },
+    {
+      "application": "Multiplayer games",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Player actions and server adjudication map to O/I/C; replay provides anti-cheat and dispute auditability with explicit conflicts."
+    },
+    {
+      "application": "Package delivery",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Scan events and routing plans map to observations and intentions; courier and hub commitments are authorized and replayable."
+    },
+    {
+      "application": "Smart cities",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Cross-agency coordination is represented through immutable events, intended actions, and accountable commitments with policy-layer arbitration."
+    },
+    {
+      "application": "Robotics",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Sensor observations, planner intentions, and actuator commitments map directly; safety interlocks are authorization constraints."
+    },
+    {
+      "application": "University administration",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Enrollment and grade workflows fit O/I/C with strong audit requirements, role authorization, and replayable provenance."
+    },
+    {
+      "application": "Manufacturing",
+      "natural_fit": true,
+      "fourth_primitive_pressure": false,
+      "axiom_violation_pressure": false,
+      "notes": "Work orders and production telemetry fit O/I/C; line conflicts and resource contention stay explicit for deterministic replay and root-cause analysis."
+    }
+  ]
+}

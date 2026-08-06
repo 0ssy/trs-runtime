@@ -1,0 +1,44 @@
+{
+  "cycle": "CYCLE-0019",
+  "phase": "phase_1",
+  "application": "GitHub",
+  "evaluated_at_utc": "2026-08-06T12:29:49Z",
+  "verdict": {
+    "natural_fit": true,
+    "fourth_primitive_pressure": false,
+    "axiom_violation_pressure": false
+  },
+  "mapping": {
+    "observation_examples": [
+      "new commit observed on branch",
+      "ci run result observed",
+      "review comment observed",
+      "merge conflict observed"
+    ],
+    "intention_examples": [
+      "author intends to merge pull request",
+      "maintainer intends to request changes",
+      "automation intends to deploy after checks pass"
+    ],
+    "commitment_examples": [
+      "reviewer commits to approve under required conditions",
+      "ci system commits to publish deterministic test result",
+      "merge bot commits to merge when branch protection predicates hold"
+    ]
+  },
+  "trs_mechanics_used": [
+    "causality",
+    "authorization",
+    "replay",
+    "conflict_visibility"
+  ],
+  "conflict_shape": {
+    "example": "two concurrent intentions to merge incompatible histories",
+    "expected_behavior": "both intentions remain visible; downstream policy decides resolution"
+  },
+  "replay_shape": {
+    "example": "reconstruct repository/project coordination state from immutable records",
+    "expected_behavior": "deterministic recomputation of open PRs, approvals, and unmet checks"
+  },
+  "notes": "GitHub collaboration workflows reduce naturally to O/I/C with policy layered above runtime. No fourth primitive required for baseline modeling."
+}

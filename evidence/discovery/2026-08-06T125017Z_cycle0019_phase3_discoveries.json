@@ -1,0 +1,55 @@
+{
+  "cycle": "CYCLE-0019",
+  "phase": "phase_3",
+  "evaluated_at_utc": "2026-08-06T12:50:17Z",
+  "discoveries": [
+    {
+      "statement": "Silent coordination overwrites disappear because conflicting intentions remain first-class and visible.",
+      "mechanisms": [
+        "conflict_visibility",
+        "causality"
+      ],
+      "contradiction": false,
+      "amendment_candidate": false
+    },
+    {
+      "statement": "Post-incident accountability improves because every decision path is replayable from immutable records.",
+      "mechanisms": [
+        "replay",
+        "causality",
+        "authorization"
+      ],
+      "contradiction": false,
+      "amendment_candidate": false
+    },
+    {
+      "statement": "Delegation abuse becomes detectable because commitments must trace to authorized roots.",
+      "mechanisms": [
+        "authorization",
+        "causality"
+      ],
+      "contradiction": false,
+      "amendment_candidate": false
+    },
+    {
+      "statement": "Cross-domain coordination can share one immutable substrate while preserving domain policy autonomy in higher layers.",
+      "mechanisms": [
+        "observation",
+        "intention",
+        "commitment",
+        "replay"
+      ],
+      "contradiction": false,
+      "amendment_candidate": false
+    },
+    {
+      "statement": "Some guarantees (hard real-time, strict transport behavior, strict serializability) remain profile-layer concerns rather than core TRS semantics.",
+      "mechanisms": [
+        "authorization",
+        "replay"
+      ],
+      "contradiction": false,
+      "amendment_candidate": false
+    }
+  ]
+}
