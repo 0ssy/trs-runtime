@@ -1,0 +1,12 @@
+{
+  "present": true,
+  "rows": [
+    {
+      "cause": "p10-task-create",
+      "left_id": "p10-claim-incomplete-alice",
+      "left_claim": "incomplete",
+      "right_id": "p10-claim-complete-bob",
+      "right_claim": "completed"
+    }
+  ]
+}

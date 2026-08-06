@@ -1,0 +1,14 @@
+{
+  "unresolved_intentions": [],
+  "intention_to_commitments": {
+    "p10-claim-incomplete-alice": [
+      "p10-decision"
+    ],
+    "p10-claim-complete-bob": [
+      "p10-decision"
+    ]
+  },
+  "orphan_commitments": [
+    "p10-authority-bob"
+  ]
+}

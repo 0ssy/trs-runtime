@@ -50,6 +50,7 @@ from .workflow_application import (
     WorkflowVerticalSliceResult,
     run_workflow_vertical_slice,
 )
+from .program10_human_coordination import Program10Result, run_program10_study
 
 __all__ = [
     "Allocation",
@@ -97,7 +98,9 @@ __all__ = [
     "ReputationVerticalSliceResult",
     "WorkflowRecordProof",
     "WorkflowVerticalSliceResult",
+    "Program10Result",
     "app_validation_backlog",
+    "run_program10_study",
     "run_identity_vertical_slice",
     "run_reputation_vertical_slice",
     "run_vertical_slice",

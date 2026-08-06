@@ -1,0 +1,84 @@
+[
+  {
+    "record_id": "p10-task-create",
+    "time": "2026-08-06T12:00:00+00:00",
+    "actor": "alice",
+    "event": "task",
+    "causes": []
+  },
+  {
+    "record_id": "p10-authority-bob",
+    "time": "2026-08-06T12:01:00+00:00",
+    "actor": "alice",
+    "event": "assign-authority",
+    "causes": [
+      "p10-task-create"
+    ]
+  },
+  {
+    "record_id": "p10-offline-bob",
+    "time": "2026-08-06T12:02:00+00:00",
+    "actor": "bob",
+    "event": "connectivity",
+    "causes": [
+      "p10-task-create"
+    ]
+  },
+  {
+    "record_id": "p10-claim-incomplete-alice",
+    "time": "2026-08-06T12:04:00+00:00",
+    "actor": "alice",
+    "event": "event",
+    "causes": [
+      "p10-task-create"
+    ]
+  },
+  {
+    "record_id": "p10-claim-complete-bob",
+    "time": "2026-08-06T12:03:00+00:00",
+    "actor": "bob",
+    "event": "event",
+    "causes": [
+      "p10-task-create"
+    ]
+  },
+  {
+    "record_id": "p10-evidence-alice",
+    "time": "2026-08-06T12:05:00+00:00",
+    "actor": "alice",
+    "event": "evidence",
+    "causes": [
+      "p10-claim-incomplete-alice"
+    ]
+  },
+  {
+    "record_id": "p10-evidence-bob",
+    "time": "2026-08-06T12:06:00+00:00",
+    "actor": "bob",
+    "event": "evidence",
+    "causes": [
+      "p10-claim-complete-bob"
+    ]
+  },
+  {
+    "record_id": "p10-reconnect-bob",
+    "time": "2026-08-06T12:07:00+00:00",
+    "actor": "bob",
+    "event": "connectivity",
+    "causes": [
+      "p10-offline-bob",
+      "p10-claim-complete-bob"
+    ]
+  },
+  {
+    "record_id": "p10-decision",
+    "time": "2026-08-06T12:08:00+00:00",
+    "actor": "alice",
+    "event": "decision",
+    "causes": [
+      "p10-task-create",
+      "p10-claim-complete-bob",
+      "p10-claim-incomplete-alice"
+    ]
+  }
+]

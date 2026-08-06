@@ -66,6 +66,7 @@ All current evidence gates are green.
 
 - Active cycle: `CYCLE-0019` completed first pass (user-first abstraction stress, misuse probes, coordination discovery).
 - Evidence index: `evidence/discovery/cycle0019_latest.json`.
+- Program 10 human-coordination validation: `CYCLE-0020` implementation complete; real participant validation run pending in `terranode-program10/`.
 
 ## Validation note (recorded)
 

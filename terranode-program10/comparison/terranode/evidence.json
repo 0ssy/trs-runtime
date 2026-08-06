@@ -1,0 +1,14 @@
+[
+  {
+    "record_id": "p10-evidence-alice",
+    "actor": "alice",
+    "for_claim": "p10-claim-incomplete-alice",
+    "note": "safety checklist missing"
+  },
+  {
+    "record_id": "p10-evidence-bob",
+    "actor": "bob",
+    "for_claim": "p10-claim-complete-bob",
+    "note": "photo uploaded from field"
+  }
+]

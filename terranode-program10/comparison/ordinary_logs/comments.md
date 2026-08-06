@@ -1,0 +1,3 @@
+- alice: Checklist not signed.
+- bob: Uploaded field photo.
+- system: Dispute detected after reconnect.

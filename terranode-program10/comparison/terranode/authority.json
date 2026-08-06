@@ -1,0 +1,7 @@
+{
+  "authorized_actor": "bob",
+  "authority_record": "p10-authority-bob",
+  "decision_authorization_path": [
+    "p10-task-create"
+  ]
+}

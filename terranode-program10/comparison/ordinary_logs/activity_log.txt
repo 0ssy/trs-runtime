@@ -1,0 +1,9 @@
+2026-08-06T12:00:00+00:00 alice: task
+2026-08-06T12:01:00+00:00 alice: assign-authority
+2026-08-06T12:02:00+00:00 bob: connectivity
+2026-08-06T12:04:00+00:00 alice: event
+2026-08-06T12:03:00+00:00 bob: event
+2026-08-06T12:05:00+00:00 alice: evidence
+2026-08-06T12:06:00+00:00 bob: evidence
+2026-08-06T12:07:00+00:00 bob: connectivity
+2026-08-06T12:08:00+00:00 alice: decision

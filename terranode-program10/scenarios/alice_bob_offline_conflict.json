@@ -1,0 +1,23 @@
+{
+  "scenario_id": "alice-bob-offline-conflict",
+  "steps": [
+    "Alice creates task",
+    "Alice assigns Bob authority",
+    "Bob goes offline",
+    "Bob records completion claim while offline",
+    "Alice records incomplete claim",
+    "Bob reconnects and syncs claim",
+    "Conflict becomes visible"
+  ],
+  "record_ids": [
+    "p10-task-create",
+    "p10-authority-bob",
+    "p10-offline-bob",
+    "p10-claim-incomplete-alice",
+    "p10-evidence-alice",
+    "p10-claim-complete-bob",
+    "p10-evidence-bob",
+    "p10-reconnect-bob",
+    "p10-decision"
+  ]
+}

@@ -1,0 +1,7 @@
+participant_id,persona,experience,session_complete,data_origin
+p01,developer,backend engineer,no,synthetic_baseline
+p02,developer,full-stack engineer,no,synthetic_baseline
+p03,non_technical,operations coordinator,no,synthetic_baseline
+p04,non_technical,administrative assistant,no,synthetic_baseline
+p05,domain_expert,field supervisor,no,synthetic_baseline
+p06,domain_expert,compliance auditor,no,synthetic_baseline

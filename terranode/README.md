@@ -21,6 +21,7 @@ TerraNode Program 1 is a consumer-validation experiment over TRS runtime.
 - `terranode/workflow_application.py`: workflow-engine vertical slice with offline ingestion and convergence artifacts.
 - `terranode/main.py`: scarcity demonstration flow.
 - `tests/`: policy, adapter, and end-to-end tests.
+- `tests/test_program10_human_coordination_validation.py`: Program 10 study package generation validation.
 - `docs/ROADMAP_P2_P9.md`: dependency-ordered post-v1.0 research stack.
 - `docs/PRE_PILOT_STACK_9_5_TO_9_11.md`: mandatory pre-pilot validation stack.
 - `examples/scarcity_demo.py`: runnable demo entrypoint.
@@ -40,6 +41,7 @@ python -m unittest -v terranode.tests.test_program6_semantic_interoperability
 python -m unittest -v terranode.tests.test_program7_capability_security
 python -m unittest -v terranode.tests.test_program8_public_submission_boundary
 python -m unittest -v terranode.tests.test_program9_human_systems
+python -m unittest -v terranode.tests.test_program10_human_coordination_validation
 python -m unittest -v terranode.tests.test_program9_10_sdk
 python -m unittest -v terranode.tests.test_program9_11_privacy
 python -m unittest -v terranode.tests.test_app_vertical_slice

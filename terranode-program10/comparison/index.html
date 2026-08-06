@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Program 10 - Interface Comparison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+    }
+    .sub {
+      margin: 0 0 16px 0;
+      color: #4b5563;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .panel {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .panel h2 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    pre {
+      margin: 0;
+      padding: 10px;
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Program 10 - Side-by-Side View</h1>
+  <p class="sub">Ordinary logs interface vs TerraNode interface for the same coordination scenario.</p>
+  <div class="grid">
+    <section class="panel">
+      <h2>Interface A - Ordinary</h2>
+      <pre id="ordinary"></pre>
+    </section>
+    <section class="panel">
+      <h2>Interface B - TerraNode</h2>
+      <pre id="terranode"></pre>
+    </section>
+  </div>
+  <script>
+    const ordinary = {
+  "status": {
+    "task_id": "task-1001",
+    "current_status": "incomplete (disputed)",
+    "owner": "alice"
+  },
+  "activity_log": [
+    "2026-08-06T12:00:00+00:00 alice: task",
+    "2026-08-06T12:01:00+00:00 alice: assign-authority",
+    "2026-08-06T12:02:00+00:00 bob: connectivity",
+    "2026-08-06T12:04:00+00:00 alice: event",
+    "2026-08-06T12:03:00+00:00 bob: event",
+    "2026-08-06T12:05:00+00:00 alice: evidence",
+    "2026-08-06T12:06:00+00:00 bob: evidence",
+    "2026-08-06T12:07:00+00:00 bob: connectivity",
+    "2026-08-06T12:08:00+00:00 alice: decision"
+  ],
+  "comments_md": "- alice: Checklist not signed.\n- bob: Uploaded field photo.\n- system: Dispute detected after reconnect."
+};
+    const terranode = {
+  "timeline": [
+    {
+      "record_id": "p10-task-create",
+      "time": "2026-08-06T12:00:00+00:00",
+      "actor": "alice",
+      "event": "task",
+      "causes": []
+    },
+    {
+      "record_id": "p10-authority-bob",
+      "time": "2026-08-06T12:01:00+00:00",
+      "actor": "alice",
+      "event": "assign-authority",
+      "causes": [
+        "p10-task-create"
+      ]
+    },
+    {
+      "record_id": "p10-offline-bob",
+      "time": "2026-08-06T12:02:00+00:00",
+      "actor": "bob",
+      "event": "connectivity",
+      "causes": [
+        "p10-task-create"
+      ]
+    },
+    {
+      "record_id": "p10-claim-incomplete-alice",
+      "time": "2026-08-06T12:04:00+00:00",
+      "actor": "alice",
+      "event": "event",
+      "causes": [
+        "p10-task-create"
+      ]
+    },
+    {
+      "record_id": "p10-claim-complete-bob",
+      "time": "2026-08-06T12:03:00+00:00",
+      "actor": "bob",
+      "event": "event",
+      "causes": [
+        "p10-task-create"
+      ]
+    },
+    {
+      "record_id": "p10-evidence-alice",
+      "time": "2026-08-06T12:05:00+00:00",
+      "actor": "alice",
+      "event": "evidence",
+      "causes": [
+        "p10-claim-incomplete-alice"
+      ]
+    },
+    {
+      "record_id": "p10-evidence-bob",
+      "time": "2026-08-06T12:06:00+00:00",
+      "actor": "bob",
+      "event": "evidence",
+      "causes": [
+        "p10-claim-complete-bob"
+      ]
+    },
+    {
+      "record_id": "p10-reconnect-bob",
+      "time": "2026-08-06T12:07:00+00:00",
+      "actor": "bob",
+      "event": "connectivity",
+      "causes": [
+        "p10-offline-bob",
+        "p10-claim-complete-bob"
+      ]
+    },
+    {
+      "record_id": "p10-decision",
+      "time": "2026-08-06T12:08:00+00:00",
+      "actor": "alice",
+      "event": "decision",
+      "causes": [
+        "p10-task-create",
+        "p10-claim-complete-bob",
+        "p10-claim-incomplete-alice"
+      ]
+    }
+  ],
+  "replay": {
+    "unresolved_intentions": [],
+    "intention_to_commitments": {
+      "p10-claim-incomplete-alice": [
+        "p10-decision"
+      ],
+      "p10-claim-complete-bob": [
+        "p10-decision"
+      ]
+    },
+    "orphan_commitments": [
+      "p10-authority-bob"
+    ]
+  },
+  "evidence": [
+    {
+      "record_id": "p10-evidence-alice",
+      "actor": "alice",
+      "for_claim": "p10-claim-incomplete-alice",
+      "note": "safety checklist missing"
+    },
+    {
+      "record_id": "p10-evidence-bob",
+      "actor": "bob",
+      "for_claim": "p10-claim-complete-bob",
+      "note": "photo uploaded from field"
+    }
+  ],
+  "authority": {
+    "authorized_actor": "bob",
+    "authority_record": "p10-authority-bob",
+    "decision_authorization_path": [
+      "p10-task-create"
+    ]
+  },
+  "conflict": {
+    "present": true,
+    "rows": [
+      {
+        "cause": "p10-task-create",
+        "left_id": "p10-claim-incomplete-alice",
+        "left_claim": "incomplete",
+        "right_id": "p10-claim-complete-bob",
+        "right_claim": "completed"
+      }
+    ]
+  },
+  "explanation": "Decision explanation\n====================\nDecision record: p10-decision\nDecision maker: alice\nOutcome: inspection-required\nReason: conflicting completion claims\nConflicting claims:\n- p10-claim-incomplete-alice (incomplete) vs p10-claim-complete-bob (completed)\nAuthority chain used: p10-task-create\nValidation errors: none\nMissing information: independent inspection result is still required."
+};
+    document.getElementById("ordinary").textContent = JSON.stringify(ordinary, null, 2);
+    document.getElementById("terranode").textContent = JSON.stringify(terranode, null, 2);
+  </script>
+</body>
+</html>

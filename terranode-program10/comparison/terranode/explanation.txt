@@ -1,0 +1,11 @@
+Decision explanation
+====================
+Decision record: p10-decision
+Decision maker: alice
+Outcome: inspection-required
+Reason: conflicting completion claims
+Conflicting claims:
+- p10-claim-incomplete-alice (incomplete) vs p10-claim-complete-bob (completed)
+Authority chain used: p10-task-create
+Validation errors: none
+Missing information: independent inspection result is still required.
