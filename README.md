@@ -1,137 +1,150 @@
 # TRS Runtime
 
-TRS runtime implementation with strict payload-independence:
+TRS is a domain-neutral coordination and provenance runtime for distributed applications, organizations, devices, services, and AI agents.
 
-- The record envelope declares the primitive type.
-- The verifier validates payload structure against the declared primitive.
-- The runtime never infers primitive type from payload.
+![TRS coordination layer](docs/images/trs-coordination-layer.png)
 
-## Layout
+## Why does this exist?
 
-- `runtime/`: core runtime modules
-- `runtime/terranode_adapter.py`: TerraNode integration boundary API
-- `runtime/storage.py`: `StorageEngine`, `RecordStore` (in-memory), `SQLiteStorage`, `LMDBStorage`, `RocksDBStorage`
-- `runtime/crypto.py`: Ed25519 key generation, signing, verification, rotation, delegation graph
-- `runtime/network_sync.py`: inventory exchange and unordered verified record transfer
-- `runtime/replay.py`: deterministic replay engine for derived views
-- `runtime/benchmark.py`: Phase 15 benchmark harness
-- `libraries/`: derived read-only libraries (identity, reputation, contracts, workflow, capabilities, trust, policy)
-- `conformance/`: specification-facing conformance tests
-- `tests/`: focused unit tests
-- `attacks/`: executable adversarial attack scripts
-- `research/attacks/`: persisted attack records
-- `research/cycles/`: research cycle summaries and amendment decisions
-- `logs/development/`: short daily engineering logs
-- `evidence/`: persisted test-run and benchmark artifacts
-- `experiments/`: disposable engineering validation scripts
-- `STATUS.md`: live project status dashboard
-- `schemas/`: schema artifacts (placeholder)
-- `payloads/`: payload artifacts (placeholder)
-- `docs/`: amendment log and external specification artifacts
-- `trs-openapi/`: canonical network contract for node + SDK parity
-- `trs-grpc/`: canonical gRPC contract for generated clients and services
-- `trs-examples/`: small runnable reference apps for TRS usage patterns
-- `trs-conformance/`: implementation-neutral conformance vectors and expected outcomes
-- `trs-canonical/`: canonical serialization, hashing, and signing profiles
-- `trs-network/`: normative HTTP wire protocol profile
-- `trs-interop/`: cross-implementation interoperability matrix and reports
-- `trs-formal/`: formal-method models (TLA+ starter)
-- `trs-governance/`: amendment workflow, voting, accepted/rejected records
-- `trs-independent-implementations/`: independent implementation evidence intake
+TRS started as an attempt to answer a simple question:
 
-## Canonical documentation files
+**Can heterogeneous systems share a common model for authority, causality, replay, and coordination without sharing the same application model?**
 
-- `docs/TRS_v1.0.pdf`
-- `docs/Design_Record.pdf`
-- `docs/Amendment_Log.md`
-- `docs/SPEC_TRACEABILITY.md`
-- `docs/RESEARCH_EXECUTION_MATRIX.md`
+This repository is an exploration of that question.
 
-## Run tests
+## The Problem
 
-```bash
-python -m unittest discover -s tests -p "test_*.py"
-python -m unittest discover -s conformance -p "test_*.py"
-python -m unittest -v tests.test_property_invariants
-python -m unittest -v tests.test_fuzz_malformed_inputs
-python -m unittest -v tests.test_mutation_checks
-python -m unittest -v tests.test_multi_node_sim
+Modern systems answer different parts of coordination:
+
+- databases store state
+- workflow engines orchestrate work
+- event logs record events
+- IAM controls access
+- version control tracks code
+
+But reconstructing **who was authorized**, **what happened**, **why systems disagree**, and **how events are causally connected** often requires stitching information together from multiple systems.
+
+## What TRS Does
+
+```text
+Application
+      |
+      v
+TRS Adapter
+      |
+      v
+TRS Runtime
 ```
 
-## Run mutation checks
+Applications keep their own domain data.  
+TRS records coordination facts and relationships using:
 
-```bash
-python experiments/0003-mutation/run_mutation_checks.py
+- Observation
+- Intention
+- Commitment
+
+## What TRS Is NOT
+
+- Not a database
+- Not a blockchain
+- Not an event store
+- Not a workflow engine
+- Not a CRDT
+- Not an AI framework
+- Not a replacement for AWS, Kafka, or PostgreSQL
+
+TRS is intended to complement existing systems.
+
+## Example (one record)
+
+```json
+{
+  "id": "p10-authority-bob",
+  "type": "Commitment",
+  "author": "alice",
+  "timestamp": "2026-08-06T12:01:00Z",
+  "schema": "trs.commitment.v1",
+  "payload": {
+    "action": "assign-authority",
+    "due_by": "2026-08-10T00:00:00Z",
+    "assignee": "bob"
+  },
+  "causes": ["p10-task-create"],
+  "authorization": ["p10-task-create"],
+  "signature": "sig:p10-authority-bob",
+  "subject": "task-1001"
+}
 ```
 
-## Run benchmarks
+## Repository Structure
 
-```bash
-python benchmarks/run_benchmarks.py --records 2000 --out evidence/benchmarks/benchmark_baseline.json
+- `runtime/` - core TRS record model, verifier, storage, replay, graph, query, and sync logic.
+- `terranode/` - consumer-side integration and validation programs over TRS.
+- `trs-node/` - deployable network node/profile exposing runtime operations.
+- `trs-sdk-python/` - Python SDK package and client flows.
+- `trs-cli/` - command-line workflow tooling for TRS operations.
+- `trs-explorer/` - inspection tools and explorer surfaces.
+- `trs-conformance/` - implementation-neutral vectors and expected outcomes.
+- `trs-openapi/` - canonical HTTP contract definition.
+- `trs-grpc/` - canonical gRPC contract definition.
+- `trs-interop/` - cross-runtime interoperability matrix and runs.
+- `trs-formal/` - formal-method artifacts (TLA+ and model checks).
+- `trs-independent-implementations/` - external implementation challenge and evidence intake.
+- `terranode-program10/` - human-coordination comparison app, study assets, and report artifacts.
+- `research/` - cycle records, evidence scoreboards, and outcomes ledger.
+- `evidence/` - machine-readable and human-readable validation artifacts.
+- `docs/` - frozen specification and traceability documents.
+
+## Current Status
+
+```text
+Research Programs
+--------------------------
+[x] Runtime Specification
+[x] Reference Runtime
+[x] SDKs (baseline set)
+[x] Node Profile
+[x] CLI
+[x] Explorer
+[x] Conformance Suite
+[x] Human Coordination Validation (implementation package)
+[x] Independent Implementations (initial gate closure)
+[x] OpenAPI + gRPC canonical contracts
+[ ] Formal verification depth expansion
+[ ] External security audit closure
+[ ] Governance adoption cycle closure
+[ ] Real-participant Program 10 validation closure
+[ ] Ecosystem growth and onboarding expansion
 ```
 
-## Compare benchmark runs
+## Independent Implementation Challenge
 
-```bash
-python benchmarks/compare_benchmarks.py --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json --current evidence/benchmarks/2026-08-01_phase15_baseline.json
-```
+See [`trs-independent-implementations/`](trs-independent-implementations/).
 
-## Run benchmark regression gate (writes history artifact)
+Goal: implement TRS using only the specification artifacts (without reusing reference runtime internals), then run conformance and interop evidence.
 
-```bash
-python benchmarks/gate_benchmarks.py --mode quick --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
-python benchmarks/gate_benchmarks.py --mode pr --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
-python benchmarks/gate_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
-```
+## Looking For Feedback
 
-Policy split:
+I am not looking for stars. I am looking for answers to questions like:
 
-- `pr`: balanced gate for pull requests
-- `nightly`: strict gate for stable machine/nightly run
-- `nightly` includes small per-metric jitter overrides for volatile microbenchmarks
+- Does this solve a real coordination problem?
+- What existing systems already solve this well?
+- Where does the abstraction fail?
+- Would you integrate this into an existing architecture?
 
-## Re-capture baseline on quiet machine (archives prior baseline)
+Please leave feedback here:
 
-```bash
-python benchmarks/rebaseline_benchmarks.py --mode nightly --baseline evidence/benchmarks/2026-08-01_phase15_baseline.json
-```
+- **GitHub Issues** for bugs and feature suggestions.
+- **GitHub Discussions** (if enabled) for broader design discussion and opinions.
 
-## Run multi-node sync simulation
+## Roadmap (remaining work)
 
-```bash
-python experiments/0005-multi-node/run_multi_node_sim.py
-```
+- Complete real-participant Program 10 runs (5+ participants) and close CYCLE-0020.
+- Expand formal verification scope/depth beyond current bounded runs.
+- Complete external professional security audit cycle.
+- Complete recurring multi-party governance adoption cycle.
+- Expand SDK onboarding and ecosystem integrations.
 
-## Run full validation cycle
+## License
 
-```bash
-python experiments/0006-validation/run_validation_cycle.py --gate-mode pr
-```
-
-## Run next research cycle (Programs 5-10)
-
-```bash
-python experiments/0013-cycle-0002/run_cycle_0002.py --scale-records 10000 100000
-```
-
-## Run in-memory performance RCA
-
-```bash
-python experiments/0014-inmemory-perf-rca/run_inmemory_perf_rca.py --records 200 2000 10000 --runs 3 --profile-records 10000
-```
-
-If you want to continue while still recording benchmark regressions:
-
-```bash
-python experiments/0006-validation/run_validation_cycle.py --gate-mode quick --allow-benchmark-regressions
-```
-
-## CI policy
-
-- Pull requests run validation with `--gate-mode pr`.
-- Pushes to `main` and nightly schedule run strict validation with `--gate-mode nightly`.
-- Workflow file: `.github/workflows/validation.yml`.
-
-## TerraNode integration boundary
-
-Use `TerraNodeRuntimeAdapter` as TerraNode's only dependency on TRS-RR. TerraNode submits envelopes and consumes results; it does not implement or duplicate TRS verifier rules.
+No repository-level `LICENSE` file is currently present. Add one before broad external adoption.
