@@ -379,13 +379,68 @@ class Verifier:
             parent = self.store.get(auth_id)
             if parent is None:
                 return False, f"authorization record missing during delegation check: {auth_id}"
-            if child_author != parent.author and not self.crypto.has_delegation(parent.author, child_author):
-                return (
-                    False,
-                    f"missing delegation from {parent.author} to {child_author} in authorization chain",
+            if child_author != parent.author:
+                delegation_ok, delegation_reason = self._has_log_delegation(
+                    grantor=parent.author,
+                    grantee=child_author,
                 )
+                if not delegation_ok:
+                    return False, delegation_reason
             child_author = parent.author
         return True, ""
+
+    def _has_log_delegation(self, *, grantor: str, grantee: str) -> tuple[bool, str]:
+        revoked_found = False
+        for candidate in self.store.all():
+            if candidate.type != PrimitiveType.COMMITMENT:
+                continue
+            if candidate.author != grantor:
+                continue
+            payload = candidate.payload
+            if not isinstance(payload, Mapping):
+                continue
+            action = payload.get("action")
+            if not isinstance(action, str):
+                continue
+            if not action.startswith("delegate"):
+                continue
+            assignee = payload.get("assignee")
+            if assignee is not None and (not isinstance(assignee, str) or assignee != grantee):
+                continue
+            if self._is_delegation_revoked(candidate, grantor=grantor, grantee=grantee):
+                revoked_found = True
+                continue
+            return True, ""
+        if revoked_found:
+            return False, f"log delegation from {grantor} to {grantee} is revoked"
+        return False, f"missing log delegation from {grantor} to {grantee} in authorization chain"
+
+    def _is_delegation_revoked(
+        self,
+        delegation_record: Record,
+        *,
+        grantor: str,
+        grantee: str,
+    ) -> bool:
+        for candidate in self.store.all():
+            if candidate.type != PrimitiveType.COMMITMENT:
+                continue
+            if candidate.author != grantor:
+                continue
+            payload = candidate.payload
+            if not isinstance(payload, Mapping):
+                continue
+            action = payload.get("action")
+            if not isinstance(action, str):
+                continue
+            if not action.startswith("revoke"):
+                continue
+            assignee = payload.get("assignee")
+            if assignee is not None and (not isinstance(assignee, str) or assignee != grantee):
+                continue
+            if delegation_record.id in candidate.authorization or delegation_record.id in candidate.causes:
+                return True
+        return False
 
     def _children_of_type(self, record_id: str, primitive: PrimitiveType) -> list[Record]:
         if self._children_of_type_provider is not None:

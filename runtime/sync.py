@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from dataclasses import dataclass
 
+from .canonical import canonical_record_bytes
 from .record import Record
 from .storage import StorageEngine
 from .verifier import VerificationResult, Verifier
 
 
 def _hash_record(record: Record) -> str:
-    payload = json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    payload = canonical_record_bytes(record, include_signature=True)
+    return hashlib.sha256(payload).hexdigest()
 
 
 def hash_inventory(store: StorageEngine) -> dict[str, str]:

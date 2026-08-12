@@ -68,6 +68,39 @@ class RecordStoreTests(unittest.TestCase):
         self.assertEqual(record.payload["subject"], "temp")
         self.assertEqual(record.payload["value"], (1, {"n": 2}))
 
+    def test_record_create_uses_content_derived_id_when_not_provided(self) -> None:
+        timestamp = datetime(2026, 1, 1, tzinfo=timezone.utc)
+        first = Record.create(
+            primitive_type=PrimitiveType.OBSERVATION,
+            author="alice",
+            schema="trs.observation.v1",
+            payload={"subject": "temp", "value": 22, "meta": {"b": 2, "a": 1}},
+            timestamp=timestamp,
+            signature="sig:any",
+        )
+        second = Record.create(
+            primitive_type=PrimitiveType.OBSERVATION,
+            author="alice",
+            schema="trs.observation.v1",
+            payload={"meta": {"a": 1, "b": 2}, "value": 22, "subject": "temp"},
+            timestamp=timestamp,
+            signature="sig:different",
+        )
+        self.assertTrue(first.id.startswith("sha256:"))
+        self.assertEqual(first.id, second.id)
+
+    def test_record_create_keeps_explicit_id_for_compatibility(self) -> None:
+        record = Record.create(
+            primitive_type=PrimitiveType.OBSERVATION,
+            author="alice",
+            schema="trs.observation.v1",
+            payload={"subject": "temp", "value": 1},
+            record_id="legacy-id",
+            timestamp=datetime(2026, 1, 1, tzinfo=timezone.utc),
+            signature="sig:legacy",
+        )
+        self.assertEqual(record.id, "legacy-id")
+
 
 if __name__ == "__main__":
     unittest.main()

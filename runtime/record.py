@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from enum import Enum
 from types import MappingProxyType
 from typing import Any, Mapping
-import uuid
+
+from .canonical import derive_record_id
 
 
 class PrimitiveType(str, Enum):
@@ -75,12 +76,13 @@ class Record:
         signature: str = "",
         record_id: str | None = None,
         timestamp: datetime | None = None,
+        subject: str | None = None,
     ) -> "Record":
         # Explicit primitive declaration is required. No payload-based inference.
         if not isinstance(primitive_type, PrimitiveType):
             raise ValueError("invalid primitive type")
-        return Record(
-            id=record_id or str(uuid.uuid4()),
+        draft = Record(
+            id=record_id or "__pending_record_id__",
             type=primitive_type,
             author=author,
             timestamp=timestamp or datetime.now(timezone.utc),
@@ -89,6 +91,20 @@ class Record:
             causes=causes,
             authorization=authorization,
             signature=signature,
+            subject=subject or (causes[0] if causes else "__self__"),
+        )
+        generated_id = derive_record_id(draft)
+        return Record(
+            id=record_id or generated_id,
+            type=primitive_type,
+            author=author,
+            timestamp=draft.timestamp,
+            schema=schema,
+            payload=payload,
+            causes=causes,
+            authorization=authorization,
+            signature=signature,
+            subject=subject or (causes[0] if causes else record_id or generated_id),
         )
 
     def to_dict(self) -> dict[str, Any]:

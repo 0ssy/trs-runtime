@@ -85,6 +85,7 @@ def _is_dependency_wait(verification: VerificationResult) -> bool:
     wait_markers = (
         "missing causes",
         "missing authorization records",
-        "missing delegation path to genesis",
+        "missing delegation path to trust root",
+        "missing log delegation",
     )
     return any(any(marker in error for marker in wait_markers) for error in verification.errors)

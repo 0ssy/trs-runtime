@@ -9,6 +9,7 @@ from .multi_node_sim import (
     simulate_partitioned_sync,
 )
 from .benchmark import BenchmarkMetrics, run_benchmarks
+from .canonical import canonical_json_bytes, canonical_record_bytes, derive_record_id
 from .crypto import CryptoSuite, SigningKey, clone_with_signature
 from .record import PrimitiveType, Record
 from .replay import CoordinationView, ReplayEngine, ReplaySnapshot
@@ -21,6 +22,9 @@ __all__ = [
     "Record",
     "BenchmarkMetrics",
     "run_benchmarks",
+    "canonical_json_bytes",
+    "canonical_record_bytes",
+    "derive_record_id",
     "SimNode",
     "RoundResult",
     "MultiNodeSimulationResult",

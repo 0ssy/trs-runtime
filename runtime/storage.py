@@ -8,6 +8,7 @@ import os
 import sqlite3
 from typing import Any, Dict, Iterable, Iterator, List, Mapping, Protocol, Sequence
 
+from .canonical import canonical_record_bytes
 from .record import PrimitiveType, Record
 
 try:
@@ -425,7 +426,7 @@ def _to_plain(value: Any) -> Any:
 
 
 def _record_to_json_bytes(record: Record) -> bytes:
-    return json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return canonical_record_bytes(record, include_signature=True)
 
 
 def _json_bytes_to_record(payload: bytes) -> Record:

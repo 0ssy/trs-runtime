@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import base64
-import json
 from typing import Any, Mapping
 import uuid
 
@@ -13,6 +12,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat, PublicFormat
 
+from .canonical import canonical_record_bytes as _canonical_record_bytes
 from .record import Record
 
 
@@ -30,7 +30,6 @@ class CryptoSuite:
     def __init__(self) -> None:
         self._public_keys: dict[str, dict[str, Ed25519PublicKey]] = {}
         self._active_key: dict[str, str] = {}
-        self._delegations: dict[str, set[str]] = {}
         self._revision: int = 0
 
     def generate_key(self, author: str, *, set_active: bool = True) -> SigningKey:
@@ -67,19 +66,12 @@ class CryptoSuite:
             self._active_key[author] = key_id
         self._revision += 1
 
-    def grant_delegation(self, grantor: str, grantee: str) -> None:
-        self._delegations.setdefault(grantor, set()).add(grantee)
-        self._revision += 1
-
-    def has_delegation(self, grantor: str, grantee: str) -> bool:
-        return grantee in self._delegations.get(grantor, set())
-
     def revision(self) -> int:
         return self._revision
 
     def sign_record(self, record: Record, private_key_b64: str, key_id: str) -> str:
         private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode(private_key_b64))
-        payload = canonical_record_bytes(record)
+        payload = _canonical_record_bytes(record, include_signature=False)
         sig_b64 = base64.b64encode(private_key.sign(payload)).decode("utf-8")
         return f"ed25519:{key_id}:{sig_b64}"
 
@@ -92,18 +84,12 @@ class CryptoSuite:
         public_key = self._public_keys.get(record.author, {}).get(key_id)
         if public_key is None:
             return False, f"unknown key id {key_id} for author {record.author}"
-        payload = canonical_record_bytes(record)
+        payload = _canonical_record_bytes(record, include_signature=False)
         try:
             public_key.verify(base64.b64decode(sig_b64), payload)
         except Exception:
             return False, "signature verification failed"
         return True, ""
-
-
-def canonical_record_bytes(record: Record) -> bytes:
-    as_dict = record.to_dict()
-    as_dict["signature"] = ""
-    return json.dumps(as_dict, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
 def clone_with_signature(record: Record, signature: str) -> Record:
@@ -119,3 +105,7 @@ def clone_with_signature(record: Record, signature: str) -> Record:
         signature=signature,
         subject=record.subject,
     )
+
+
+def canonical_record_bytes(record: Record) -> bytes:
+    return _canonical_record_bytes(record, include_signature=False)
