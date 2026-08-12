@@ -15,6 +15,7 @@ from .record import PrimitiveType, Record
 from .replay import CoordinationView, ReplayEngine, ReplaySnapshot
 from .storage import LMDBStorage, RecordStore, RocksDBStorage, SQLiteStorage, StorageEngine
 from .terranode_adapter import SubmitResult, TerraNodeRuntimeAdapter
+from .sync import build_checkpoint_record, checkpoint_inventory_hash, head_record_ids
 from .verifier import RuleStatus, VerificationResult, Verifier
 
 __all__ = [
@@ -38,6 +39,9 @@ __all__ = [
     "NetworkSyncResult",
     "ingest_records_unordered",
     "sync_nodes",
+    "build_checkpoint_record",
+    "checkpoint_inventory_hash",
+    "head_record_ids",
     "CryptoSuite",
     "SigningKey",
     "clone_with_signature",

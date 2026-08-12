@@ -6,7 +6,7 @@ import unittest
 from runtime.network_sync import ingest_records_unordered, sync_nodes
 from runtime.record import PrimitiveType, Record
 from runtime.storage import RecordStore
-from runtime.verifier import Verifier
+from runtime.verifier import RuleStatus, Verifier
 
 
 class NetworkSyncTests(unittest.TestCase):
@@ -64,6 +64,84 @@ class NetworkSyncTests(unittest.TestCase):
         self.assertEqual(result.rejected_ids, [])
         self.assertEqual([r.id for r in target.all()], ["g", "a", "b"])
         self.assertEqual([r.id for r in self.source.all()], before_source)
+
+    def test_partition_divergent_subject_chains_surface_conflict_on_reconnect(self) -> None:
+        shared_root = Record(
+            id="g-partition",
+            type=PrimitiveType.OBSERVATION,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "task-42", "value": "created"},
+            authorization=("g-partition",),
+            signature="sig:g-partition",
+        )
+
+        node_a = RecordStore()
+        node_b = RecordStore()
+        node_a.append(shared_root)
+        node_b.append(shared_root)
+
+        a1 = Record(
+            id="a1",
+            type=PrimitiveType.COMMITMENT,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "claim-progress", "due_by": "2027-01-01", "value": "in-progress"},
+            causes=("g-partition",),
+            authorization=("g-partition",),
+            subject="task-42",
+            signature="sig:a1",
+        )
+        a2 = Record(
+            id="a2",
+            type=PrimitiveType.COMMITMENT,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "claim-progress", "due_by": "2027-01-01", "value": "done"},
+            causes=("a1",),
+            authorization=("g-partition",),
+            subject="task-42",
+            signature="sig:a2",
+        )
+        b1 = Record(
+            id="b1",
+            type=PrimitiveType.COMMITMENT,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "claim-progress", "due_by": "2027-01-01", "value": "in-progress"},
+            causes=("g-partition",),
+            authorization=("g-partition",),
+            subject="task-42",
+            signature="sig:b1",
+        )
+        b2 = Record(
+            id="b2",
+            type=PrimitiveType.COMMITMENT,
+            author="bob",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "claim-progress", "due_by": "2027-01-01", "value": "blocked"},
+            causes=("b1",),
+            authorization=("g-partition",),
+            subject="task-42",
+            signature="sig:b2",
+        )
+        for record in (a1, a2):
+            node_a.append(record)
+        for record in (b1, b2):
+            node_b.append(record)
+
+        result = sync_nodes(node_b, node_a, Verifier(node_a))
+        self.assertEqual(result.rejected_ids, [])
+        self.assertIn("b2", result.appended_ids)
+        b2_verification = next(v for rid, v in zip(result.appended_ids, result.verification_results) if rid == "b2")
+        conflict_rule = next(r for r in b2_verification.rules if r.rule_id == "4.5")
+        self.assertEqual(conflict_rule.status, RuleStatus.PASS)
+        self.assertIn("a2", conflict_rule.reason)
 
 
 if __name__ == "__main__":

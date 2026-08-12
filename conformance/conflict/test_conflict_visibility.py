@@ -133,6 +133,48 @@ class ConflictTests(unittest.TestCase):
         conflict_rule = next(r for r in result.rules if r.rule_id == "4.5")
         self.assertEqual(conflict_rule.status, RuleStatus.PASS)
 
+    def test_descendant_update_on_same_subject_is_not_conflict(self) -> None:
+        store = RecordStore()
+        verifier = Verifier(store)
+        root = Record(
+            id="root4",
+            type=PrimitiveType.OBSERVATION,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "state", "value": "open"},
+            signature="sig:root4",
+        )
+        store.append(root)
+
+        first = Record(
+            id="i5",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "allocate", "horizon": "Q1"},
+            causes=("root4",),
+            subject="warehouse-8",
+            signature="sig:i5",
+        )
+        store.append(first)
+
+        second = Record(
+            id="i6",
+            type=PrimitiveType.INTENTION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.intention.v1",
+            payload={"goal": "allocate", "horizon": "Q2"},
+            causes=("i5",),
+            subject="warehouse-8",
+            signature="sig:i6",
+        )
+        result = verifier.verify(second)
+        conflict_rule = next(r for r in result.rules if r.rule_id == "4.5")
+        self.assertEqual(conflict_rule.status, RuleStatus.NOT_APPLICABLE)
+
 
 if __name__ == "__main__":
     unittest.main()

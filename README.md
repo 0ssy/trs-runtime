@@ -151,6 +151,13 @@ Please leave feedback here:
 - Complete recurring multi-party governance adoption cycle.
 - Expand SDK onboarding and ecosystem integrations.
 
+## Operational and Positioning Notes
+
+- Deployment guidance: [`docs/DEPLOYMENT_GUIDANCE.md`](docs/DEPLOYMENT_GUIDANCE.md)
+- System comparisons: [`docs/TRS_COMPARISONS.md`](docs/TRS_COMPARISONS.md)
+- App-layer boundary: [`docs/APP_LAYER_BOUNDARY.md`](docs/APP_LAYER_BOUNDARY.md)
+- Design lineage addendum: [`docs/DESIGN_RECORD_LINEAGE_ADDENDUM.md`](docs/DESIGN_RECORD_LINEAGE_ADDENDUM.md)
+
 ## License
 
 Apache-2.0. See [`LICENSE`](LICENSE).

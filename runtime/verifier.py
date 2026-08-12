@@ -108,6 +108,9 @@ class Verifier:
         signature = self.verify_signature(record)
         rule_results.append(signature)
 
+        checkpoint_anchor = self.verify_checkpoint_anchor(record)
+        rule_results.append(checkpoint_anchor)
+
         payload_shape = self.verify_payload_shape(record)
         rule_results.append(payload_shape)
 
@@ -194,7 +197,7 @@ class Verifier:
     def verify_non_silent_conflict(self, record: Record) -> RuleResult:
         store_revision = self._store_revision()
         if store_revision is not None:
-            cache_key = (store_revision, record.type, tuple(record.causes), id(record.payload))
+            cache_key = (store_revision, record.type, record.subject, tuple(record.causes), id(record.payload))
             cached = self._conflict_cache.get(cache_key)
             if cached is not None:
                 if cached:
@@ -211,6 +214,9 @@ class Verifier:
             for sibling in self._children_of_type(cause_id, record.type):
                 if sibling.subject == record.subject and sibling.payload != record.payload:
                     conflicting.append(sibling.id)
+        for divergent in self._subject_divergent_conflicts(record):
+            if divergent not in conflicting:
+                conflicting.append(divergent)
         if store_revision is not None:
             self._conflict_cache[cache_key] = tuple(conflicting)
         if conflicting:
@@ -221,6 +227,43 @@ class Verifier:
                 f"conflict explicitly visible with siblings: {', '.join(conflicting)}",
             )
         return RuleResult("4.5", "Non-Silent Conflict", RuleStatus.NOT_APPLICABLE, "no conflict detected")
+
+    def _subject_divergent_conflicts(self, record: Record) -> list[str]:
+            conflicts: list[str] = []
+            record_ancestors = self._causal_ancestors_for_record(record)
+            for candidate in self.store.all():
+                if candidate.type != record.type:
+                    continue
+                if candidate.subject != record.subject:
+                    continue
+                if candidate.payload == record.payload:
+                    continue
+                if candidate.id in record_ancestors:
+                    continue
+                candidate_ancestors = self._causal_ancestors_for_id(candidate.id)
+                if not (record_ancestors & candidate_ancestors):
+                    continue
+                conflicts.append(candidate.id)
+            return conflicts
+
+    def _causal_ancestors_for_record(self, record: Record) -> set[str]:
+            ancestors: set[str] = set()
+            stack = list(record.causes)
+            while stack:
+                current_id = stack.pop()
+                if current_id in ancestors:
+                    continue
+                ancestors.add(current_id)
+                current = self.store.get(current_id)
+                if current is not None:
+                    stack.extend(current.causes)
+            return ancestors
+
+    def _causal_ancestors_for_id(self, record_id: str) -> set[str]:
+            record = self.store.get(record_id)
+            if record is None:
+                return set()
+            return self._causal_ancestors_for_record(record)
 
     def verify_authorization(self, record: Record) -> tuple[RuleResult, list[str]]:
         if not record.authorization:
@@ -339,6 +382,21 @@ class Verifier:
             f"payload valid for declared primitive {record.type.value}",
         )
 
+    def verify_checkpoint_anchor(self, record: Record) -> RuleResult:
+        if self._is_checkpoint_record(record):
+            return RuleResult("5.4", "Checkpoint Anchoring", RuleStatus.PASS, "checkpoint anchor record")
+        latest_checkpoint = self._latest_checkpoint_record()
+        if latest_checkpoint is None:
+            return RuleResult("5.4", "Checkpoint Anchoring", RuleStatus.NOT_APPLICABLE, "no checkpoint anchor present")
+        if record.timestamp <= latest_checkpoint.timestamp:
+            return RuleResult(
+                "5.4",
+                "Checkpoint Anchoring",
+                RuleStatus.FAIL,
+                f"record timestamp is not newer than latest checkpoint {latest_checkpoint.id}",
+            )
+        return RuleResult("5.4", "Checkpoint Anchoring", RuleStatus.PASS, "record timestamp is newer than checkpoint")
+
     def _find_authorization_path(self, start_id: str) -> list[str]:
         queue = deque([(start_id, [start_id])])
         visited = {start_id}
@@ -372,6 +430,23 @@ class Verifier:
             )
         verified, _ = self.crypto.verify_record_signature(record)
         return verified
+
+    def _latest_checkpoint_record(self) -> Record | None:
+        latest: Record | None = None
+        for candidate in self.store.all():
+            if not self._is_checkpoint_record(candidate):
+                continue
+            if latest is None or candidate.timestamp > latest.timestamp:
+                latest = candidate
+        return latest
+
+    def _is_checkpoint_record(self, record: Record) -> bool:
+        if record.type != PrimitiveType.OBSERVATION or record.schema != "trs.observation.v1":
+            return False
+        payload = record.payload
+        if not isinstance(payload, Mapping):
+            return False
+        return payload.get("subject") == "trs.checkpoint"
 
     def _verify_delegation_chain(self, record: Record, auth_path: list[str]) -> tuple[bool, str]:
         child_author = record.author
