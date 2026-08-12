@@ -73,3 +73,4 @@ All current evidence gates are green.
 - Strict PR validation (`run_validation_cycle.py --gate-mode pr`) failed at `2026-08-05T143533Z` on benchmark gate.
 - Rebaseline + median-of-7 reruns substantially stabilized results.
 - Strict PR validation re-run passed at `2026-08-06T121825Z` (`evidence/test_runs/2026-08-06T121825Z_validation_cycle.log`).
+- Post-hardening full-suite re-run passed at `2026-08-12T081400Z` with fresh benchmark history artifact `benchmarks/history/2026-08-12T081408Z_records-120_median-of-2.json`.

@@ -9,6 +9,9 @@ This ledger records completed and in-progress outcomes with direct evidence poin
 - Accepted amendments:
   - TRS-0001
   - TRS-0002 (subject-scoped non-silent conflict semantics)
+  - TRS-0003 (content-derived canonical record identity)
+  - TRS-0004 (ancestor-scope partition conflict visibility clarification)
+  - TRS-0005 (signed checkpoint anchoring)
 
 Primary evidence:
 
@@ -18,8 +21,8 @@ Primary evidence:
 
 ## Core runtime verification baseline
 
-- Unit tests: 44/44 pass
-- Conformance: 9/9 pass
+- Unit tests: 57/57 pass
+- Conformance: 12/12 pass
 - Attack suite: 10/10 blocked
 - Mutation checks: 5/5 killed
 - Property invariants: pass
@@ -29,6 +32,7 @@ Latest full-cycle evidence:
 
 - `evidence/test_runs/2026-08-03T130045Z_validation_cycle.log`
 - `evidence/test_runs/2026-08-06T121825Z_validation_cycle.log` (strict PR gate mode pass)
+- `evidence/test_runs/2026-08-12T081400Z_validation_cycle.log` (post-hardening full-suite pass with fresh artifacts)
 
 ## Research cycle outcomes
 
@@ -61,6 +65,7 @@ Latest full-cycle evidence:
 - `evidence/external/2026-08-03_submission/CYCLE-0002_INDEPENDENT_ATTACK_SUBMISSION_EXTERNAL.txt`
 - `evidence/external/2026-08-03_submission/BLOCKER_RESOLUTION_REPORT.md`
 - `evidence/external/2026-08-03_submission/RATIFICATION_TRS_0002.md`
+- `evidence/external/2026-08-12_phase5_close_loop/index.json` (evidence-backed follow-up packets for Fifth Percent and byron)
 - `evidence/handoff/pre_pilot_external_handoff_latest.json` (unified handoff pack for 9.5/9.7/9.8/9.9)
 
 ## Open closure blockers before pilot

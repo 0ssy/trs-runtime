@@ -124,6 +124,7 @@ class SQLiteStorage:
     def __init__(self, db_path: str) -> None:
         self.db_path = db_path
         self._initialize()
+        self._revision = self._current_revision()
 
     def _connect(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self.db_path)
@@ -167,6 +168,11 @@ class SQLiteStorage:
                 """
             )
 
+    def _current_revision(self) -> int:
+        with self._session() as conn:
+            row = conn.execute("SELECT COUNT(*) FROM records").fetchone()
+        return int(row[0]) if row is not None else 0
+
     def append(self, record: Record) -> None:
         if self.exists(record.id):
             raise ValueError(f"record already exists: {record.id}")
@@ -194,6 +200,7 @@ class SQLiteStorage:
                     "INSERT INTO cause_edges (parent_id, child_id) VALUES (?, ?)",
                     (parent, record.id),
                 )
+        self._revision += 1
 
     def get(self, record_id: str) -> Record | None:
         with self._session() as conn:
@@ -244,6 +251,9 @@ class SQLiteStorage:
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return filter_records(self.all(), expression)
 
+    def revision(self) -> int:
+        return self._revision
+
 
 class LMDBStorage:
     def __init__(self, db_path: str, map_size: int = 64 * 1024 * 1024) -> None:
@@ -262,6 +272,8 @@ class LMDBStorage:
         self._sequence_db = self._env.open_db(b"sequence")
         self._children_db = self._env.open_db(b"children")
         self._closed = False
+        with self._env.begin() as txn:
+            self._revision = _next_sequence(txn, self._sequence_db) - 1
 
     def append(self, record: Record) -> None:
         record_key = _b(record.id)
@@ -276,6 +288,7 @@ class LMDBStorage:
             for parent in record.causes:
                 edge_key = _b(f"{parent}\x1f{record.id}")
                 txn.put(edge_key, b"1", db=self._children_db)
+        self._revision += 1
 
     def get(self, record_id: str) -> Record | None:
         with self._env.begin() as txn:
@@ -322,6 +335,9 @@ class LMDBStorage:
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return filter_records(self.all(), expression)
 
+    def revision(self) -> int:
+        return self._revision
+
     def close(self) -> None:
         if not self._closed:
             self._env.close()
@@ -340,6 +356,7 @@ class RocksDBStorage:
         os.makedirs(db_path, exist_ok=True)
         self._db = _Rdict(db_path)
         self._closed = False
+        self._revision = int(self._db.get("meta:last_seq", 0))
 
     def append(self, record: Record) -> None:
         record_key = f"record:{record.id}"
@@ -357,6 +374,7 @@ class RocksDBStorage:
             child_ids = json.loads(str(raw)) if raw is not None else []
             child_ids.append(record.id)
             self._db[index_key] = json.dumps(child_ids, separators=(",", ":"))
+        self._revision += 1
 
     def get(self, record_id: str) -> Record | None:
         payload = self._db.get(f"record:{record_id}")
@@ -388,6 +406,9 @@ class RocksDBStorage:
 
     def query(self, expression: Mapping[str, Any]) -> list[Record]:
         return filter_records(self.all(), expression)
+
+    def revision(self) -> int:
+        return self._revision
 
     def close(self) -> None:
         if not self._closed:

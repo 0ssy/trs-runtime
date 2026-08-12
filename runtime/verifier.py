@@ -70,6 +70,10 @@ class Verifier:
         self._cache_revision: int | None = None
         self._verification_cache: dict[tuple[int, int], VerificationResult] = {}
         self._conflict_cache: dict[tuple[int, PrimitiveType, tuple[str, ...], int], tuple[str, ...]] = {}
+        self._checkpoint_cache_revision: int | None = None
+        self._checkpoint_cache_record: Record | None = None
+        self._delegation_cache_revision: int | None = None
+        self._delegation_cache: dict[str, tuple[str, str | None, bool]] = {}
 
     def verify(self, record: Record) -> VerificationResult:
         cache_revision = self._cache_revision_key()
@@ -432,12 +436,19 @@ class Verifier:
         return verified
 
     def _latest_checkpoint_record(self) -> Record | None:
+        store_revision = self._store_revision()
+        if store_revision is not None and self._checkpoint_cache_revision == store_revision:
+            return self._checkpoint_cache_record
+
         latest: Record | None = None
         for candidate in self.store.all():
             if not self._is_checkpoint_record(candidate):
                 continue
             if latest is None or candidate.timestamp > latest.timestamp:
                 latest = candidate
+        if store_revision is not None:
+            self._checkpoint_cache_revision = store_revision
+            self._checkpoint_cache_record = latest
         return latest
 
     def _is_checkpoint_record(self, record: Record) -> bool:
@@ -465,11 +476,30 @@ class Verifier:
         return True, ""
 
     def _has_log_delegation(self, *, grantor: str, grantee: str) -> tuple[bool, str]:
+        delegations = self._delegation_records()
         revoked_found = False
+        for _, (delegation_grantor, assignee, revoked) in delegations.items():
+            if delegation_grantor != grantor:
+                continue
+            if assignee is not None and assignee != grantee:
+                continue
+            if revoked:
+                revoked_found = True
+                continue
+            return True, ""
+        if revoked_found:
+            return False, f"log delegation from {grantor} to {grantee} is revoked"
+        return False, f"missing log delegation from {grantor} to {grantee} in authorization chain"
+
+    def _delegation_records(self) -> dict[str, tuple[str, str | None, bool]]:
+        store_revision = self._store_revision()
+        if store_revision is not None and self._delegation_cache_revision == store_revision:
+            return self._delegation_cache
+
+        delegations: dict[str, tuple[str, str | None, bool]] = {}
+        records = self.store.all()
         for candidate in self.store.all():
             if candidate.type != PrimitiveType.COMMITMENT:
-                continue
-            if candidate.author != grantor:
                 continue
             payload = candidate.payload
             if not isinstance(payload, Mapping):
@@ -479,43 +509,32 @@ class Verifier:
                 continue
             if not action.startswith("delegate"):
                 continue
-            assignee = payload.get("assignee")
-            if assignee is not None and (not isinstance(assignee, str) or assignee != grantee):
+            assignee_value = payload.get("assignee")
+            if assignee_value is not None and not isinstance(assignee_value, str):
                 continue
-            if self._is_delegation_revoked(candidate, grantor=grantor, grantee=grantee):
-                revoked_found = True
-                continue
-            return True, ""
-        if revoked_found:
-            return False, f"log delegation from {grantor} to {grantee} is revoked"
-        return False, f"missing log delegation from {grantor} to {grantee} in authorization chain"
+            delegations[candidate.id] = (candidate.author, assignee_value, False)
 
-    def _is_delegation_revoked(
-        self,
-        delegation_record: Record,
-        *,
-        grantor: str,
-        grantee: str,
-    ) -> bool:
-        for candidate in self.store.all():
+        for candidate in records:
             if candidate.type != PrimitiveType.COMMITMENT:
-                continue
-            if candidate.author != grantor:
                 continue
             payload = candidate.payload
             if not isinstance(payload, Mapping):
                 continue
             action = payload.get("action")
-            if not isinstance(action, str):
+            if not isinstance(action, str) or not action.startswith("revoke"):
                 continue
-            if not action.startswith("revoke"):
-                continue
-            assignee = payload.get("assignee")
-            if assignee is not None and (not isinstance(assignee, str) or assignee != grantee):
-                continue
-            if delegation_record.id in candidate.authorization or delegation_record.id in candidate.causes:
-                return True
-        return False
+            for reference_id in (*candidate.causes, *candidate.authorization):
+                delegation = delegations.get(reference_id)
+                if delegation is None:
+                    continue
+                if delegation[0] != candidate.author:
+                    continue
+                delegations[reference_id] = (delegation[0], delegation[1], True)
+
+        if store_revision is not None:
+            self._delegation_cache_revision = store_revision
+            self._delegation_cache = delegations
+        return delegations
 
     def _children_of_type(self, record_id: str, primitive: PrimitiveType) -> list[Record]:
         if self._children_of_type_provider is not None:
@@ -547,3 +566,7 @@ class Verifier:
         self._cache_revision = cache_revision
         self._verification_cache.clear()
         self._conflict_cache.clear()
+        self._checkpoint_cache_revision = None
+        self._checkpoint_cache_record = None
+        self._delegation_cache_revision = None
+        self._delegation_cache = {}
