@@ -68,6 +68,7 @@ def run_reputation_vertical_slice(
         timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "reputation-ledger", "value": {"epoch": "v1"}},
+        authorization=(root_id,),
         signature=f"sig:{root_id}",
         subject="reputation-ledger",
     )

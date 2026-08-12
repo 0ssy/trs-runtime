@@ -20,6 +20,20 @@ MODE_PRESETS = {
 }
 
 MODE_THRESHOLD_OVERRIDES: dict[str, dict[str, dict[str, float]]] = {
+    "pr": {
+        "lmdb": {
+            "append_records_per_sec": 90.0,
+            "verify_records_per_sec": 25.0,
+        },
+        "sqlite": {
+            "append_records_per_sec": 60.0,
+        },
+        "rocksdb": {
+            "append_records_per_sec": 60.0,
+            "query_latency_ms": 150.0,
+            "replay_sec": 75.0,
+        },
+    },
     "nightly": {
         "in_memory": {
             "append_records_per_sec": 20.0,
@@ -27,6 +41,14 @@ MODE_THRESHOLD_OVERRIDES: dict[str, dict[str, dict[str, float]]] = {
         },
         "sqlite": {
             "authorization_verify_sec": 20.0,
+            "append_records_per_sec": 60.0,
+        },
+        "lmdb": {
+            "append_records_per_sec": 90.0,
+            "verify_records_per_sec": 25.0,
+        },
+        "rocksdb": {
+            "append_records_per_sec": 60.0,
         },
     }
 }

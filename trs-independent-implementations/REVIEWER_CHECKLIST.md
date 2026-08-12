@@ -52,6 +52,7 @@ Run the exact commands in each package `README.md` and store output logs under t
 In the selected implementation folder:
 
 1. Update `implementation-report.md` with final outcomes.
+   - Ensure tooling disclosure is explicit (including whether AI assistance was used).
 2. Update `ambiguity-report.md` with any open/closed ambiguities.
 3. Sign `independence-attestation.md` (name/date + spec-only statement).
 4. Update `metadata.json`:

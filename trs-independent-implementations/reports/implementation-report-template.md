@@ -6,6 +6,7 @@
 - Date:
 - Spec package used:
 - Runtime code consulted: yes/no
+- Tooling used (include AI assistance if any):
 
 ## Outcome summary
 

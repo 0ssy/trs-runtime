@@ -15,6 +15,7 @@ class TerraNodeAdapterTests(unittest.TestCase):
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "schema": "trs.observation.v1",
             "payload": {"subject": "boot", "value": 1},
+            "authorization": ["g1"],
             "signature": "sig:g1",
         }
         result = self.adapter.submit_envelope(genesis)

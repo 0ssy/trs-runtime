@@ -75,6 +75,7 @@ class CryptoPhase12Tests(unittest.TestCase):
             timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={"subject": "boot", "value": 1},
+            authorization=("g1",),
             signature="",
         )
         genesis = clone_with_signature(genesis, crypto.sign_record(genesis, root_key.private_key_b64, root_key.key_id))

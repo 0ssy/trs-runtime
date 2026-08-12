@@ -32,6 +32,13 @@ def _payload_for(primitive: PrimitiveType, index: int) -> dict[str, object]:
 def _make_record(
     record_id: str, primitive: PrimitiveType, author: str, index: int, causes: tuple[str, ...] = ()
 ) -> Record:
+    authorization: tuple[str, ...]
+    if primitive == PrimitiveType.COMMITMENT:
+        authorization = ("g0",)
+    elif primitive == PrimitiveType.OBSERVATION and record_id == "g0":
+        authorization = ("g0",)
+    else:
+        authorization = ()
     return Record(
         id=record_id,
         type=primitive,
@@ -40,7 +47,7 @@ def _make_record(
         schema=_schema_for(primitive),
         payload=_payload_for(primitive, index),
         causes=causes,
-        authorization=("g0",) if primitive == PrimitiveType.COMMITMENT else (),
+        authorization=authorization,
         signature=f"sig:{record_id}",
     )
 

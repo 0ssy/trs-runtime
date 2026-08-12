@@ -140,6 +140,7 @@ class TerraNodeRuntimeAdapter:
             timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={"subject": subject, "value": {"available": float(available)}},
+            authorization=(root_id,),
             signature=f"sig:{root_id}",
             subject=subject,
         )

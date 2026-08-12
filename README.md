@@ -123,6 +123,12 @@ See [`trs-independent-implementations/`](trs-independent-implementations/).
 
 Goal: implement TRS using only the specification artifacts (without reusing reference runtime internals), then run conformance and interop evidence.
 
+## Authorship and Independence Disclosure
+
+- This repository has been developed with human direction and AI-assisted coding support (including Copilot-assisted implementation work).
+- "Independent implementation" in this project means implementation from the specification artifacts, without copying reference-runtime internals.
+- Every independent implementation submission must disclose tooling used (including AI assistance) in its report and attestation.
+
 ## Looking For Feedback
 
 I am not looking for stars. I am looking for answers to questions like:
@@ -147,4 +153,4 @@ Please leave feedback here:
 
 ## License
 
-No repository-level `LICENSE` file is currently present. Add one before broad external adoption.
+Apache-2.0. See [`LICENSE`](LICENSE).

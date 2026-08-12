@@ -20,6 +20,7 @@ class GraphQuerySyncTests(unittest.TestCase):
             timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={"subject": "s", "value": 1},
+            authorization=("g",),
             signature="sig:g",
         )
         self.a = Record(

@@ -17,6 +17,7 @@ class VerifierTests(unittest.TestCase):
             timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={"subject": "root", "value": 1},
+            authorization=("genesis",),
             signature="sig:genesis",
         )
         self.store.append(self.genesis)
@@ -77,6 +78,78 @@ class VerifierTests(unittest.TestCase):
         auth_rule = next(r for r in result.rules if r.rule_id == "6.1")
         self.assertEqual(auth_rule.status, RuleStatus.PASS)
         self.assertEqual(result.authorization_path, ["delegation", "genesis"])
+
+    def test_rootless_record_is_not_trust_root(self) -> None:
+        rootless = Record(
+            id="rootless",
+            type=PrimitiveType.OBSERVATION,
+            author="mallory",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "rootless", "value": 1},
+            signature="sig:rootless",
+        )
+        self.store.append(rootless)
+        delegation = Record(
+            id="delegation-rootless",
+            type=PrimitiveType.COMMITMENT,
+            author="mallory",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "delegate", "due_by": "2027-01-01"},
+            causes=("rootless",),
+            authorization=("rootless",),
+            signature="sig:delegation-rootless",
+        )
+        result = self.verifier.verify(delegation)
+        self.assertFalse(result.valid)
+        self.assertTrue(any("trust root" in err for err in result.errors))
+
+    def test_unauthorized_alice_completion_claim_fails(self) -> None:
+        delegation = Record(
+            id="cap-bob",
+            type=PrimitiveType.COMMITMENT,
+            author="root",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "delegate-completion-claim", "due_by": "2027-01-01", "assignee": "bob"},
+            causes=("genesis",),
+            authorization=("genesis",),
+            signature="sig:cap-bob",
+        )
+        self.store.append(delegation)
+
+        alice_claim = Record(
+            id="claim-alice",
+            type=PrimitiveType.COMMITMENT,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "claim-completed", "due_by": "2027-01-01"},
+            causes=("genesis",),
+            signature="sig:claim-alice",
+        )
+        result = self.verifier.verify(alice_claim)
+        auth_rule = next(r for r in result.rules if r.rule_id == "6.1")
+        self.assertEqual(auth_rule.status, RuleStatus.FAIL)
+        self.assertIn("requires at least one authorization reference", auth_rule.reason)
+
+    def test_commitment_without_authorization_fails(self) -> None:
+        record = Record(
+            id="c-no-auth",
+            type=PrimitiveType.COMMITMENT,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "execute", "due_by": "2027-01-01"},
+            causes=("genesis",),
+            signature="sig:c-no-auth",
+        )
+        result = self.verifier.verify(record)
+        self.assertFalse(result.valid)
+        auth_rule = next(r for r in result.rules if r.rule_id == "6.1")
+        self.assertEqual(auth_rule.status, RuleStatus.FAIL)
+        self.assertIn("commitment requires", auth_rule.reason)
 
     def test_non_silent_conflict_cache_invalidates_on_append(self) -> None:
         candidate = Record(

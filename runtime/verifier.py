@@ -224,6 +224,16 @@ class Verifier:
 
     def verify_authorization(self, record: Record) -> tuple[RuleResult, list[str]]:
         if not record.authorization:
+            if record.type == PrimitiveType.COMMITMENT:
+                return (
+                    RuleResult(
+                        "6.1",
+                        "Authorization Traceability",
+                        RuleStatus.FAIL,
+                        "commitment requires at least one authorization reference",
+                    ),
+                    [],
+                )
             return (
                 RuleResult(
                     "6.1",
@@ -234,7 +244,7 @@ class Verifier:
                 [],
             )
 
-        missing = [rid for rid in record.authorization if not self.store.exists(rid)]
+        missing = [rid for rid in record.authorization if rid != record.id and not self.store.exists(rid)]
         if missing:
             return (
                 RuleResult(
@@ -246,9 +256,18 @@ class Verifier:
                 [],
             )
 
-        genesis_ids = {r.id for r in self.store.all() if not r.causes and not r.authorization}
         for auth_id in record.authorization:
-            path = self._find_authorization_path(auth_id, genesis_ids)
+            if auth_id == record.id and self._is_self_authorized_root(record):
+                return (
+                    RuleResult(
+                        "6.1",
+                        "Authorization Traceability",
+                        RuleStatus.PASS,
+                        "self-authorization root verified",
+                    ),
+                    [record.id],
+                )
+            path = self._find_authorization_path(auth_id)
             if path:
                 if self.crypto:
                     delegation_ok, delegation_reason = self._verify_delegation_chain(record, path)
@@ -276,7 +295,7 @@ class Verifier:
                 "6.1",
                 "Authorization Traceability",
                 RuleStatus.FAIL,
-                "missing delegation path to genesis",
+                "missing delegation path to trust root",
             ),
             [],
         )
@@ -320,12 +339,12 @@ class Verifier:
             f"payload valid for declared primitive {record.type.value}",
         )
 
-    def _find_authorization_path(self, start_id: str, genesis_ids: set[str]) -> list[str]:
+    def _find_authorization_path(self, start_id: str) -> list[str]:
         queue = deque([(start_id, [start_id])])
         visited = {start_id}
         while queue:
             current_id, path = queue.popleft()
-            if current_id in genesis_ids:
+            if self._is_trust_root_id(current_id):
                 return path
             current = self.store.get(current_id)
             if current is None:
@@ -335,6 +354,24 @@ class Verifier:
                     visited.add(parent)
                     queue.append((parent, [*path, parent]))
         return []
+
+    def _is_trust_root_id(self, record_id: str) -> bool:
+        record = self.store.get(record_id)
+        if record is None:
+            return False
+        return self._is_self_authorized_root(record)
+
+    def _is_self_authorized_root(self, record: Record) -> bool:
+        if record.causes:
+            return False
+        if tuple(record.authorization) != (record.id,):
+            return False
+        if self.crypto is None:
+            return bool(record.signature) and (
+                record.signature.startswith("sig:") or record.signature.startswith("ed25519:")
+            )
+        verified, _ = self.crypto.verify_record_signature(record)
+        return verified
 
     def _verify_delegation_chain(self, record: Record, auth_path: list[str]) -> tuple[bool, str]:
         child_author = record.author

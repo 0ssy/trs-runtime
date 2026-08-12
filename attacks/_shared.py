@@ -23,6 +23,7 @@ def make_genesis(store: RecordStore) -> None:
         timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "boot", "value": 1},
+        authorization=("g1",),
         signature="sig:g1",
     )
     store.append(genesis)

@@ -85,6 +85,7 @@ def make_linear_records(length: int) -> list[Record]:
         timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "boot", "value": 1},
+        authorization=("g0",),
         signature="sig:g0",
     )
     records.append(genesis)

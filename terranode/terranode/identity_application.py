@@ -62,6 +62,7 @@ def run_identity_vertical_slice(
         timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "identity-registry", "value": {"registry": "global-v1"}},
+        authorization=(root_id,),
         signature=f"sig:{root_id}",
         subject="identity-registry",
     )

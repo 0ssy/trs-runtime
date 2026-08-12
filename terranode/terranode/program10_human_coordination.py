@@ -143,6 +143,7 @@ def _build_records() -> list[Record]:
                 "subject": "task",
                 "value": {"task_id": "task-1001", "title": "Inspect pump station", "status": "open"},
             },
+            authorization=("p10-task-create",),
             signature="sig:p10-task-create",
             subject="task-1001",
         ),
