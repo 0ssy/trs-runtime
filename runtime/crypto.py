@@ -69,6 +69,30 @@ class CryptoSuite:
     def revision(self) -> int:
         return self._revision
 
+    def export_public_keys(self) -> dict[str, dict[str, str]]:
+        bundle: dict[str, dict[str, str]] = {}
+        for author, keys in self._public_keys.items():
+            encoded: dict[str, str] = {}
+            for key_id, public_key in keys.items():
+                raw = public_key.public_bytes(encoding=Encoding.Raw, format=PublicFormat.Raw)
+                encoded[key_id] = base64.b64encode(raw).decode("utf-8")
+            bundle[author] = encoded
+        return bundle
+
+    def import_public_keys(self, bundle: Mapping[str, Mapping[str, str]]) -> None:
+        changed = False
+        for author, keys in bundle.items():
+            author_keys = self._public_keys.setdefault(author, {})
+            for key_id, public_b64 in keys.items():
+                if key_id in author_keys:
+                    continue
+                author_keys[key_id] = Ed25519PublicKey.from_public_bytes(base64.b64decode(public_b64))
+                if author not in self._active_key:
+                    self._active_key[author] = key_id
+                changed = True
+        if changed:
+            self._revision += 1
+
     def sign_record(self, record: Record, private_key_b64: str, key_id: str) -> str:
         private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode(private_key_b64))
         payload = _canonical_record_bytes(record, include_signature=False)

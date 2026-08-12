@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
-
-from runtime.record import PrimitiveType, Record
+from runtime.record import PrimitiveType
 from runtime.storage import RecordStore
 from runtime.verifier import Verifier
 
@@ -53,25 +51,13 @@ def run_reputation_vertical_slice(
     requests: list[ReputationSignalRequest] | None = None,
 ) -> ReputationVerticalSliceResult:
     adapter = TerraNodeRuntimeAdapter(node_id="repapp")
-    sequence = 0
-
-    def next_id(prefix: str) -> str:
-        nonlocal sequence
-        sequence += 1
-        return f"rep-ledger-{prefix}-{sequence:06d}"
-
-    root_id = next_id("root")
-    root = Record(
-        id=root_id,
-        type=PrimitiveType.OBSERVATION,
+    root = adapter.create_signed_self_authorized_root(
         author="reputation-root",
-        timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "reputation-ledger", "value": {"epoch": "v1"}},
-        authorization=(root_id,),
-        signature=f"sig:{root_id}",
         subject="reputation-ledger",
     )
+    root_id = root.id
     root_verification = adapter.verifier.verify(root)
     if not root_verification.valid:
         raise ValueError(f"reputation root rejected: {root_verification.errors}")
@@ -124,12 +110,9 @@ def run_reputation_vertical_slice(
             )
             continue
 
-        signal_id = next_id("signal")
-        signal_record = Record(
-            id=signal_id,
+        signal_record = adapter.create_signed_record(
             type=PrimitiveType.OBSERVATION,
             author=request.claimant,
-            timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={
                 "subject": "reputation-signal",
@@ -141,9 +124,9 @@ def run_reputation_vertical_slice(
                 },
             },
             causes=(root_id,),
-            signature=f"sig:{signal_id}",
             subject="reputation-ledger",
         )
+        signal_id = signal_record.id
         verification = adapter.verifier.verify(signal_record)
         if not verification.valid:
             rejected += 1
@@ -219,9 +202,7 @@ def run_reputation_vertical_slice(
             if existing.id == record.id:
                 continue
             proof_store.append(existing)
-        proof_verification = Verifier(
-            proof_store, allow_insecure_signatures=True, enforce_canonical_record_id=False
-        ).verify(record)
+        proof_verification = Verifier(proof_store, crypto=adapter.crypto).verify(record)
         proofs.append(
             ReputationRecordProof(
                 record_id=record.id,

@@ -7,7 +7,10 @@ from runtime.terranode_adapter import TerraNodeRuntimeAdapter
 
 class TerraNodeAdapterTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.adapter = TerraNodeRuntimeAdapter()
+        self.adapter = TerraNodeRuntimeAdapter(
+            allow_insecure_signatures=True,
+            enforce_canonical_record_id=False,
+        )
         genesis = {
             "id": "g1",
             "type": "Observation",

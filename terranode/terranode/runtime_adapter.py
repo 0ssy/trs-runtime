@@ -4,6 +4,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
+from runtime.canonical import derive_record_id
+from runtime.crypto import CryptoSuite, SigningKey, clone_with_signature
 from runtime.network_sync import NetworkSyncResult, sync_nodes
 from runtime.query import QueryEngine
 from runtime.record import PrimitiveType, Record
@@ -23,33 +25,31 @@ class SubmittedIntention:
 class TerraNodeRuntimeAdapter:
     def __init__(self, *, node_id: str = "") -> None:
         self.store = RecordStore()
-        self.verifier = Verifier(self.store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
+        self.crypto = CryptoSuite()
+        self.verifier = Verifier(self.store, crypto=self.crypto)
         self.query = QueryEngine(self.store)
         self.replay_engine = ReplayEngine(self.store)
         self._sequence = 0
         self._node_id = node_id.strip()
         self._root_by_subject: dict[str, str] = {}
         self._capability_by_subject: dict[str, str] = {}
+        self._author_keys: dict[str, SigningKey] = {}
 
     def submit_intention(self, claimant: str, subject: str, amount: float, available: float) -> SubmittedIntention:
         self._ensure_subject_bootstrap(subject=subject, available=available)
-        intention_id = self._next_id("intention")
-        intention = Record(
-            id=intention_id,
+        intention = self._signed_record(
             type=PrimitiveType.INTENTION,
             author=claimant,
-            timestamp=datetime.now(timezone.utc),
             schema="trs.intention.v1",
             payload={"goal": "resource-allocation", "horizon": "program-1", "amount": float(amount)},
             causes=(self._root_by_subject[subject],),
-            signature=f"sig:{intention_id}",
             subject=subject,
         )
         verification = self.verifier.verify(intention)
         if not verification.valid:
-            return SubmittedIntention(record_id=intention_id, verification=verification)
+            return SubmittedIntention(record_id=intention.id, verification=verification)
         self.store.append(intention)
-        return SubmittedIntention(record_id=intention_id, verification=verification)
+        return SubmittedIntention(record_id=intention.id, verification=verification)
 
     def find_conflicts(self, subject: str) -> ConflictSet:
         root_id = self._root_by_subject.get(subject)
@@ -80,12 +80,9 @@ class TerraNodeRuntimeAdapter:
         capability_id = self._capability_by_subject[decision.subject]
         appended: list[str] = []
         for allocation in decision.allocations:
-            commitment_id = self._next_id("commitment")
-            commitment = Record(
-                id=commitment_id,
+            commitment = self._signed_record(
                 type=PrimitiveType.COMMITMENT,
                 author="allocator",
-                timestamp=datetime.now(timezone.utc),
                 schema="trs.commitment.v1",
                 payload={
                     "action": "grant-allocation",
@@ -96,35 +93,30 @@ class TerraNodeRuntimeAdapter:
                 },
                 causes=(root_id, allocation.claim_id),
                 authorization=(capability_id,),
-                signature=f"sig:{commitment_id}",
                 subject=decision.subject,
             )
             commitment_result = self.verifier.verify(commitment)
             if not commitment_result.valid:
                 raise ValueError(f"commitment rejected: {commitment_result.errors}")
             self.store.append(commitment)
-            appended.append(commitment_id)
+            appended.append(commitment.id)
 
-            closure_id = self._next_id("closure")
-            closure = Record(
-                id=closure_id,
+            closure = self._signed_record(
                 type=PrimitiveType.OBSERVATION,
                 author="allocator",
-                timestamp=datetime.now(timezone.utc),
                 schema="trs.observation.v1",
                 payload={
                     "subject": "intention-closure",
                     "value": {"intention_id": allocation.claim_id, "status": "completed"},
                 },
-                causes=(allocation.claim_id, commitment_id),
-                signature=f"sig:{closure_id}",
+                causes=(allocation.claim_id, commitment.id),
                 subject=decision.subject,
             )
             closure_result = self.verifier.verify(closure)
             if not closure_result.valid:
                 raise ValueError(f"closure rejected: {closure_result.errors}")
             self.store.append(closure)
-            appended.append(closure_id)
+            appended.append(closure.id)
         return appended
 
     def replay(self) -> ReplaySnapshot:
@@ -133,15 +125,12 @@ class TerraNodeRuntimeAdapter:
     def seed_subject(self, *, subject: str, available: float, root_id: str, capability_id: str) -> None:
         if subject in self._root_by_subject:
             return
-        root = Record(
-            id=root_id,
-            type=PrimitiveType.OBSERVATION,
+        seed_timestamp = datetime(2026, 1, 1, tzinfo=timezone.utc)
+        root = self._signed_self_authorized_root(
             author="root",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=seed_timestamp,
             schema="trs.observation.v1",
-            payload={"subject": subject, "value": {"available": float(available)}},
-            authorization=(root_id,),
-            signature=f"sig:{root_id}",
+            payload={"subject": subject, "value": {"available": float(available), "seed": root_id}},
             subject=subject,
         )
         root_result = self.verifier.verify(root)
@@ -149,16 +138,14 @@ class TerraNodeRuntimeAdapter:
             raise ValueError(f"seed root rejected: {root_result.errors}")
         self.store.append(root)
 
-        capability = Record(
-            id=capability_id,
+        capability = self._signed_record(
             type=PrimitiveType.COMMITMENT,
             author="root",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=seed_timestamp.replace(second=1),
             schema="trs.commitment.v1",
-            payload={"action": "delegate-allocation", "due_by": "2027-01-01"},
-            causes=(root_id,),
-            authorization=(root_id,),
-            signature=f"sig:{capability_id}",
+            payload={"action": "delegate-allocation", "due_by": "2027-01-01", "seed": capability_id},
+            causes=(root.id,),
+            authorization=(root.id,),
             subject=subject,
         )
         cap_result = self.verifier.verify(capability)
@@ -166,10 +153,12 @@ class TerraNodeRuntimeAdapter:
             raise ValueError(f"seed capability rejected: {cap_result.errors}")
         self.store.append(capability)
 
-        self._root_by_subject[subject] = root_id
-        self._capability_by_subject[subject] = capability_id
+        self._root_by_subject[subject] = root.id
+        self._capability_by_subject[subject] = capability.id
 
     def sync_with_peer(self, peer: "TerraNodeRuntimeAdapter") -> tuple[NetworkSyncResult, NetworkSyncResult]:
+        self.crypto.import_public_keys(peer.crypto.export_public_keys())
+        peer.crypto.import_public_keys(self.crypto.export_public_keys())
         peer_to_self = sync_nodes(peer.store, self.store, self.verifier)
         self_to_peer = sync_nodes(self.store, peer.store, peer.verifier)
         self._rebuild_subject_indexes()
@@ -238,6 +227,118 @@ class TerraNodeRuntimeAdapter:
         if self._node_id:
             return f"{self._node_id}-{prefix}-{self._sequence:06d}"
         return f"{prefix}-{self._sequence:06d}"
+
+    def create_signed_record(
+        self,
+        *,
+        type: PrimitiveType,
+        author: str,
+        schema: str,
+        payload: Mapping[str, object],
+        causes: tuple[str, ...] = (),
+        authorization: tuple[str, ...] = (),
+        subject: str | None = None,
+        timestamp: datetime | None = None,
+    ) -> Record:
+        return self._signed_record(
+            type=type,
+            author=author,
+            schema=schema,
+            payload=payload,
+            causes=causes,
+            authorization=authorization,
+            subject=subject,
+            timestamp=timestamp,
+        )
+
+    def create_signed_self_authorized_root(
+        self,
+        *,
+        author: str,
+        schema: str,
+        payload: Mapping[str, object],
+        subject: str,
+        timestamp: datetime | None = None,
+    ) -> Record:
+        return self._signed_self_authorized_root(
+            author=author,
+            schema=schema,
+            payload=payload,
+            subject=subject,
+            timestamp=timestamp,
+        )
+
+    def _ensure_signing_key(self, author: str) -> SigningKey:
+        key = self._author_keys.get(author)
+        if key is not None:
+            return key
+        created = self.crypto.generate_key(author)
+        self._author_keys[author] = created
+        return created
+
+    def _signed_record(
+        self,
+        *,
+        type: PrimitiveType,
+        author: str,
+        schema: str,
+        payload: Mapping[str, object],
+        causes: tuple[str, ...] = (),
+        authorization: tuple[str, ...] = (),
+        subject: str | None = None,
+        timestamp: datetime | None = None,
+    ) -> Record:
+        record = Record.create(
+            primitive_type=type,
+            author=author,
+            schema=schema,
+            payload=payload,
+            causes=causes,
+            authorization=authorization,
+            subject=subject,
+            timestamp=timestamp,
+            signature="",
+        )
+        key = self._ensure_signing_key(author)
+        signature = self.crypto.sign_record(record, key.private_key_b64, key.key_id)
+        return clone_with_signature(record, signature)
+
+    def _signed_self_authorized_root(
+        self,
+        *,
+        author: str,
+        schema: str,
+        payload: Mapping[str, object],
+        subject: str,
+        timestamp: datetime | None = None,
+    ) -> Record:
+        ts = timestamp or datetime.now(timezone.utc)
+        provisional = Record(
+            id="__self__",
+            type=PrimitiveType.OBSERVATION,
+            author=author,
+            timestamp=ts,
+            schema=schema,
+            payload=payload,
+            authorization=("__self__",),
+            signature="",
+            subject=subject,
+        )
+        root_id = derive_record_id(provisional)
+        root = Record(
+            id=root_id,
+            type=PrimitiveType.OBSERVATION,
+            author=author,
+            timestamp=ts,
+            schema=schema,
+            payload=payload,
+            authorization=(root_id,),
+            signature="",
+            subject=subject,
+        )
+        key = self._ensure_signing_key(author)
+        signature = self.crypto.sign_record(root, key.private_key_b64, key.key_id)
+        return clone_with_signature(root, signature)
 
     def _rebuild_subject_indexes(self) -> None:
         self._root_by_subject.clear()

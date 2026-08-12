@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
-
-from runtime.record import PrimitiveType, Record
+from runtime.record import PrimitiveType
 from runtime.storage import RecordStore
 from runtime.verifier import Verifier
 
@@ -47,43 +45,28 @@ def run_identity_vertical_slice(
     requests: list[IdentitySubmissionRequest] | None = None,
 ) -> IdentityVerticalSliceResult:
     adapter = TerraNodeRuntimeAdapter(node_id="idapp")
-    sequence = 0
-
-    def next_id(prefix: str) -> str:
-        nonlocal sequence
-        sequence += 1
-        return f"idapp-{prefix}-{sequence:06d}"
-
-    root_id = next_id("root")
-    root = Record(
-        id=root_id,
-        type=PrimitiveType.OBSERVATION,
+    root = adapter.create_signed_self_authorized_root(
         author="identity-root",
-        timestamp=datetime.now(timezone.utc),
         schema="trs.observation.v1",
         payload={"subject": "identity-registry", "value": {"registry": "global-v1"}},
-        authorization=(root_id,),
-        signature=f"sig:{root_id}",
         subject="identity-registry",
     )
+    root_id = root.id
     root_verification = adapter.verifier.verify(root)
     if not root_verification.valid:
         raise ValueError(f"identity root rejected: {root_verification.errors}")
     adapter.store.append(root)
 
-    capability_id = next_id("cap")
-    capability = Record(
-        id=capability_id,
+    capability = adapter.create_signed_record(
         type=PrimitiveType.COMMITMENT,
         author="identity-root",
-        timestamp=datetime.now(timezone.utc),
         schema="trs.commitment.v1",
         payload={"action": "delegate-identity-attestation", "due_by": "2027-01-01"},
         causes=(root_id,),
         authorization=(root_id,),
-        signature=f"sig:{capability_id}",
         subject="identity-registry",
     )
+    capability_id = capability.id
     cap_verification = adapter.verifier.verify(capability)
     if not cap_verification.valid:
         raise ValueError(f"identity capability rejected: {cap_verification.errors}")
@@ -137,21 +120,18 @@ def run_identity_vertical_slice(
             )
             continue
 
-        registration_id = next_id("identity")
-        registration = Record(
-            id=registration_id,
+        registration = adapter.create_signed_record(
             type=PrimitiveType.OBSERVATION,
             author=request.controller,
-            timestamp=datetime.now(timezone.utc),
             schema="trs.observation.v1",
             payload={
                 "subject": "identity-registration",
                 "value": {"identity": request.identity, "controller": request.controller},
             },
             causes=(root_id,),
-            signature=f"sig:{registration_id}",
             subject="identity-registry",
         )
+        registration_id = registration.id
         registration_verification = adapter.verifier.verify(registration)
         if not registration_verification.valid:
             rejected += 1
@@ -166,12 +146,9 @@ def run_identity_vertical_slice(
             continue
         adapter.store.append(registration)
 
-        attestation_id = next_id("attest")
-        attestation = Record(
-            id=attestation_id,
+        attestation = adapter.create_signed_record(
             type=PrimitiveType.COMMITMENT,
             author="identity-registrar",
-            timestamp=datetime.now(timezone.utc),
             schema="trs.commitment.v1",
             payload={
                 "action": "attest-identity",
@@ -181,9 +158,9 @@ def run_identity_vertical_slice(
             },
             causes=(root_id, registration_id),
             authorization=(capability_id,),
-            signature=f"sig:{attestation_id}",
             subject="identity-registry",
         )
+        attestation_id = attestation.id
         attestation_verification = adapter.verifier.verify(attestation)
         if not attestation_verification.valid:
             rejected += 1
@@ -203,9 +180,7 @@ def run_identity_vertical_slice(
             if existing.id == attestation.id:
                 continue
             proof_store.append(existing)
-        proof_verification = Verifier(
-            proof_store, allow_insecure_signatures=True, enforce_canonical_record_id=False
-        ).verify(attestation)
+        proof_verification = Verifier(proof_store, crypto=adapter.crypto).verify(attestation)
         proofs.append(
             IdentityRecordProof(
                 record_id=attestation.id,

@@ -129,9 +129,7 @@ def run_vertical_slice(
             if existing.id == record.id:
                 continue
             proof_store.append(existing)
-        verification = Verifier(
-            proof_store, allow_insecure_signatures=True, enforce_canonical_record_id=False
-        ).verify(record)
+        verification = Verifier(proof_store, crypto=adapter.crypto).verify(record)
         proofs.append(
             RecordProof(
                 record_id=record.id,

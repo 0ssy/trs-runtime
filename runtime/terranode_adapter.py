@@ -27,13 +27,20 @@ class TerraNodeRuntimeAdapter:
     embedding TRS rule logic in TerraNode itself.
     """
 
-    def __init__(self, store: StorageEngine | None = None, crypto: CryptoSuite | None = None) -> None:
+    def __init__(
+        self,
+        store: StorageEngine | None = None,
+        crypto: CryptoSuite | None = None,
+        *,
+        allow_insecure_signatures: bool = False,
+        enforce_canonical_record_id: bool = True,
+    ) -> None:
         self.store = store or RecordStore()
         self.verifier = Verifier(
             self.store,
             crypto=crypto,
-            allow_insecure_signatures=crypto is None,
-            enforce_canonical_record_id=False,
+            allow_insecure_signatures=allow_insecure_signatures,
+            enforce_canonical_record_id=enforce_canonical_record_id,
         )
         self.graph = Graph(self.store)
         self.query_engine = QueryEngine(self.store)

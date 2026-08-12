@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 _HASH_DOMAIN_PREFIX = b"TRS-HASH-1\n"
 _SELF_SUBJECT_SENTINEL = "__self__"
+_SELF_AUTH_SENTINEL = "__self__"
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -38,6 +39,8 @@ def canonical_record_identity_bytes(record: "Record") -> bytes:
     envelope.pop("signature", None)
     if not record.causes and record.subject == record.id:
         envelope["subject"] = _SELF_SUBJECT_SENTINEL
+    if tuple(record.authorization) == (record.id,):
+        envelope["authorization"] = [_SELF_AUTH_SENTINEL]
     return canonical_json_bytes(envelope)
 
 

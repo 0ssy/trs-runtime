@@ -47,7 +47,9 @@ class InMemoryTransport:
             if frozenset((source, target)) in self._blocked_links:
                 self._queue.append((source, target, records))
                 continue
+            source_node = self._nodes[source]
             target_node = self._nodes[target]
+            target_node.adapter.crypto.import_public_keys(source_node.adapter.crypto.export_public_keys())
             target_node.receive_records(records)
             delivered.append(
                 PendingDelivery(source=source, target=target, record_ids=[record.id for record in records])

@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from statistics import mean
 
+from runtime.canonical import derive_record_id
+from runtime.crypto import CryptoSuite, clone_with_signature
 from runtime.graph import Graph
 from runtime.record import PrimitiveType, Record
 from runtime.replay import ReplayEngine
@@ -32,11 +34,12 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
     _ensure_directories(root)
 
     store = RecordStore()
-    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
+    crypto = CryptoSuite()
+    verifier = Verifier(store, crypto=crypto)
     graph = Graph(store)
     replay = ReplayEngine(store)
 
-    records = _build_records()
+    records, aliases = _build_records(crypto)
     verification_by_id: dict[str, VerificationResult] = {}
     for record in records:
         verification = verifier.verify(record)
@@ -45,10 +48,11 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
         store.append(record)
         verification_by_id[record.id] = verification
 
-    decision = store.get("p10-decision")
+    decision_id = aliases["p10-decision"]
+    decision = store.get(decision_id)
     if decision is None:
         raise ValueError("missing decision record")
-    decision_verification = verification_by_id["p10-decision"]
+    decision_verification = verification_by_id[decision_id]
 
     timeline_ids = graph.topological_order()
     replay_snapshot = replay.replay()
@@ -63,6 +67,7 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
         conflict_rows=conflict_rows,
         decision=decision,
         decision_verification=decision_verification,
+        aliases=aliases,
     )
 
     _write_json(
@@ -113,7 +118,8 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
 
     _write_text(root / "PROGRAM10.md", _program10_markdown())
 
-    task_creator = store.get("p10-task-create").author if store.get("p10-task-create") else ""
+    task_record = store.get(aliases["p10-task-create"])
+    task_creator = task_record.author if task_record else ""
     completion_claimant = _completion_claimant(store)
     return Program10Result(
         scenario_id="alice-bob-offline-conflict",
@@ -121,20 +127,47 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
         task_creator=task_creator,
         authorized_actor="bob",
         completion_claimant=completion_claimant,
-        evidence_record_ids=["p10-evidence-bob", "p10-evidence-alice"],
+        evidence_record_ids=[aliases["p10-evidence-bob"], aliases["p10-evidence-alice"]],
         missing_information="Independent verifier inspection result after conflicting claims.",
         ordinary_accuracy_mean=ordinary_mean,
         terranode_accuracy_mean=terranode_mean,
     )
 
 
-def _build_records() -> list[Record]:
+def _build_records(crypto: CryptoSuite) -> tuple[list[Record], dict[str, str]]:
     def t(hour: int, minute: int) -> datetime:
         return datetime(2026, 8, 6, hour, minute, tzinfo=timezone.utc)
 
-    return [
+    aliases: dict[str, str] = {}
+    records: list[Record] = []
+    signing_keys = {}
+
+    def sign(record: Record) -> Record:
+        key = signing_keys.get(record.author)
+        if key is None:
+            key = crypto.generate_key(record.author)
+            signing_keys[record.author] = key
+        signature = crypto.sign_record(record, key.private_key_b64, key.key_id)
+        return clone_with_signature(record, signature)
+
+    provisional_root = Record(
+        id="__self__",
+        type=PrimitiveType.OBSERVATION,
+        author="alice",
+        timestamp=t(12, 0),
+        schema="trs.observation.v1",
+        payload={
+            "subject": "task",
+            "value": {"task_id": "task-1001", "title": "Inspect pump station", "status": "open"},
+        },
+        authorization=("__self__",),
+        signature="",
+        subject="task-1001",
+    )
+    root_id = derive_record_id(provisional_root)
+    root = sign(
         Record(
-            id="p10-task-create",
+            id=root_id,
             type=PrimitiveType.OBSERVATION,
             author="alice",
             timestamp=t(12, 0),
@@ -143,113 +176,143 @@ def _build_records() -> list[Record]:
                 "subject": "task",
                 "value": {"task_id": "task-1001", "title": "Inspect pump station", "status": "open"},
             },
-            authorization=("p10-task-create",),
-            signature="sig:p10-task-create",
+            authorization=(root_id,),
+            signature="",
             subject="task-1001",
-        ),
-        Record(
-            id="p10-authority-bob",
-            type=PrimitiveType.COMMITMENT,
-            author="alice",
-            timestamp=t(12, 1),
-            schema="trs.commitment.v1",
-            payload={"action": "assign-authority", "due_by": "2026-08-10T00:00:00Z", "assignee": "bob"},
-            causes=("p10-task-create",),
-            authorization=("p10-task-create",),
-            signature="sig:p10-authority-bob",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-offline-bob",
-            type=PrimitiveType.OBSERVATION,
-            author="bob",
-            timestamp=t(12, 2),
-            schema="trs.observation.v1",
-            payload={"subject": "connectivity", "value": {"actor": "bob", "state": "offline"}},
-            causes=("p10-task-create",),
-            signature="sig:p10-offline-bob",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-claim-incomplete-alice",
-            type=PrimitiveType.INTENTION,
-            author="alice",
-            timestamp=t(12, 4),
-            schema="trs.intention.v1",
-            payload={"goal": "claim-task-state", "horizon": "session-1", "claim": "incomplete"},
-            causes=("p10-task-create",),
-            signature="sig:p10-claim-incomplete-alice",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-evidence-alice",
-            type=PrimitiveType.OBSERVATION,
-            author="alice",
-            timestamp=t(12, 5),
-            schema="trs.observation.v1",
-            payload={
-                "subject": "evidence",
-                "value": {"for_claim": "p10-claim-incomplete-alice", "note": "safety checklist missing"},
+        )
+    )
+    aliases["p10-task-create"] = root.id
+    records.append(root)
+
+    def alias(alias_id: str) -> str:
+        return aliases[alias_id]
+
+    def add(
+        alias_id: str,
+        *,
+        type: PrimitiveType,
+        author: str,
+        timestamp: datetime,
+        schema: str,
+        payload: dict[str, object],
+        causes: tuple[str, ...] = (),
+        authorization: tuple[str, ...] = (),
+        subject: str,
+    ) -> None:
+        record = Record.create(
+            primitive_type=type,
+            author=author,
+            timestamp=timestamp,
+            schema=schema,
+            payload=payload,
+            causes=tuple(alias(cause) for cause in causes),
+            authorization=tuple(alias(a) for a in authorization),
+            signature="",
+            subject=subject,
+        )
+        signed = sign(record)
+        aliases[alias_id] = signed.id
+        records.append(signed)
+
+    add(
+        "p10-authority-bob",
+        type=PrimitiveType.COMMITMENT,
+        author="alice",
+        timestamp=t(12, 1),
+        schema="trs.commitment.v1",
+        payload={"action": "delegate-authority", "due_by": "2026-08-10T00:00:00Z", "assignee": "bob"},
+        causes=("p10-task-create",),
+        authorization=("p10-task-create",),
+        subject="task-1001",
+    )
+    add(
+        "p10-offline-bob",
+        type=PrimitiveType.OBSERVATION,
+        author="bob",
+        timestamp=t(12, 2),
+        schema="trs.observation.v1",
+        payload={"subject": "connectivity", "value": {"actor": "bob", "state": "offline"}},
+        causes=("p10-task-create",),
+        subject="task-1001",
+    )
+    add(
+        "p10-claim-incomplete-alice",
+        type=PrimitiveType.INTENTION,
+        author="alice",
+        timestamp=t(12, 4),
+        schema="trs.intention.v1",
+        payload={"goal": "claim-task-state", "horizon": "session-1", "claim": "incomplete"},
+        causes=("p10-task-create",),
+        subject="task-1001",
+    )
+    add(
+        "p10-claim-complete-bob",
+        type=PrimitiveType.INTENTION,
+        author="bob",
+        timestamp=t(12, 3),
+        schema="trs.intention.v1",
+        payload={"goal": "claim-task-state", "horizon": "session-1", "claim": "completed"},
+        causes=("p10-task-create",),
+        authorization=("p10-authority-bob",),
+        subject="task-1001",
+    )
+    add(
+        "p10-evidence-alice",
+        type=PrimitiveType.OBSERVATION,
+        author="alice",
+        timestamp=t(12, 5),
+        schema="trs.observation.v1",
+        payload={
+            "subject": "evidence",
+            "value": {
+                "for_claim": alias("p10-claim-incomplete-alice"),
+                "note": "safety checklist missing",
             },
-            causes=("p10-claim-incomplete-alice",),
-            signature="sig:p10-evidence-alice",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-claim-complete-bob",
-            type=PrimitiveType.INTENTION,
-            author="bob",
-            timestamp=t(12, 3),
-            schema="trs.intention.v1",
-            payload={"goal": "claim-task-state", "horizon": "session-1", "claim": "completed"},
-            causes=("p10-task-create",),
-            authorization=("p10-authority-bob",),
-            signature="sig:p10-claim-complete-bob",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-evidence-bob",
-            type=PrimitiveType.OBSERVATION,
-            author="bob",
-            timestamp=t(12, 6),
-            schema="trs.observation.v1",
-            payload={
-                "subject": "evidence",
-                "value": {"for_claim": "p10-claim-complete-bob", "note": "photo uploaded from field"},
-            },
-            causes=("p10-claim-complete-bob",),
-            signature="sig:p10-evidence-bob",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-reconnect-bob",
-            type=PrimitiveType.OBSERVATION,
-            author="bob",
-            timestamp=t(12, 7),
-            schema="trs.observation.v1",
-            payload={"subject": "connectivity", "value": {"actor": "bob", "state": "online"}},
-            causes=("p10-offline-bob", "p10-claim-complete-bob"),
-            signature="sig:p10-reconnect-bob",
-            subject="task-1001",
-        ),
-        Record(
-            id="p10-decision",
-            type=PrimitiveType.COMMITMENT,
-            author="alice",
-            timestamp=t(12, 8),
-            schema="trs.commitment.v1",
-            payload={
-                "action": "decision",
-                "due_by": "2026-08-07T00:00:00Z",
-                "outcome": "inspection-required",
-                "reason": "conflicting completion claims",
-            },
-            causes=("p10-task-create", "p10-claim-complete-bob", "p10-claim-incomplete-alice"),
-            authorization=("p10-task-create",),
-            signature="sig:p10-decision",
-            subject="task-1001",
-        ),
-    ]
+        },
+        causes=("p10-claim-incomplete-alice",),
+        subject="task-1001",
+    )
+    add(
+        "p10-evidence-bob",
+        type=PrimitiveType.OBSERVATION,
+        author="bob",
+        timestamp=t(12, 6),
+        schema="trs.observation.v1",
+        payload={
+            "subject": "evidence",
+            "value": {"for_claim": alias("p10-claim-complete-bob"), "note": "photo uploaded from field"},
+        },
+        causes=("p10-claim-complete-bob",),
+        subject="task-1001",
+    )
+    add(
+        "p10-reconnect-bob",
+        type=PrimitiveType.OBSERVATION,
+        author="bob",
+        timestamp=t(12, 7),
+        schema="trs.observation.v1",
+        payload={"subject": "connectivity", "value": {"actor": "bob", "state": "online"}},
+        causes=("p10-offline-bob", "p10-claim-complete-bob"),
+        subject="task-1001",
+    )
+    add(
+        "p10-decision",
+        type=PrimitiveType.COMMITMENT,
+        author="alice",
+        timestamp=t(12, 8),
+        schema="trs.commitment.v1",
+        payload={
+            "action": "decision",
+            "due_by": "2026-08-07T00:00:00Z",
+            "outcome": "inspection-required",
+            "reason": "conflicting completion claims",
+        },
+        causes=("p10-task-create", "p10-claim-complete-bob", "p10-claim-incomplete-alice"),
+        authorization=("p10-task-create",),
+        subject="task-1001",
+    )
+
+    return records, aliases
 
 
 def _build_ordinary_view(store: RecordStore, timeline_ids: list[str]) -> dict[str, object]:
@@ -288,6 +351,7 @@ def _build_terranode_view(
     conflict_rows: list[dict[str, str]],
     decision: Record,
     decision_verification: VerificationResult,
+    aliases: dict[str, str],
 ) -> dict[str, object]:
     by_id = {record.id: record for record in store.all()}
     timeline = [
@@ -312,7 +376,7 @@ def _build_terranode_view(
     ]
     authority = {
         "authorized_actor": "bob",
-        "authority_record": "p10-authority-bob",
+        "authority_record": aliases["p10-authority-bob"],
         "decision_authorization_path": list(decision_verification.authorization_path),
     }
     replay_view = {
