@@ -77,7 +77,7 @@ def _mk_record(record_id: str, primitive: PrimitiveType, *, signature: str, caus
 
 def _kill_immutability_bypass() -> bool:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     existing = _mk_record("dup", PrimitiveType.OBSERVATION, signature="sig:existing")
     store.append(existing)
     target = _mk_record("dup", PrimitiveType.OBSERVATION, signature="sig:target")
@@ -93,7 +93,7 @@ def _kill_immutability_bypass() -> bool:
 
 def _kill_signature_bypass() -> bool:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     target = _mk_record("no-sig", PrimitiveType.OBSERVATION, signature="")
     original = Verifier.verify_signature
     try:
@@ -106,7 +106,7 @@ def _kill_signature_bypass() -> bool:
 
 def _kill_payload_shape_bypass() -> bool:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     target = Record(
         id="bad-payload",
         type=PrimitiveType.OBSERVATION,
@@ -127,7 +127,7 @@ def _kill_payload_shape_bypass() -> bool:
 
 def _kill_authorization_bypass() -> bool:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     target = _mk_record(
         "bad-auth",
         PrimitiveType.COMMITMENT,
@@ -148,7 +148,7 @@ def _kill_authorization_bypass() -> bool:
 
 def _kill_query_mutation_mutant() -> bool:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     g = _mk_record("g0", PrimitiveType.OBSERVATION, signature="sig:g0")
     store.append(g)
     q = QueryEngine(store)

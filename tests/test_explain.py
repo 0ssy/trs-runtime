@@ -10,7 +10,7 @@ from runtime.verifier import Verifier
 class ExplainTests(unittest.TestCase):
     def test_explain_includes_rule_failures(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         record = Record(
             id="r",
             type=PrimitiveType.COMMITMENT,

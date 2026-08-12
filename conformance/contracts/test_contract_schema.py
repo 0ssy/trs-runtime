@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class ContractTests(unittest.TestCase):
     def test_commitment_schema_must_match_declared_primitive(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         record = Record(
             id="contract-1",
             type=PrimitiveType.COMMITMENT,

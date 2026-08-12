@@ -47,7 +47,9 @@ class FuzzMalformedInputsTests(unittest.TestCase):
     def test_random_payload_for_declared_primitive_never_crashes_verifier(
         self, primitive: PrimitiveType, payload: dict
     ) -> None:
-        verifier = Verifier(TerraNodeRuntimeAdapter().store)
+        verifier = Verifier(
+            TerraNodeRuntimeAdapter().store, allow_insecure_signatures=True, enforce_canonical_record_id=False
+        )
         record = Record(
             id=f"fuzz-{primitive.value}-{hash(str(payload))}",
             type=primitive,

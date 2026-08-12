@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable
 
+from .canonical import derive_record_id
 from .crypto import CryptoSuite
 from .record import PrimitiveType, Record
 from .storage import StorageEngine
@@ -58,9 +59,18 @@ def _require_keys(record: Record, keys: tuple[str, ...]) -> tuple[bool, str]:
 
 
 class Verifier:
-    def __init__(self, store: StorageEngine, crypto: CryptoSuite | None = None) -> None:
+    def __init__(
+        self,
+        store: StorageEngine,
+        crypto: CryptoSuite | None = None,
+        *,
+        allow_insecure_signatures: bool = False,
+        enforce_canonical_record_id: bool = True,
+    ) -> None:
         self.store = store
         self.crypto = crypto
+        self.allow_insecure_signatures = allow_insecure_signatures
+        self.enforce_canonical_record_id = enforce_canonical_record_id
         revision = getattr(self.store, "revision", None)
         children_of_type = getattr(self.store, "children_of_type", None)
         self._revision_provider: Callable[[], int] | None = revision if callable(revision) else None
@@ -87,6 +97,9 @@ class Verifier:
         rule_results: list[RuleResult] = []
         causal_path: list[str] = []
         auth_path: list[str] = []
+
+        record_identity = self.verify_record_identity(record)
+        rule_results.append(record_identity)
 
         immutability = self.verify_immutability(record)
         rule_results.append(immutability)
@@ -141,6 +154,19 @@ class Verifier:
                 self._verification_cache.clear()
             self._verification_cache[(cache_revision, id(record))] = result
         return result
+
+    def verify_record_identity(self, record: Record) -> RuleResult:
+        if not self.enforce_canonical_record_id:
+            return RuleResult("5.0", "Canonical Record Identity", RuleStatus.NOT_APPLICABLE, "identity enforcement disabled")
+        expected_id = derive_record_id(record)
+        if record.id != expected_id:
+            return RuleResult(
+                "5.0",
+                "Canonical Record Identity",
+                RuleStatus.FAIL,
+                f"record id does not match canonical content hash (expected {expected_id})",
+            )
+        return RuleResult("5.0", "Canonical Record Identity", RuleStatus.PASS, "record id matches canonical content hash")
 
     def verify_immutability(self, record: Record) -> RuleResult:
         if self.store.exists(record.id):
@@ -364,9 +390,16 @@ class Verifier:
         if not record.signature:
             return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, "missing signature")
         if self.crypto is None:
-            if record.signature.startswith("sig:") or record.signature.startswith("ed25519:"):
+            if self.allow_insecure_signatures and (
+                record.signature.startswith("sig:") or record.signature.startswith("ed25519:")
+            ):
                 return RuleResult("5.2", "Signature Presence", RuleStatus.PASS, "signature present")
-            return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, "signature format invalid")
+            return RuleResult(
+                "5.2",
+                "Signature Presence",
+                RuleStatus.FAIL,
+                "crypto suite required for signature verification (insecure signature mode disabled)",
+            )
         ok, reason = self.crypto.verify_record_signature(record)
         if not ok:
             return RuleResult("5.2", "Signature Presence", RuleStatus.FAIL, reason)

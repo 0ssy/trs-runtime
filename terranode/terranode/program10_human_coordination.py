@@ -32,7 +32,7 @@ def run_program10_study(output_root: str | Path) -> Program10Result:
     _ensure_directories(root)
 
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     graph = Graph(store)
     replay = ReplayEngine(store)
 

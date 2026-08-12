@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class WorkflowTests(unittest.TestCase):
     def test_genesis_without_causes_is_not_applicable_for_causality(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         genesis = Record(
             id="g",
             type=PrimitiveType.OBSERVATION,

@@ -10,7 +10,7 @@ from runtime.verifier import RuleStatus, Verifier
 class CheckpointTests(unittest.TestCase):
     def setUp(self) -> None:
         self.store = RecordStore()
-        self.verifier = Verifier(self.store)
+        self.verifier = Verifier(self.store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         self.genesis = Record(
             id="g-check",
             type=PrimitiveType.OBSERVATION,

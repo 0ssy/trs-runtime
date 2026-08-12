@@ -12,7 +12,7 @@ from runtime.verifier import Verifier
 class GraphQuerySyncTests(unittest.TestCase):
     def setUp(self) -> None:
         self.store = RecordStore()
-        self.verifier = Verifier(self.store)
+        self.verifier = Verifier(self.store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         self.g = Record(
             id="g",
             type=PrimitiveType.OBSERVATION,
@@ -68,7 +68,7 @@ class GraphQuerySyncTests(unittest.TestCase):
     def test_sync_appends_only_verified_records(self) -> None:
         local = RecordStore()
         local.append(self.g)
-        verifier = Verifier(local)
+        verifier = Verifier(local, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         bad = Record(
             id="bad",
             type=PrimitiveType.OBSERVATION,

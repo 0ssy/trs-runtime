@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class CapabilityTests(unittest.TestCase):
     def test_missing_authorization_path_fails(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         forged = Record(
             id="forged",
             type=PrimitiveType.COMMITMENT,

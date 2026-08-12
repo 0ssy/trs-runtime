@@ -29,7 +29,12 @@ class TerraNodeRuntimeAdapter:
 
     def __init__(self, store: StorageEngine | None = None, crypto: CryptoSuite | None = None) -> None:
         self.store = store or RecordStore()
-        self.verifier = Verifier(self.store, crypto=crypto)
+        self.verifier = Verifier(
+            self.store,
+            crypto=crypto,
+            allow_insecure_signatures=crypto is None,
+            enforce_canonical_record_id=False,
+        )
         self.graph = Graph(self.store)
         self.query_engine = QueryEngine(self.store)
 

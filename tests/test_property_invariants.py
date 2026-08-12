@@ -60,7 +60,7 @@ class PropertyInvariantTests(unittest.TestCase):
     )
     def test_duplicate_ids_are_never_accepted(self, primitive: PrimitiveType, author: str) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         first = _make_record("dup-id", primitive, author, 1)
         store.append(first)
         second = _make_record("dup-id", primitive, author, 2)
@@ -75,7 +75,7 @@ class PropertyInvariantTests(unittest.TestCase):
     )
     def test_queries_never_mutate_storage(self, length: int, query_author: str) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         genesis = _make_record("g0", PrimitiveType.OBSERVATION, "root", 0)
         store.append(genesis)
 
@@ -99,7 +99,7 @@ class PropertyInvariantTests(unittest.TestCase):
     @given(length=st.integers(min_value=2, max_value=20))
     def test_accepted_records_are_explainable(self, length: int) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         g = _make_record("g0", PrimitiveType.OBSERVATION, "root", 0)
         g_result = verifier.verify(g)
         self.assertTrue(g_result.valid)
@@ -122,7 +122,7 @@ class PropertyInvariantTests(unittest.TestCase):
     @given(length=st.integers(min_value=3, max_value=20))
     def test_sync_never_mutates_existing_records(self, length: int) -> None:
         source = RecordStore()
-        source_verifier = Verifier(source)
+        source_verifier = Verifier(source, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         g = _make_record("g0", PrimitiveType.OBSERVATION, "root", 0)
         source.append(g)
         prev_id = "g0"
@@ -137,7 +137,7 @@ class PropertyInvariantTests(unittest.TestCase):
         local = RecordStore()
         local.append(g)
         local_snapshot = {r.id: r.to_dict() for r in local.all()}
-        local_verifier = Verifier(local)
+        local_verifier = Verifier(local, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         result = sync_append_only(local, source.all(), local_verifier)
         self.assertGreaterEqual(len(result.appended_ids), 0)
         post_snapshot = {r.id: r.to_dict() for r in local.all() if r.id in local_snapshot}

@@ -51,7 +51,7 @@ class ConflictTests(unittest.TestCase):
 
     def test_same_parent_different_subjects_are_not_conflict(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         root = Record(
             id="root2",
             type=PrimitiveType.OBSERVATION,
@@ -93,7 +93,7 @@ class ConflictTests(unittest.TestCase):
 
     def test_same_parent_same_subject_and_different_payload_is_conflict(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         root = Record(
             id="root3",
             type=PrimitiveType.OBSERVATION,
@@ -135,7 +135,7 @@ class ConflictTests(unittest.TestCase):
 
     def test_descendant_update_on_same_subject_is_not_conflict(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         root = Record(
             id="root4",
             type=PrimitiveType.OBSERVATION,

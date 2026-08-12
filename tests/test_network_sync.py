@@ -48,7 +48,7 @@ class NetworkSyncTests(unittest.TestCase):
 
     def test_ingest_records_unordered_handles_dependency_retries(self) -> None:
         target = RecordStore()
-        verifier = Verifier(target)
+        verifier = Verifier(target, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         result = ingest_records_unordered(target, [self.b, self.a, self.g], verifier)
         self.assertEqual(set(result.appended_ids), {"g", "a", "b"})
         self.assertEqual(result.rejected_ids, [])
@@ -56,7 +56,7 @@ class NetworkSyncTests(unittest.TestCase):
 
     def test_sync_nodes_exchanges_inventory_and_appends_missing(self) -> None:
         target = RecordStore()
-        target_verifier = Verifier(target)
+        target_verifier = Verifier(target, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         before_source = [r.id for r in self.source.all()]
         result = sync_nodes(self.source, target, target_verifier)
         self.assertEqual(set(result.missing_ids), {"g", "a", "b"})
@@ -135,7 +135,9 @@ class NetworkSyncTests(unittest.TestCase):
         for record in (b1, b2):
             node_b.append(record)
 
-        result = sync_nodes(node_b, node_a, Verifier(node_a))
+        result = sync_nodes(
+            node_b, node_a, Verifier(node_a, allow_insecure_signatures=True, enforce_canonical_record_id=False)
+        )
         self.assertEqual(result.rejected_ids, [])
         self.assertIn("b2", result.appended_ids)
         b2_verification = next(v for rid, v in zip(result.appended_ids, result.verification_results) if rid == "b2")

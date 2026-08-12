@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class ReportedAuthorizationRegressionTests(unittest.TestCase):
     def test_unauthorized_alice_claim_without_authorization_is_rejected(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         task_root = Record(
             id="task-root",
             type=PrimitiveType.OBSERVATION,
@@ -50,7 +50,7 @@ class ReportedAuthorizationRegressionTests(unittest.TestCase):
 
     def test_rootless_record_cannot_be_used_as_trust_root(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         rootless = Record(
             id="rootless",
             type=PrimitiveType.OBSERVATION,

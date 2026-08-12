@@ -34,7 +34,7 @@ class MultiNodeSimulationResult:
 
 def make_node(name: str, seed: Iterable[Record] = ()) -> SimNode:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     for record in seed:
         if not store.exists(record.id):
             store.append(record)

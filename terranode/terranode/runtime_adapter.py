@@ -23,7 +23,7 @@ class SubmittedIntention:
 class TerraNodeRuntimeAdapter:
     def __init__(self, *, node_id: str = "") -> None:
         self.store = RecordStore()
-        self.verifier = Verifier(self.store)
+        self.verifier = Verifier(self.store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         self.query = QueryEngine(self.store)
         self.replay_engine = ReplayEngine(self.store)
         self._sequence = 0

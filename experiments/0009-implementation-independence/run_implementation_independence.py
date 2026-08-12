@@ -49,7 +49,7 @@ def _fixtures() -> list[Record]:
 
 
 def _load_and_verify(name: str, store: StorageEngine, records: list[Record]) -> dict:
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     accepted: list[str] = []
     for record in records:
         result = verifier.verify(record)

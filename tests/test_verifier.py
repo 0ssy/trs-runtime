@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class VerifierTests(unittest.TestCase):
     def setUp(self) -> None:
         self.store = RecordStore()
-        self.verifier = Verifier(self.store)
+        self.verifier = Verifier(self.store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         self.genesis = Record(
             id="genesis",
             type=PrimitiveType.OBSERVATION,
@@ -214,6 +214,38 @@ class VerifierTests(unittest.TestCase):
 
         second = self.verifier.verify(missing_cause_record)
         self.assertTrue(second.valid)
+
+    def test_default_verifier_rejects_non_canonical_id(self) -> None:
+        strict_verifier = Verifier(self.store)
+        record = Record(
+            id="totally-made-up-id-not-a-hash",
+            type=PrimitiveType.COMMITMENT,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.commitment.v1",
+            payload={"action": "execute", "due_by": "2027-01-01"},
+            causes=("genesis",),
+            authorization=("genesis",),
+            signature="ed25519:any:any",
+        )
+        result = strict_verifier.verify(record)
+        identity_rule = next(r for r in result.rules if r.rule_id == "5.0")
+        self.assertEqual(identity_rule.status, RuleStatus.FAIL)
+
+    def test_default_verifier_rejects_stub_signature_without_crypto(self) -> None:
+        strict_verifier = Verifier(self.store)
+        record = Record(
+            id="sha256:stub",
+            type=PrimitiveType.OBSERVATION,
+            author="alice",
+            timestamp=datetime.now(timezone.utc),
+            schema="trs.observation.v1",
+            payload={"subject": "x", "value": 1},
+            signature="sig:stub",
+        )
+        result = strict_verifier.verify(record)
+        signature_rule = next(r for r in result.rules if r.rule_id == "5.2")
+        self.assertEqual(signature_rule.status, RuleStatus.FAIL)
 
 
 if __name__ == "__main__":

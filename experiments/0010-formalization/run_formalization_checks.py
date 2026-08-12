@@ -14,7 +14,7 @@ from runtime.verifier import Verifier
 
 def _theorem_fail_safe_authorization() -> tuple[bool, str]:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     g0 = Record(
         id="g0",
         type=PrimitiveType.OBSERVATION,
@@ -41,7 +41,7 @@ def _theorem_fail_safe_authorization() -> tuple[bool, str]:
 
 def _theorem_payload_independence() -> tuple[bool, str]:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     g0 = Record(
         id="g0",
         type=PrimitiveType.OBSERVATION,
@@ -68,7 +68,7 @@ def _theorem_payload_independence() -> tuple[bool, str]:
 
 def _theorem_append_only_uniqueness() -> tuple[bool, str]:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     first = Record(
         id="dup",
         type=PrimitiveType.OBSERVATION,

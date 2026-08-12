@@ -33,4 +33,4 @@ def make_store_and_verifier(with_genesis: bool = True) -> tuple[RecordStore, Ver
     store = RecordStore()
     if with_genesis:
         make_genesis(store)
-    return store, Verifier(store)
+    return store, Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)

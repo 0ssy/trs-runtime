@@ -93,7 +93,9 @@ def run_workflow_vertical_slice() -> WorkflowVerticalSliceResult:
             if existing.id == record.id:
                 continue
             proof_store.append(existing)
-        proof_verification = Verifier(proof_store).verify(record)
+        proof_verification = Verifier(
+            proof_store, allow_insecure_signatures=True, enforce_canonical_record_id=False
+        ).verify(record)
         proofs.append(
             WorkflowRecordProof(
                 record_id=record.id,

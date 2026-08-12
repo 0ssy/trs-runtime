@@ -98,7 +98,7 @@ def run_cycle_0012_baseline() -> BaselineResult:
     fixture_path.write_text(json.dumps({"records": source_records}, indent=2), encoding="utf-8")
 
     target_store = RecordStore()
-    target_verifier = Verifier(target_store)
+    target_verifier = Verifier(target_store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     imported_records = [_record_from_dict(item) for item in source_records]
     ingest = ingest_records_unordered(target_store, imported_records, target_verifier)
 

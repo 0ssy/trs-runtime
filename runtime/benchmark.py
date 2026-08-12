@@ -47,7 +47,7 @@ def run_benchmarks(records: int = 2000, backends: tuple[str, ...] = SUPPORTED_BA
 
 def _benchmark_in_memory(records: int) -> BenchmarkMetrics:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     return _benchmark_store("in_memory", store, verifier, records, disk_path=None)
 
 
@@ -64,7 +64,7 @@ def _benchmark_persistent(records: int, backend: str) -> BenchmarkMetrics:
             store = RocksDBStorage(path)
         else:
             raise ValueError(f"unsupported backend: {backend}")
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         metrics = _benchmark_store(backend, store, verifier, records, disk_path=Path(tmp))
         close = getattr(store, "close", None)
         if callable(close):

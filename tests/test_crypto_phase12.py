@@ -129,7 +129,7 @@ class CryptoPhase12Tests(unittest.TestCase):
         crypto = CryptoSuite()
         root_key = crypto.generate_key("root")
         alice_key = crypto.generate_key("alice")
-        verifier = Verifier(store, crypto=crypto)
+        verifier = Verifier(store, crypto=crypto, enforce_canonical_record_id=False)
 
         genesis = Record(
             id="g1",
@@ -203,7 +203,7 @@ class CryptoPhase12Tests(unittest.TestCase):
         crypto = CryptoSuite()
         root_key = crypto.generate_key("root")
         alice_key = crypto.generate_key("alice")
-        verifier = Verifier(store, crypto=crypto)
+        verifier = Verifier(store, crypto=crypto, enforce_canonical_record_id=False)
 
         genesis = Record(
             id="g1",

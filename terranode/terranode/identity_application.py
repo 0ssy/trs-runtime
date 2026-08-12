@@ -203,7 +203,9 @@ def run_identity_vertical_slice(
             if existing.id == attestation.id:
                 continue
             proof_store.append(existing)
-        proof_verification = Verifier(proof_store).verify(attestation)
+        proof_verification = Verifier(
+            proof_store, allow_insecure_signatures=True, enforce_canonical_record_id=False
+        ).verify(attestation)
         proofs.append(
             IdentityRecordProof(
                 record_id=attestation.id,

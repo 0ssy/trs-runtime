@@ -9,7 +9,7 @@ from runtime.verifier import Verifier
 class WorkflowCompletionTests(unittest.TestCase):
     def test_intention_requires_existing_cause_for_closure(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         intention = Record(
             id="i1",
             type=PrimitiveType.INTENTION,

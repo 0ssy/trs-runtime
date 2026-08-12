@@ -9,7 +9,7 @@ from runtime.verifier import RuleStatus, Verifier
 class SchemaTests(unittest.TestCase):
     def test_duplicate_id_fails_immutability_rule(self) -> None:
         store = RecordStore()
-        verifier = Verifier(store)
+        verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
         record = Record(
             id="dup",
             type=PrimitiveType.OBSERVATION,

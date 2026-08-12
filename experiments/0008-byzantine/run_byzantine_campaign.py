@@ -56,7 +56,7 @@ def _scenario_replay_storm() -> ScenarioResult:
     source = RecordStore()
     target = RecordStore()
     _seed_chain(source, 60)
-    verifier = Verifier(target)
+    verifier = Verifier(target, allow_insecure_signatures=True, enforce_canonical_record_id=False)
 
     appended_total = 0
     for _ in range(20):
@@ -76,7 +76,7 @@ def _scenario_replay_storm() -> ScenarioResult:
 
 def _scenario_authorization_flood() -> ScenarioResult:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     _seed_chain(store, 20)
 
     rejected = 0
@@ -105,7 +105,7 @@ def _scenario_authorization_flood() -> ScenarioResult:
 
 def _scenario_cycle_spam() -> ScenarioResult:
     store = RecordStore()
-    verifier = Verifier(store)
+    verifier = Verifier(store, allow_insecure_signatures=True, enforce_canonical_record_id=False)
     _seed_chain(store, 10)
 
     rejected = 0
